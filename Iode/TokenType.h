@@ -1,0 +1,16 @@
+enum TokenType
+{
+	IDENTIFIER,
+	NUMBER,
+	BOOL,
+	NIL,
+	ADD,
+	MUL,
+	SUB,
+	DIV,
+	EQUALS,
+	DOT,
+	COMMA,
+	VAR,
+	NEWLINE
+};
