@@ -100,14 +100,14 @@ FunctionNode *Parser::parseFunction()
 
 			if (peekCheck(LBRACE))
 			{
-				vector<Base> body;
+				vector<Base> *body;
 				nextToken();
 				skipNewline();
 
 				while (!peekCheck(RBRACE))
 				{
 					Base *next = parseNext();
-					body.push_back(*next);
+					body->push_back(*next);
 					skipNewline();
 
 					if (peekCheck(NEWLINE))

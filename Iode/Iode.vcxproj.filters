@@ -54,11 +54,11 @@
     <ClInclude Include="VarType.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="FunctionNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Codegen.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionNode.h">
+      <Filter>Header Files\AST</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,7 +81,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FunctionNode.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\AST</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
