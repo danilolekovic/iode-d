@@ -6,6 +6,5 @@
 
 using namespace llvm;
 
-static std::unique_ptr<Module> IodeModule = make_unique<Module>("Iode", getGlobalContext());
+static Module *IodeModule = new Module("Iode", getGlobalContext());
 static IRBuilder<> IodeBuilder(getGlobalContext());
-static map<string, Value*> Variables;

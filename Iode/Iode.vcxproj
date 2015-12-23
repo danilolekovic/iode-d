@@ -152,6 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ASTType.h" />
     <ClInclude Include="Base.h" />
     <ClInclude Include="Codegen.h" />
     <ClInclude Include="ErrorFactory.h" />

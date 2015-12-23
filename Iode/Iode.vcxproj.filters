@@ -60,6 +60,9 @@
     <ClInclude Include="FunctionNode.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
+    <ClInclude Include="ASTType.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

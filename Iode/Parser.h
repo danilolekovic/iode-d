@@ -26,7 +26,7 @@ public:
 	void skipNewline(); // skips the upcoming newline
 	NumberNode *parseNumber(); // [0-9]+
 	FunctionNode *parseFunction(); // fn name(args..) { ... }
-	Base *parseNext();
+	Base *parseNext(); // parses the next expression
 
 	Parser(Lexer _lexer) : lexer(_lexer), pos(0), line(1),
 		totalTokens(lexer.tokens.size()), code(lexer.code) { }

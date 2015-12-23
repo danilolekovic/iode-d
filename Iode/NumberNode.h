@@ -9,5 +9,6 @@ class NumberNode : public Base
 public:
 	NumberNode(double _val) : val(_val) { }
 	Value *generate() override;
+	ASTType type() override;
 };
 

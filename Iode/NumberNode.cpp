@@ -8,3 +8,8 @@ Value *NumberNode::generate()
 {
 	return ConstantFP::get(getGlobalContext(), APFloat(val));
 }
+
+ASTType NumberNode::type()
+{
+	return AST_NUMBER;
+}

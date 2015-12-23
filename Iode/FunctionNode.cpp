@@ -7,3 +7,8 @@ Value *FunctionNode::generate()
 	// todo
 	return nullptr;
 }
+
+ASTType FunctionNode::type()
+{
+	return AST_FUNCTION;
+}
