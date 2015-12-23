@@ -1,5 +1,0 @@
-enum NodeType
-{
-	Identifier,
-	VariableDeclaration
-};

@@ -11,6 +11,11 @@ enum TokenType
 	EQUALS,
 	DOT,
 	COMMA,
+	LPAREN,
+	RPAREN,
+	LBRACE,
+	RBRACE,
 	VAR,
+	FUNCTION,
 	NEWLINE
 };

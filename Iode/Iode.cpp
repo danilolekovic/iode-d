@@ -4,21 +4,25 @@
 #include <iostream>
 #include <string>
 #include "Lexer.h"
+#include "Parser.h"
+#include "Codegen.h"
 
 using namespace std;
+using namespace llvm;
 
 int main()
 {
-	Lexer lexer = Lexer("var i = 5 + 5");
-	lexer.tokenize();
+	string code = "123";
 
-	for (Token t : lexer.tokens)
-	{
-		cout << t.value << endl;
-	}
+	Lexer lex = Lexer(code);
+	lex.tokenize();
+
+	Parser parser = Parser(lex);
+	Base *first = parser.parseNext();
+
+	cout << first->generate() << endl;
 
 	cin.get();
-
 	return 0;
 }
 

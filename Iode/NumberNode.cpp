@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "NumberNode.h"
 #include <llvm/IR/IRBuilder.h>
+#include "NumberNode.h"
 
 using namespace llvm;
 

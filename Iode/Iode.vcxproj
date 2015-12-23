@@ -153,18 +153,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
+    <ClInclude Include="Codegen.h" />
+    <ClInclude Include="ErrorFactory.h" />
+    <ClInclude Include="FunctionNode.h" />
     <ClInclude Include="Lexer.h" />
-    <ClInclude Include="NodeType.h" />
     <ClInclude Include="NumberNode.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenType.h" />
+    <ClInclude Include="VarType.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ErrorFactory.cpp" />
+    <ClCompile Include="FunctionNode.cpp" />
     <ClCompile Include="Iode.cpp" />
     <ClCompile Include="Lexer.cpp" />
     <ClCompile Include="NumberNode.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

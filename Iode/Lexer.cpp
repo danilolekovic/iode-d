@@ -45,6 +45,10 @@ void Lexer::tokenize()
 			{
 				tokens.push_back(Token(VAR, str)); // push to tokens vector
 			}
+			else if (str == "fn")
+			{
+				tokens.push_back(Token(FUNCTION, str));
+			}
 
 			// checking for bools and nil values
 			else if (str == "true" || str == "false")
@@ -128,6 +132,26 @@ void Lexer::tokenize()
 		{
 			pos++;
 			tokens.push_back(Token(COMMA, ","));
+		}
+		else if (code[pos] == '(')
+		{
+			pos++;
+			tokens.push_back(Token(LPAREN, "("));
+		}
+		else if (code[pos] == ')')
+		{
+			pos++;
+			tokens.push_back(Token(RPAREN, ")"));
+		}
+		else if (code[pos] == '{')
+		{
+			pos++;
+			tokens.push_back(Token(LBRACE, "{"));
+		}
+		else if (code[pos] == '}')
+		{
+			pos++;
+			tokens.push_back(Token(RBRACE, "}"));
 		}
 	}
 }

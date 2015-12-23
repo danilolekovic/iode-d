@@ -39,14 +39,26 @@
     <ClInclude Include="TokenType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NodeType.h">
-      <Filter>Header Files\AST</Filter>
-    </ClInclude>
     <ClInclude Include="Base.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
     <ClInclude Include="NumberNode.h">
       <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VarType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Codegen.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +73,15 @@
     </ClCompile>
     <ClCompile Include="NumberNode.cpp">
       <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctionNode.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
