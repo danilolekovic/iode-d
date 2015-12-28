@@ -1,5 +1,6 @@
 ﻿using Iode.CodeGen;
 using System.Reflection.Emit;
+using System;
 
 namespace Iode.AST
 {
@@ -27,6 +28,11 @@ namespace Iode.AST
         public override void generate(ILGenerator ilg)
         {
             Stash.getVariable(name).generate(ilg);
+        }
+
+        public override string ToString()
+        {
+            return Stash.getVariable(name).ToString();
         }
     }
 }

@@ -28,14 +28,17 @@ namespace Iode.CodeGen
 
             Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Initializing..");
 
-            Lexer lexer = new Lexer("name = \"Joe\"\nputs(name)\n");
+            Lexer lexer = new Lexer("msg = true\nputs(msg)\n");
             Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Tokenizing..");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);
             Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Parsing..");
-            parser.parse().generate(ilg);
-            parser.parse().generate(ilg);
+            
+            while (parser.pos != parser.totalTokens)
+            {
+                parser.parse().generate(ilg);
+            }
 
             ilg.Emit(OpCodes.Ldc_I4_0);
             ilg.Emit(OpCodes.Ret);

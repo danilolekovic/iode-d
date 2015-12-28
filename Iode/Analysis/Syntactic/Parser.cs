@@ -36,7 +36,7 @@ namespace Iode.Analysis.Syntactic
         /// The lexer
         /// </summary>
         public Lexer lexer { get; set; }
-        
+
         public Parser(Lexer lexer)
         {
             this.lexer = lexer;
@@ -351,7 +351,7 @@ namespace Iode.Analysis.Syntactic
         public Node parse()
         {
             TokenType t = peekToken().type;
-            
+
             // Check the type of token and decide how to parse it
             switch (t)
             {

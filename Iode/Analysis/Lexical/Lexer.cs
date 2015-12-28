@@ -174,7 +174,7 @@ namespace Iode.Analysis.Lexical
                 {
                     pos++; // ignore whitespace
                 }
-                
+
                 // checking for operators & symbols
                 else if (code[pos] == '+')
                 {

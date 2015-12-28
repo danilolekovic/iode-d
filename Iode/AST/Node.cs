@@ -13,6 +13,12 @@ namespace Iode.AST
         public abstract NodeType type { get; }
 
         /// <summary>
+        /// ToString() method
+        /// </summary>
+        /// <returns>Stringified value</returns>
+        public abstract override string ToString();
+
+        /// <summary>
         /// Calls code generation
         /// </summary>
         public abstract void generate(ILGenerator ilg);

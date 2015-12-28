@@ -39,18 +39,20 @@ namespace Iode.AST
         {
             if (name.StartsWith("puts"))
             {
-                foreach (Node n in args)
-                {
-                    n.generate(ilg);
-                }
-
                 if (args.Count > 1)
                 {
                     throw new CodeGenException("\"" + name + "\" method accepts 1 argument.");
                 }
 
+                ilg.Emit(OpCodes.Ldstr, args[0].ToString());
+
                 ilg.Emit(OpCodes.Call, typeof(Puts).GetMethod("puts", new Type[] { typeof(string) }));
             }
+        }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

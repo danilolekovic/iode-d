@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 
 namespace Iode.AST
 {
@@ -26,6 +27,11 @@ namespace Iode.AST
         public override void generate(ILGenerator ilg)
         {
             ilg.Emit(OpCodes.Ldstr, value);
+        }
+
+        public override string ToString()
+        {
+            return value;
         }
     }
 }

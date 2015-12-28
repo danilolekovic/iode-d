@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 
 namespace Iode.AST
 {
@@ -35,6 +36,11 @@ namespace Iode.AST
                 // since booleans are represented by 0 and 1
                 ilg.Emit(OpCodes.Ldc_I4_0);
             }
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
         }
     }
 }
