@@ -28,12 +28,16 @@
         LBRACK,
         RBRACK,
         EQUALS,
+        ARROW,
 
         // Keywords
         IF,
         ELSE,
         FUNCTION,
         VAR,
+        INT,
+        STR,
+        BOOL,
 
         // Special
         NEWLINE

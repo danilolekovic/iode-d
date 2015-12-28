@@ -121,6 +121,20 @@ namespace Iode.Analysis.Lexical
                         tokens.Add(new Token(TokenType.NIL, str));
                     }
 
+                    // checking for types
+                    else if (str == "string")
+                    {
+                        tokens.Add(new Token(TokenType.STR, str));
+                    }
+                    else if (str == "bool")
+                    {
+                        tokens.Add(new Token(TokenType.BOOL, str));
+                    }
+                    else if (str == "int")
+                    {
+                        tokens.Add(new Token(TokenType.INT, str));
+                    }
+
                     // must be an identifier
                     else
                     {
@@ -184,7 +198,16 @@ namespace Iode.Analysis.Lexical
                 else if (code[pos] == '-')
                 {
                     pos++;
-                    tokens.Add(new Token(TokenType.SUB, "-"));
+                    
+                    if (code[pos] == '>')
+                    {
+                        pos++;
+                        tokens.Add(new Token(TokenType.ARROW, "->"));
+                    }
+                    else
+                    {
+                        tokens.Add(new Token(TokenType.SUB, "-"));
+                    }
                 }
                 else if (code[pos] == '*')
                 {

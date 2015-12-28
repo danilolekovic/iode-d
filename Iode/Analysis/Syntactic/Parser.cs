@@ -280,6 +280,64 @@ namespace Iode.Analysis.Syntactic
                 skipNewline();
                 Node value = parseExpression();
 
+                if (peekCheck(TokenType.ARROW))
+                {
+                    nextToken();
+                    skipNewline();
+
+                    if (peekCheck(TokenType.INT) || peekCheck(TokenType.STR) || peekCheck(TokenType.BOOL))
+                    {
+                        string type = nextToken().value;
+
+                        if (type == "int")
+                        {
+                            if (value.type == NodeType.VARIABLE)
+                            {
+                                double dbl = 0;
+
+                                if (!double.TryParse(value.ToString(), out dbl))
+                                {
+                                    throw new ParsingException("Expected an object type of int", line);
+                                }
+                            }
+                            else if (value.type == NodeType.NUMBER)
+                            {
+                            }
+                            else
+                            {
+                                throw new ParsingException("Expected an object type of int", line);
+                            }
+                        }
+                        else if (type == "str")
+                        {
+                            // todo
+                        }
+                        else if (type == "bool")
+                        {
+                            if (value.type == NodeType.VARIABLE)
+                            {
+                                bool bl = false;
+
+                                if (!bool.TryParse(value.ToString(), out bl))
+                                {
+                                    throw new ParsingException("Expected an object type of boolean", line);
+                                }
+                            }
+                            else if (value.type == NodeType.BOOLEAN)
+                            {
+                            }
+                            else
+                            {
+                                throw new ParsingException("Expected an object type of boolean", line);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new ParsingException("Expected an object type", line);
+                    }
+                }
+
                 if (peekCheck(TokenType.NEWLINE))
                 {
                     skipNewline();
