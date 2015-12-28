@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Iode.CodeGen;
+using System;
 
 namespace Iode
 {
@@ -10,6 +7,9 @@ namespace Iode
     {
         static void Main(string[] args)
         {
+            Console.Title = "Iode";
+            IodeGenerator.init("Test");
+            Console.ReadLine();
         }
     }
 }

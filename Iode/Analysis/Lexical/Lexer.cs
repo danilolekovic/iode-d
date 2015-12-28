@@ -32,24 +32,12 @@ namespace Iode.Analysis.Lexical
         /// </summary>
         public int line { get; set; }
 
-        /// <summary>
-        /// List of special identifiers
-        /// </summary>
-        public List<string> keywords { get; set; }
-
         public Lexer(string code)
         {
             this.code = code;
             this.index = -1;
             this.tokens = new List<Token>();
             this.line = 1;
-            this.keywords = new List<string>()
-            {
-                "if",
-                "else",
-                "def",
-                "var"
-            };
         }
 
         /// <summary>
@@ -95,13 +83,13 @@ namespace Iode.Analysis.Lexical
                 string str = ""; // buffer for values
 
                 // checking if the char is a letter
-                if (char.IsLetter(code[pos]))
+                if (char.IsLetter(code[pos]) || code[pos] == '_')
                 {
                     str += code[pos]; // append char to buffer
                     pos++; // move on to the next char
 
                     // now we're checking if the char is a letter OR digit
-                    while (char.IsLetterOrDigit(code[pos]))
+                    while (pos < code.Length && (char.IsLetterOrDigit(code[pos]) || code[pos] == '_'))
                     {
                         str += code[pos];
                         pos++;
@@ -109,24 +97,18 @@ namespace Iode.Analysis.Lexical
 
                     // checking for keywords; if it's not a special keyword,
                     // it is an identifier.
-                    if (keywords.Contains(str))
+
+                    if (str == "if")
                     {
-                        if (str == "if")
-                        {
-                            tokens.Add(new Token(TokenType.IF, str)); // push to tokens list
-                        }
-                        else if (str == "else")
-                        {
-                            tokens.Add(new Token(TokenType.ELSE, str));
-                        }
-                        else if (str == "def")
-                        {
-                            tokens.Add(new Token(TokenType.FUNCTION, str));
-                        }
-                        else if (str == "var")
-                        {
-                            tokens.Add(new Token(TokenType.VAR, str));
-                        }
+                        tokens.Add(new Token(TokenType.IF, str)); // push to tokens list
+                    }
+                    else if (str == "else")
+                    {
+                        tokens.Add(new Token(TokenType.ELSE, str));
+                    }
+                    else if (str == "def")
+                    {
+                        tokens.Add(new Token(TokenType.FUNCTION, str));
                     }
 
                     // checking for bools and nil values
@@ -154,7 +136,7 @@ namespace Iode.Analysis.Lexical
                     str += code[pos];
                     pos++;
 
-                    while (char.IsDigit(code[pos]))
+                    while (pos < code.Length && char.IsDigit(code[pos]))
                     {
                         str += code[pos];
                         pos++;
@@ -164,17 +146,33 @@ namespace Iode.Analysis.Lexical
 
                     str = "";
                 }
+                // checking of the char is a quote
+                else if (code[pos] == '"')
+                {
+                    pos++;
+
+                    while (pos < code.Length && code[pos] != '"')
+                    {
+                        str += code[pos];
+                        pos++;
+                    }
+
+                    pos++;
+                    tokens.Add(new Token(TokenType.STRING, str));
+
+                    str = "";
+                }
 
                 // checking for whitespace & newlines
-                else if (char.IsWhiteSpace(code[pos]))
-                {
-                    pos++; // ignore whitespace
-                }
                 else if (code[pos] == '\n')
                 {
                     line++;
                     pos++;
                     tokens.Add(new Token(TokenType.NEWLINE, "\n"));
+                }
+                else if (char.IsWhiteSpace(code[pos]))
+                {
+                    pos++; // ignore whitespace
                 }
                 
                 // checking for operators & symbols
@@ -237,6 +235,11 @@ namespace Iode.Analysis.Lexical
                 {
                     pos++;
                     tokens.Add(new Token(TokenType.RBRACK, "]"));
+                }
+                else if (code[pos] == '=')
+                {
+                    pos++;
+                    tokens.Add(new Token(TokenType.EQUALS, "="));
                 }
             }
         }

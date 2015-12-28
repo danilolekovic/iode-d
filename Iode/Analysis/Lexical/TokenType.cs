@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Iode.Analysis.Lexical
+﻿namespace Iode.Analysis.Lexical
 {
+    /// <summary>
+    /// All possible tokens
+    /// </summary>
     public enum TokenType
     {
         // Types
@@ -30,6 +27,7 @@ namespace Iode.Analysis.Lexical
         RBRACE,
         LBRACK,
         RBRACK,
+        EQUALS,
 
         // Keywords
         IF,
