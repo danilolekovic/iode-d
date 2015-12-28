@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Iode")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("The Iode programming language.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Iode")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright © 2015 Danilo Lekovic")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

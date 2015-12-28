@@ -2,7 +2,6 @@
 using Iode.Analysis.Syntactic;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
 
