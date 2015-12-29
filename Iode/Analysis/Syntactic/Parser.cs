@@ -310,7 +310,22 @@ namespace Iode.Analysis.Syntactic
                         }
                         else if (type == "str")
                         {
-                            // todo
+                            if (value.type == NodeType.VARIABLE)
+                            {
+                                VariableNode vn = (VariableNode) value;
+
+                                if (vn.variableType != NodeType.STRING)
+                                {
+                                    throw new ParsingException("Expected an object type of string", line);
+                                }
+                            }
+                            else if (value.type == NodeType.STRING)
+                            {
+                            }
+                            else
+                            {
+                                throw new ParsingException("Expected an object type of string", line);
+                            }
                         }
                         else if (type == "bool")
                         {

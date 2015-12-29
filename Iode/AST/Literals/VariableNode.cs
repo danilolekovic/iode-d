@@ -20,9 +20,13 @@ namespace Iode.AST
         // Name of the variable
         public string name { get; set; }
 
+        // Type of value
+        public NodeType variableType { get; set; }
+
         public VariableNode(string name)
         {
             this.name = name;
+            this.variableType = Stash.getVariable(name).type;
         }
 
         public override void generate(ILGenerator ilg)

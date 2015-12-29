@@ -28,7 +28,7 @@ namespace Iode.CodeGen
 
             Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Initializing..");
 
-            Lexer lexer = new Lexer("msg = 124 -> int\nputs(msg)\n");
+            Lexer lexer = new Lexer("smth = \"Hello\"\nmsg = smth -> string\nputs(msg)\n");
             Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Tokenizing..");
             lexer.tokenize();
 
