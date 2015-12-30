@@ -1,4 +1,5 @@
 ﻿using Iode.CodeGen;
+using Iode.Tests;
 using System;
 
 namespace Iode
@@ -8,7 +9,7 @@ namespace Iode
         static void Main(string[] args)
         {
             Console.Title = "Iode";
-            IodeGenerator.init("Test");
+            IfTest.init("Test");
             Console.ReadLine();
         }
     }

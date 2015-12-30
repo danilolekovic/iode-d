@@ -7,6 +7,8 @@
         CALL,
         STRING,
         BOOLEAN,
-        VARIABLE
+        VARIABLE,
+        IF,
+        NULL
     }
 }

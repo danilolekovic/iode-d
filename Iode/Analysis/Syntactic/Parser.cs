@@ -395,6 +395,18 @@ namespace Iode.Analysis.Syntactic
         }
 
         /// <summary>
+        /// Parses a null object
+        /// ::
+        /// 'null'
+        /// </summary>
+        /// <returns>NullNode</returns>
+        public NullNode parseNull()
+        {
+            nextToken();
+            return new NullNode();
+        }
+
+        /// <summary>
         /// Parses the next expression
         /// </summary>
         /// <returns>Node</returns>
@@ -412,6 +424,8 @@ namespace Iode.Analysis.Syntactic
                     return parseBoolean();
                 case TokenType.IDENTIFIER:
                     return parseVariable();
+                case TokenType.NIL:
+                    return parseNull();
                 default:
                     throw new ParsingException("Invalid token: " + t.ToString(), line);
             }

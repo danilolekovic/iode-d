@@ -96,6 +96,7 @@
     <Compile Include="AST\Literals\StringNode.cs" />
     <Compile Include="AST\Literals\NumberNode.cs" />
     <Compile Include="AST\Literals\VariableNode.cs" />
+    <Compile Include="AST\Statements\IfNode.cs" />
     <Compile Include="CodeGen\IodeGenerator.cs" />
     <Compile Include="CodeGen\Stash.cs" />
     <Compile Include="Exceptions\CodeGenException.cs" />
@@ -103,14 +104,13 @@
     <Compile Include="Library\Puts.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\IfTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Resources\variables.iode" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AST\Statements\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
