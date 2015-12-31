@@ -93,7 +93,7 @@ namespace Iode.Analysis.Syntactic
         {
             pos++;
 
-            if (peekCheck(TokenType.NEWLINE))
+            if (peekCheck(TokenType.NEWLINE) && peekToken().value != ";")
             {
                 line++;
             }
@@ -106,10 +106,17 @@ namespace Iode.Analysis.Syntactic
         /// </summary>
         public void skipNewline()
         {
-            if (peekCheck(TokenType.NEWLINE))
+            if (!(totalTokens >= pos))
             {
-                line++; // new line
-                nextToken();
+                if (peekCheck(TokenType.NEWLINE) && peekToken().value != ";")
+                {
+                    line++; // new line
+                }
+
+                if (peekCheck(TokenType.NEWLINE))
+                {
+                    nextToken();
+                }
             }
         }
 
@@ -410,7 +417,7 @@ namespace Iode.Analysis.Syntactic
 
                             body.Add(nextNode);
                         }
-
+                        
                         if (peekCheck(TokenType.RBRACE))
                         {
                             nextToken();
@@ -474,6 +481,18 @@ namespace Iode.Analysis.Syntactic
         }
 
         /// <summary>
+        /// Parses a newline
+        /// ::
+        /// \n
+        /// </summary>
+        /// <returns>NewlineNode</returns>
+        public NewlineNode parseNewline()
+        {
+            nextToken();
+            return new NewlineNode();
+        }
+
+        /// <summary>
         /// Parses the next expression
         /// </summary>
         /// <returns>Node</returns>
@@ -513,6 +532,8 @@ namespace Iode.Analysis.Syntactic
                     return parseIdentifier();
                 case TokenType.IF:
                     return parseIf();
+                case TokenType.NEWLINE:
+                    return parseNewline();
                 default:
                     throw new ParsingException("Invalid token: " + t.ToString(), line);
             }

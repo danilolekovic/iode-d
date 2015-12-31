@@ -88,6 +88,7 @@
     <Compile Include="Analysis\Lexical\Token.cs" />
     <Compile Include="Analysis\Lexical\TokenType.cs" />
     <Compile Include="Analysis\Syntactic\Parser.cs" />
+    <Compile Include="AST\Expressions\NewlineNode.cs" />
     <Compile Include="AST\Literals\BooleanNode.cs" />
     <Compile Include="AST\Expressions\CallNode.cs" />
     <Compile Include="AST\Expressions\DeclarationNode.cs" />

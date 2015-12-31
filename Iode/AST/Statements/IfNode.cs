@@ -36,12 +36,17 @@ namespace Iode.AST
 
         public override void generate(ILGenerator ilg)
         {
-            // doesn't work..?
-            Label exit = ilg.DefineLabel();
-            ilg.Emit(OpCodes.Brfalse, exit);
-            ilg.Emit(OpCodes.Ldstr, "Hey");
-            ilg.Emit(OpCodes.Call, typeof(Puts).GetMethod("puts", new Type[] { typeof(string) }));
-            ilg.MarkLabel(exit);
+            comparison.generate(ilg);
+
+            var toEnd = ilg.DefineLabel();
+            ilg.Emit(OpCodes.Brfalse, toEnd);
+            
+            foreach (Node n in body)
+            {
+                n.generate(ilg);
+            }
+
+            ilg.MarkLabel(toEnd);
         }
 
         public override string ToString()

@@ -1,9 +1,6 @@
-﻿using Iode.Analysis.Lexical;
-using Iode.Analysis.Syntactic;
-using Iode.AST;
+﻿using Iode.AST;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -24,31 +21,15 @@ namespace Iode.Tests
             moduleBuilder = assemblyBuilder.DefineDynamicModule(an.Name, programName + ".exe");
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType("Iode." + programName, TypeAttributes.Public | TypeAttributes.Class);
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("Main", MethodAttributes.Public | MethodAttributes.Static, typeof(void), new Type[] { typeof(string[]) });
+            var methodBuilder = new DynamicMethod("Main", typeof(void), null);
+            var ilGenerator = methodBuilder.GetILGenerator();
 
-            ILGenerator ilg = methodBuilder.GetILGenerator();
+            new IfNode(new BooleanNode(true), new List<Node>() { new CallNode("puts", new List<Node>() { new StringNode("Hello") }) }).generate(ilGenerator);
 
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Initializing..");
+            ilGenerator.Emit(OpCodes.Ret);
 
-            IfNode node = new IfNode(null, null); // null for now
-            node.generate(ilg);
-
-            Type t = typeBuilder.CreateType();
-            assemblyBuilder.SetEntryPoint(methodBuilder, PEFileKinds.ConsoleApplication);
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Saved exe..");
-            assemblyBuilder.Save(programName + ".exe");
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Running exe..");
-
-            var p = new Process();
-
-            p.StartInfo = new ProcessStartInfo(programName + ".exe")
-            {
-                UseShellExecute = false
-            };
-
-            p.Start();
-            p.WaitForExit();
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Finished.");
+            var @delegate = (Action)methodBuilder.CreateDelegate(typeof(Action));
+            @delegate();
         }
     }
 }

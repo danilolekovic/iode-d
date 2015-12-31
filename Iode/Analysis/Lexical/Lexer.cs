@@ -178,11 +178,11 @@ namespace Iode.Analysis.Lexical
                 }
 
                 // checking for whitespace & newlines
-                else if (code[pos] == '\n')
+                else if (code[pos] == '\n' || code[pos] == ';')
                 {
                     line++;
                     pos++;
-                    tokens.Add(new Token(TokenType.NEWLINE, "\n"));
+                    tokens.Add(new Token(TokenType.NEWLINE, code[pos].ToString()));
                 }
                 else if (char.IsWhiteSpace(code[pos]))
                 {

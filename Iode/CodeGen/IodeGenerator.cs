@@ -22,44 +22,23 @@ namespace Iode.CodeGen
             moduleBuilder = assemblyBuilder.DefineDynamicModule(an.Name, programName + ".exe");
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType("Iode." + programName, TypeAttributes.Public | TypeAttributes.Class);
-            MethodBuilder methodBuilder = typeBuilder.DefineMethod("Main", MethodAttributes.Public | MethodAttributes.Static, typeof(int), new Type[] { typeof(string[]) });
+            var methodBuilder = new DynamicMethod("Main", typeof(void), null);
+            var ilGenerator = methodBuilder.GetILGenerator();
 
-            ILGenerator ilg = methodBuilder.GetILGenerator();
-
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Initializing..");
-
-            Lexer lexer = new Lexer("smth = \"Hello\"\nmsg = smth -> string\nputs(msg)\n");
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Tokenizing..");
+            Lexer lexer = new Lexer("if(true){puts(\"Hello\");}");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Parsing..");
             
             while (parser.pos != parser.totalTokens)
             {
-                parser.parse().generate(ilg);
+                parser.parse().generate(ilGenerator);
             }
 
-            ilg.Emit(OpCodes.Ldc_I4_0);
-            ilg.Emit(OpCodes.Ret);
+            ilGenerator.Emit(OpCodes.Ret);
 
-            Type t = typeBuilder.CreateType();
-            assemblyBuilder.SetEntryPoint(methodBuilder, PEFileKinds.ConsoleApplication);
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Saved exe..");
-            assemblyBuilder.Save(programName + ".exe");
-
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Running exe..");
-
-            var p = new Process();
-
-            p.StartInfo = new ProcessStartInfo(programName + ".exe")
-            {
-                UseShellExecute = false
-            };
-
-            p.Start();
-            p.WaitForExit();
-            Console.WriteLine("[" + DateTime.Now.ToString("hh.mm.ss.ffffff") + "] Finished.");
+            var @delegate = (Action)methodBuilder.CreateDelegate(typeof(Action));
+            @delegate();
         }
     }
 }
