@@ -373,6 +373,73 @@ namespace Iode.Analysis.Syntactic
         }
 
         /// <summary>
+        /// Parses an if statement
+        /// ::
+        /// if (...) { ... }
+        /// </summary>
+        /// <returns>IfNode</returns>
+        public IfNode parseIf()
+        {
+            nextToken();
+            skipNewline();
+
+            if (peekCheck(TokenType.LPAREN))
+            {
+                nextToken();
+                skipNewline();
+
+                Node condition = parseExpression();
+                skipNewline();
+
+                if (peekCheck(TokenType.RPAREN))
+                {
+                    nextToken();
+                    skipNewline();
+
+                    if (peekCheck(TokenType.LBRACE))
+                    {
+                        nextToken();
+                        skipNewline();
+
+                        List<Node> body = new List<Node>();
+
+                        while (!peekCheck(TokenType.RBRACE))
+                        {
+                            var nextNode = parse();
+                            skipNewline();
+
+                            body.Add(nextNode);
+                        }
+
+                        if (peekCheck(TokenType.RBRACE))
+                        {
+                            nextToken();
+                            skipNewline();
+
+                            return new IfNode(condition, body);
+                        }
+                        else
+                        {
+                            throw new ParsingException("Expected a \"}\"", line);
+                        }
+                    }
+                    else
+                    {
+                        throw new ParsingException("Expected a \"{\"", line);
+                    }
+                }
+                else
+                {
+                    throw new ParsingException("Expected a \")\"", line);
+                }
+            }
+            else
+            {
+                throw new ParsingException("Expected a \"(\"", line);
+            }
+        }
+
+        /// <summary>
         /// Parses a variable
         /// ::
         /// [A-Za-z][A-Za-z0-9]*
@@ -444,6 +511,8 @@ namespace Iode.Analysis.Syntactic
             {
                 case TokenType.IDENTIFIER:
                     return parseIdentifier();
+                case TokenType.IF:
+                    return parseIf();
                 default:
                     throw new ParsingException("Invalid token: " + t.ToString(), line);
             }

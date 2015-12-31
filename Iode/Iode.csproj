@@ -91,6 +91,7 @@
     <Compile Include="AST\Literals\BooleanNode.cs" />
     <Compile Include="AST\Expressions\CallNode.cs" />
     <Compile Include="AST\Expressions\DeclarationNode.cs" />
+    <Compile Include="AST\Literals\NullNode.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="AST\NodeType.cs" />
     <Compile Include="AST\Literals\StringNode.cs" />
