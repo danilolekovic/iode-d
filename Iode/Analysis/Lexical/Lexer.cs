@@ -180,9 +180,9 @@ namespace Iode.Analysis.Lexical
                 // checking for whitespace & newlines
                 else if (code[pos] == '\n' || code[pos] == ';')
                 {
+                    tokens.Add(new Token(TokenType.NEWLINE, code[pos].ToString()));
                     line++;
                     pos++;
-                    tokens.Add(new Token(TokenType.NEWLINE, code[pos].ToString()));
                 }
                 else if (char.IsWhiteSpace(code[pos]))
                 {

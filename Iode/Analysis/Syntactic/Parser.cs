@@ -319,7 +319,7 @@ namespace Iode.Analysis.Syntactic
                         {
                             if (value.type == NodeType.VARIABLE)
                             {
-                                VariableNode vn = (VariableNode) value;
+                                VariableNode vn = (VariableNode)value;
 
                                 if (vn.variableType != NodeType.STRING)
                                 {

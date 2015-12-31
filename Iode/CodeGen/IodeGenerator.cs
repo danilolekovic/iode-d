@@ -1,7 +1,6 @@
 ﻿using Iode.Analysis.Lexical;
 using Iode.Analysis.Syntactic;
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -25,7 +24,7 @@ namespace Iode.CodeGen
             var methodBuilder = new DynamicMethod("Main", typeof(void), null);
             var ilGenerator = methodBuilder.GetILGenerator();
 
-            Lexer lexer = new Lexer("if(true){puts(\"Hello\");}");
+            Lexer lexer = new Lexer("puts(\"Hello\");");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);
