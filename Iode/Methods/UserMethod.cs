@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Iode.AST;
+using System;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace Iode.Methods
@@ -22,6 +24,25 @@ namespace Iode.Methods
         /// Argument types that are supposed to be passed to the method
         /// </summary>
         public Type[] types { get; set; }
+
+        /// <summary>
+        /// Code inside the method
+        /// </summary>
+        public List<Node> body { get; set; }
+
+        /// <summary>
+        /// List of param names
+        /// </summary>
+        public List<string> names { get; set; }
+
+        public UserMethod(string name, Type returnType, Type[] types, List<Node> body, List<string> names)
+        {
+            this.name = name;
+            this.returnType = returnType;
+            this.types = types;
+            this.body = body;
+            this.names = names;
+        }
 
         /// <summary>
         /// Creates a DynamicMethod

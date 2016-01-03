@@ -4,15 +4,15 @@ using System;
 namespace Iode.Library
 {
     /// <summary>
-    /// Outputs a newline to the display
+    /// Outputs a number to the display
     /// </summary>
-    public class NewLine : LibraryMethod
+    public class PutsNumber : LibraryMethod
     {
         public override string name
         {
             get
             {
-                return "newln";
+                return "puts_i";
             }
         }
 
@@ -28,13 +28,13 @@ namespace Iode.Library
         {
             get
             {
-                return new Type[] { };
+                return new Type[] { typeof(double) };
             }
         }
 
-        public static void generate()
+        public static void generate(double msg)
         {
-            Console.WriteLine();
+            Console.WriteLine(msg);
         }
     }
 }

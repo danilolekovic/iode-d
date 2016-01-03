@@ -15,6 +15,7 @@ namespace Iode.AST
                 return NodeType.NULL;
             }
         }
+
         public override void generate(ILGenerator ilg)
         {
             ilg.Emit(OpCodes.Ldnull);

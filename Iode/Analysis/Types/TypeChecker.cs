@@ -5,6 +5,60 @@ namespace Iode.Analysis.Types
 {
     public class TypeChecker
     {
+        /// <summary>
+        /// Attempts to compute the type of the specified node
+        /// </summary>
+        /// <param name="value">The node</param>
+        /// <returns>Type</returns>
+        public static Type getType(Node value)
+        {
+            if (value.type == NodeType.VARIABLE)
+            {
+                double dbl = 0;
+                VariableNode vn = (VariableNode)value;
+                bool bl = false;
+
+                if (bool.TryParse(value.ToString(), out bl))
+                {
+                    return typeof(bool);
+                }
+                else if (vn.variableType == NodeType.STRING)
+                {
+                    return typeof(string);
+                }
+                else if (double.TryParse(value.ToString(), out dbl) || value.type == NodeType.BINARY)
+                {
+                    return typeof(int);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else if (value.type == NodeType.NUMBER || value.type == NodeType.BINARY)
+            {
+                return typeof(int);
+            }
+            else if (value.type == NodeType.STRING)
+            {
+                return typeof(string);
+            }
+            else if (value.type == NodeType.BOOLEAN)
+            {
+                return typeof(bool);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified value is a [type]
+        /// </summary>
+        /// <param name="value">Node to be compared</param>
+        /// <param name="type">Type compared to</param>
+        /// <returns>Boolean</returns>
         public static bool sameType(Node value, Type type)
         {
             if (type == typeof(int))
@@ -72,6 +126,10 @@ namespace Iode.Analysis.Types
                 {
                     return false;
                 }
+            }
+            else if (type == typeof(Type))
+            {
+                return true;
             }
             else
             {

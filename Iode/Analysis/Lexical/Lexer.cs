@@ -108,7 +108,7 @@ namespace Iode.Analysis.Lexical
                     }
                     else if (str == "def")
                     {
-                        tokens.Add(new Token(TokenType.FUNCTION, str));
+                        tokens.Add(new Token(TokenType.DEF, str));
                     }
 
                     // checking for bools and nil values

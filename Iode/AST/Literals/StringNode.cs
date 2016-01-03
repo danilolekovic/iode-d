@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection.Emit;
+﻿using System.Reflection.Emit;
 
 namespace Iode.AST
 {
@@ -16,7 +15,9 @@ namespace Iode.AST
             }
         }
 
-        // String value
+        /// <summary>
+        /// String value
+        /// </summary>
         public string value { get; set; }
 
         public StringNode(string value)

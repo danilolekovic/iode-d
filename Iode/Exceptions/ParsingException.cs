@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Iode.Analysis.Syntactic;
+using System;
 using System.Runtime.Serialization;
 
 namespace Iode.Exceptions
@@ -8,28 +9,31 @@ namespace Iode.Exceptions
     /// </summary>
     public class ParsingException : Exception
     {
-        public int line = 0;
+        public Parser parser { get; set; }
+        public string msg { get; set; }
 
-        public ParsingException(string message, int line) : base(message)
+        public ParsingException(string message, Parser parser) : base(message)
         {
-            this.line = line;
+            this.parser = parser;
+            this.msg = message + " on line #" + parser.line + ". Code: " + parser.lexer.code.Split('\n')[parser.line - 1];
         }
 
-        public ParsingException(string message, Exception innerException, int line) : base(message, innerException)
+        public ParsingException(string message, Exception innerException, Parser parser) : base(message, innerException)
         {
-            this.line = line;
+            this.parser = parser;
+            this.msg = message + " on line #" + parser.line + ". Code: " + parser.lexer.code.Split('\n')[parser.line - 1];
         }
 
-        protected ParsingException(SerializationInfo info, StreamingContext context, int line) : base(info, context)
+        protected ParsingException(SerializationInfo info, StreamingContext context, Parser parser) : base(info, context)
         {
-            this.line = line;
+            this.parser = parser;
         }
 
         public override string Message
         {
             get
             {
-                return base.Message + " on line #" + line;
+                return msg;
             }
         }
     }

@@ -73,9 +73,9 @@ namespace Iode.AST
                     ilg.Emit(OpCodes.Call, lm.GetType().GetMethod("generate", lm.types));
                 }
             }
-            else
+            else if (Stash.methodExists(name))
             {
-                throw new CodeGenException("Undefined method: " + name);
+                // todo
             }
         }
 

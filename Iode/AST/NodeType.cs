@@ -9,6 +9,8 @@
         BOOLEAN,
         VARIABLE,
         IF,
-        NULL
+        NULL,
+        BINARY,
+        METHOD
     }
 }

@@ -16,7 +16,9 @@ namespace Iode.AST
             }
         }
 
-        // Number value
+        /// <summary>
+        /// Double value
+        /// </summary>
         public double value { get; set; }
 
         public NumberNode(double value)
