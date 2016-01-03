@@ -1,3 +1,0 @@
-name = "Joe"
-
-puts name
