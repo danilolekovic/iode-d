@@ -89,6 +89,7 @@
     <Compile Include="Analysis\Lexical\TokenType.cs" />
     <Compile Include="Analysis\Syntactic\Parser.cs" />
     <Compile Include="Analysis\Types\TypeChecker.cs" />
+    <Compile Include="AST\Expressions\LongDeclarationNode.cs" />
     <Compile Include="AST\Expressions\MethodNode.cs" />
     <Compile Include="AST\Expressions\NewlineNode.cs" />
     <Compile Include="AST\Literals\BinaryNode.cs" />
@@ -107,7 +108,6 @@
     <Compile Include="Exceptions\CodeGenException.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="Library\Puts.cs" />
-    <Compile Include="Library\PutsNumber.cs" />
     <Compile Include="Methods\IMethod.cs" />
     <Compile Include="Methods\LibraryMethod.cs" />
     <Compile Include="Methods\Method.cs" />

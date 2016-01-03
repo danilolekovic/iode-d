@@ -14,18 +14,31 @@ namespace Iode.CodeGen
     /// </summary>
     public class Stash
     {
+        /// <summary>
+        /// Keeps track of all global variables
+        /// </summary>
         public static Dictionary<string, Node> variables = new Dictionary<string, Node>()
         {
             { "version_iode", new StringNode("1.0.0.0") }
         };
 
+        /// <summary>
+        /// Keeps track of all built-in methods
+        /// </summary>
         public static Dictionary<string, LibraryMethod> builtIns = new Dictionary<string, LibraryMethod>()
         {
-            { "puts", new Puts() },
-            { "puts_i", new PutsNumber() }
+            { "puts", new Puts() }
         };
 
+        /// <summary>
+        /// Keeps track of all user-defined methods
+        /// </summary>
         public static Dictionary<string, UserMethod> userMethods = new Dictionary<string, UserMethod>();
+
+        /// <summary>
+        /// Keeps track of all methods that have already been loaded
+        /// </summary>
+        public static List<string> loadedMethods = new List<string>();
 
         /// <summary>
         /// Checks if the specified variable has been declared yet

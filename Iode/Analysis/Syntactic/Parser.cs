@@ -169,54 +169,6 @@ namespace Iode.Analysis.Syntactic
         }
 
         /// <summary>
-        /// Parses a variable declaration
-        /// ::
-        /// var [name] = [value]
-        /// </summary>
-        /// <returns>DeclarationNode</returns>
-        public DeclarationNode parseDeclaration()
-        {
-            // eat up "var"
-            nextToken();
-            skipNewline();
-
-            // check for a name
-            if (peekCheck(TokenType.IDENTIFIER))
-            {
-                string name = nextToken().getValue();
-                skipNewline();
-
-                // check for an equals sign
-                if (peekCheck(TokenType.EQUALS))
-                {
-                    nextToken();
-                    skipNewline();
-
-                    Node value = parseExpression();
-
-                    if (peekCheck(TokenType.NEWLINE))
-                    {
-                        skipNewline();
-
-                        return new DeclarationNode(name, value);
-                    }
-                    else
-                    {
-                        throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
-                    }
-                }
-                else
-                {
-                    throw new ParsingException("Expected \"=\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
-                }
-            }
-            else
-            {
-                throw new ParsingException("Expected a variable name, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
-            }
-        }
-
-        /// <summary>
         /// Parses an identifier
         /// ::
         /// [ident] = [value]
@@ -369,6 +321,7 @@ namespace Iode.Analysis.Syntactic
                     throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                 }
 
+                Stash.pushVariable(ident, value);
                 return new DeclarationNode(ident, value);
             }
 
@@ -447,6 +400,60 @@ namespace Iode.Analysis.Syntactic
         }
 
         /// <summary>
+        /// Parses mass variable declaration
+        /// ::
+        /// (a, b, c..) = 1, 2, 3..
+        /// </summary>
+        /// <returns>LongDeclarationNode</returns>
+        public LongDeclarationNode parseLongDeclaration()
+        {
+            nextTokenNewline();
+            List<string> names = parseListNames();
+            skipNewline();
+
+            if (peekCheck(TokenType.RPAREN))
+            {
+                nextTokenNewline();
+            }
+            else
+            {
+                throw new ParsingException("Expected \")\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
+            }
+
+            if (peekCheck(TokenType.EQUALS))
+            {
+                nextTokenNewline();
+            }
+            else
+            {
+                throw new ParsingException("Expected \"=\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
+            }
+
+            List<Node> values = parseListNodes();
+
+            if (peekCheck(TokenType.NEWLINE))
+            {
+                skipNewline();
+            }
+            else
+            {
+                throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
+            }
+
+            if (names.Count != values.Count)
+            {
+                throw new CodeGenException("Expected " + names.Count + " values, got " + values.Count);
+            }
+
+            for (int i = 0; i < names.Count; i++)
+            {
+                Stash.pushVariable(names[i], values[i]);
+            }
+
+            return new LongDeclarationNode(names, values);
+        }
+
+        /// <summary>
         /// Parses a variable
         /// ::
         /// [A-Za-z][A-Za-z0-9]*
@@ -490,6 +497,77 @@ namespace Iode.Analysis.Syntactic
         {
             nextToken();
             return new NewlineNode();
+        }
+
+        /// <summary>
+        /// Parses a list of identifiers
+        /// </summary>
+        /// <returns>List of identifiers</returns>
+        public List<string> parseListNames()
+        {
+            List<string> paramList = new List<string>();
+
+            if (peekCheck(TokenType.IDENTIFIER))
+            {
+                paramList.Add(nextToken().value);
+                skipNewline();
+            }
+            else
+            {
+                throw new ParsingException("Expected an identifier", this);
+            }
+
+            if (peekCheck(TokenType.COMMA))
+            {
+                while (peekCheck(TokenType.COMMA))
+                {
+                    nextTokenNewline();
+
+                    if (peekCheck(TokenType.IDENTIFIER))
+                    {
+                        paramList.Add(nextToken().value);
+                        skipNewline();
+                    }
+                    else
+                    {
+                        throw new ParsingException("Expected an identifier", this);
+                    }
+                }
+
+                return paramList;
+            }
+            else
+            {
+                throw new ParsingException("Expected a comma in the list", this);
+            }
+        }
+
+        /// <summary>
+        /// Parses a list of expressions
+        /// </summary>
+        /// <returns>List of nodes</returns>
+        public List<Node> parseListNodes()
+        {
+            List<Node> paramList = new List<Node>();
+
+            paramList.Add(parseExpression());
+            skipNewline();
+
+            if (peekCheck(TokenType.COMMA))
+            {
+                while (peekCheck(TokenType.COMMA))
+                {
+                    nextTokenNewline();
+                    paramList.Add(parseExpression());
+                    skipNewline();
+                }
+
+                return paramList;
+            }
+            else
+            {
+                throw new ParsingException("Expected a comma in the list", this);
+            }
         }
 
         /// <summary>
@@ -683,6 +761,8 @@ namespace Iode.Analysis.Syntactic
                     return parseIf();
                 case TokenType.DEF:
                     return parseMethod();
+                case TokenType.LPAREN:
+                    return parseLongDeclaration();
                 case TokenType.NEWLINE:
                     return parseNewline();
                 default:

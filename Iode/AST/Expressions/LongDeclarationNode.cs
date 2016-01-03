@@ -1,14 +1,14 @@
 ﻿using Iode.CodeGen;
 using Iode.Exceptions;
+using System.Collections.Generic;
 using System.Reflection.Emit;
-using System;
 
 namespace Iode.AST
 {
     /// <summary>
-    /// Represents a variable declaration in the AST
+    /// Represents a mass variable declaration in the AST
     /// </summary>
-    public class DeclarationNode : Node
+    public class LongDeclarationNode : Node
     {
         public override NodeType type
         {
@@ -19,19 +19,19 @@ namespace Iode.AST
         }
 
         /// <summary>
-        /// Name of the variable
+        /// All variable names
         /// </summary>
-        public string name { get; set; }
+        public List<string> names { get; set; }
 
         /// <summary>
-        /// Value of the variable
+        /// All variable values
         /// </summary>
-        public Node value { get; set; }
+        public List<Node> values { get; set; }
 
-        public DeclarationNode(string name, Node value)
+        public LongDeclarationNode(List<string> names, List<Node> values)
         {
-            this.name = name;
-            this.value = value;
+            this.names = names;
+            this.values = values;
         }
 
         public override void generate(ILGenerator ilg)
@@ -40,7 +40,7 @@ namespace Iode.AST
 
         public override string ToString()
         {
-            return value.ToString();
+            return names.ToArray().ToString();
         }
     }
 }

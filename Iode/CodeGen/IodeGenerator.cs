@@ -25,7 +25,7 @@ namespace Iode.CodeGen
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType("Iode." + programName, TypeAttributes.Public | TypeAttributes.Class);
 
-            Lexer lexer = new Lexer("def main() { puts(\"Hello!\"); }");
+            Lexer lexer = new Lexer("def main() { (msg, name) = \"Hello\", \"John\"; puts(name); }");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);
@@ -41,6 +41,15 @@ namespace Iode.CodeGen
                 var methodBuilder = Stash.generateMethod("main", typeBuilder.Module);
                 var ilGenerator = methodBuilder.GetILGenerator();
                 List<Node> mainMethod = Stash.getMethod("main").body;
+                Stash.loadedMethods.Add("main");
+
+                foreach (Node n in ast)
+                {
+                    if (n.type == NodeType.DECLARATION)
+                    {
+                        n.generate(ilGenerator); // generate all variables
+                    }
+                }
 
                 foreach (Node n in mainMethod)
                 {
@@ -54,7 +63,7 @@ namespace Iode.CodeGen
             }
             else
             {
-                throw new CodeGenException("No main function in program.");
+                throw new CodeGenException("0");
             }
         }
     }
