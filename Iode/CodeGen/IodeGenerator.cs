@@ -1,7 +1,9 @@
 ﻿using Iode.Analysis.Lexical;
 using Iode.Analysis.Syntactic;
+using Iode.AST;
+using Iode.Exceptions;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -22,23 +24,38 @@ namespace Iode.CodeGen
             moduleBuilder = assemblyBuilder.DefineDynamicModule(an.Name, programName + ".exe");
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType("Iode." + programName, TypeAttributes.Public | TypeAttributes.Class);
-            var methodBuilder = new DynamicMethod("Main", typeof(void), null);
-            var ilGenerator = methodBuilder.GetILGenerator();
 
-            Lexer lexer = new Lexer("if(true){puts(\"Hello\");}");
+            Lexer lexer = new Lexer("def main() { puts(\"Hello!\"); }");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);
+            List<Node> ast = new List<Node>();
             
             while (parser.pos != parser.totalTokens)
             {
-                parser.parse().generate(ilGenerator);
+                ast.Add(parser.parse());
             }
 
-            ilGenerator.Emit(OpCodes.Ret);
+            if (Stash.methodExists("main"))
+            {
+                var methodBuilder = Stash.generateMethod("main", typeBuilder.Module);
+                var ilGenerator = methodBuilder.GetILGenerator();
+                List<Node> mainMethod = Stash.getMethod("main").body;
 
-            var @delegate = (Action)methodBuilder.CreateDelegate(typeof(Action));
-            @delegate();
+                foreach (Node n in mainMethod)
+                {
+                    n.generate(ilGenerator);
+                }
+
+                ilGenerator.Emit(OpCodes.Ret);
+
+                var @delegate = (Action)methodBuilder.CreateDelegate(typeof(Action));
+                @delegate();
+            }
+            else
+            {
+                throw new CodeGenException("No main function in program.");
+            }
         }
     }
 }

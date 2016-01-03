@@ -17,10 +17,14 @@ namespace Iode.AST
             }
         }
 
-        // Name of the variable
+        /// <summary>
+        /// Name of the variable
+        /// </summary>
         public string name { get; set; }
 
-        // Type of value
+        /// <summary>
+        /// Type of value
+        /// </summary>
         public NodeType variableType { get; set; }
 
         public VariableNode(string name)

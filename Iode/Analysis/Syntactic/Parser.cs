@@ -202,17 +202,17 @@ namespace Iode.Analysis.Syntactic
                     }
                     else
                     {
-                        throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                        throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                     }
                 }
                 else
                 {
-                    throw new ParsingException("Expected \"=\", got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                    throw new ParsingException("Expected \"=\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                 }
             }
             else
             {
-                throw new ParsingException("Expected a variable name, got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                throw new ParsingException("Expected a variable name, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
             }
         }
 
@@ -254,7 +254,7 @@ namespace Iode.Analysis.Syntactic
                     }
                     else
                     {
-                        throw new ParsingException("Expected a \",\" or a \")\", got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                        throw new ParsingException("Expected a \",\" or a \")\", got a \"" + peekToken().value.ToString().ToLower() + "\"", this);
                     }
                 }
 
@@ -264,7 +264,7 @@ namespace Iode.Analysis.Syntactic
                 }
                 else
                 {
-                    throw new ParsingException("Expected a \")\", got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                    throw new ParsingException("Expected a \")\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                 }
 
                 if (peekCheck(TokenType.NEWLINE))
@@ -273,7 +273,7 @@ namespace Iode.Analysis.Syntactic
                 }
                 else
                 {
-                    throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                    throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                 }
 
                 return new CallNode(ident, args);
@@ -304,7 +304,7 @@ namespace Iode.Analysis.Syntactic
 
                                 if (!double.TryParse(value.ToString(), out dbl))
                                 {
-                                    throw new ParsingException("Expected an object type of int", line);
+                                    throw new ParsingException("Expected an object type of int", this);
                                 }
                             }
                             else if (value.type == NodeType.NUMBER)
@@ -312,18 +312,18 @@ namespace Iode.Analysis.Syntactic
                             }
                             else
                             {
-                                throw new ParsingException("Expected an object type of int", line);
+                                throw new ParsingException("Expected an object type of int", this);
                             }
                         }
                         else if (type == "str")
                         {
                             if (value.type == NodeType.VARIABLE)
                             {
-                                VariableNode vn = (VariableNode) value;
+                                VariableNode vn = (VariableNode)value;
 
                                 if (vn.variableType != NodeType.STRING)
                                 {
-                                    throw new ParsingException("Expected an object type of string", line);
+                                    throw new ParsingException("Expected an object type of string", this);
                                 }
                             }
                             else if (value.type == NodeType.STRING)
@@ -331,7 +331,7 @@ namespace Iode.Analysis.Syntactic
                             }
                             else
                             {
-                                throw new ParsingException("Expected an object type of string", line);
+                                throw new ParsingException("Expected an object type of string", this);
                             }
                         }
                         else if (type == "bool")
@@ -342,7 +342,7 @@ namespace Iode.Analysis.Syntactic
 
                                 if (!bool.TryParse(value.ToString(), out bl))
                                 {
-                                    throw new ParsingException("Expected an object type of boolean", line);
+                                    throw new ParsingException("Expected an object type of boolean", this);
                                 }
                             }
                             else if (value.type == NodeType.BOOLEAN)
@@ -350,13 +350,13 @@ namespace Iode.Analysis.Syntactic
                             }
                             else
                             {
-                                throw new ParsingException("Expected an object type of boolean", line);
+                                throw new ParsingException("Expected an object type of boolean", this);
                             }
                         }
                     }
                     else
                     {
-                        throw new ParsingException("Expected an object type", line);
+                        throw new ParsingException("Expected an object type", this);
                     }
                 }
 
@@ -366,7 +366,7 @@ namespace Iode.Analysis.Syntactic
                 }
                 else
                 {
-                    throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", line);
+                    throw new ParsingException("Expected a newline, got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
                 }
 
                 return new DeclarationNode(ident, value);
@@ -375,7 +375,7 @@ namespace Iode.Analysis.Syntactic
             // Invalid token!
             else
             {
-                throw new ParsingException("Expected \"(\" or \"=\" after the \"" + ident + "\"", line);
+                throw new ParsingException("Expected \"(\" or \"=\" after the \"" + ident + "\"", this);
             }
         }
 
@@ -427,22 +427,22 @@ namespace Iode.Analysis.Syntactic
                         }
                         else
                         {
-                            throw new ParsingException("Expected a \"}\"", line);
+                            throw new ParsingException("Expected a \"}\"", this);
                         }
                     }
                     else
                     {
-                        throw new ParsingException("Expected a \"{\"", line);
+                        throw new ParsingException("Expected a \"{\"", this);
                     }
                 }
                 else
                 {
-                    throw new ParsingException("Expected a \")\"", line);
+                    throw new ParsingException("Expected a \")\"", this);
                 }
             }
             else
             {
-                throw new ParsingException("Expected a \"(\"", line);
+                throw new ParsingException("Expected a \"(\"", this);
             }
         }
 
@@ -464,7 +464,7 @@ namespace Iode.Analysis.Syntactic
             }
             else
             {
-                throw new ParsingException("Undefined variable \"" + ident + "\"", line);
+                throw new ParsingException("Undefined variable \"" + ident + "\"", this);
             }
         }
 
@@ -498,22 +498,171 @@ namespace Iode.Analysis.Syntactic
         /// <returns>Node</returns>
         public Node parseExpression()
         {
-            TokenType t = peekToken().type;
+            Token t = peekToken();
+            Node original;
 
-            switch (t)
+            if (t.type == TokenType.NUMBER)
             {
-                case TokenType.NUMBER:
-                    return parseNumber();
-                case TokenType.STRING:
-                    return parseString();
-                case TokenType.BOOLEAN:
-                    return parseBoolean();
-                case TokenType.IDENTIFIER:
-                    return parseVariable();
-                case TokenType.NIL:
-                    return parseNull();
-                default:
-                    throw new ParsingException("Invalid token: " + t.ToString(), line);
+                original = parseNumber();
+            }
+            else if (t.type == TokenType.STRING)
+            {
+                original = parseString();
+            }
+            else if (t.type == TokenType.BOOLEAN)
+            {
+                original = parseBoolean();
+            }
+            else if (t.type == TokenType.IDENTIFIER)
+            {
+                original = parseVariable();
+            }
+            else if (t.type == TokenType.NIL)
+            {
+                original = parseNull();
+            }
+            else
+            {
+                throw new ParsingException("Invalid token: " + t.value, this);
+            }
+
+            if (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB) || peekCheck(TokenType.DIV) || peekCheck(TokenType.MUL))
+            {
+                Node left = original;
+                char op = peekToken().value[0];
+                Node right = null;
+
+                while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB) || peekCheck(TokenType.DIV) || peekCheck(TokenType.MUL))
+                {
+                    op = nextToken().value[0];
+                    skipNewline();
+                    right = parseExpression();
+                }
+
+                return new BinaryNode(left, op, right);
+            }
+            else
+            {
+                return original;
+            }
+        }
+
+        /// <summary>
+        /// Parses the next method declaration argument
+        /// </summary>
+        /// <returns>TokenType and String</returns>
+        public Dictionary<TokenType, string> parseNextArg(Dictionary<TokenType, string> orig)
+        {
+            Dictionary<TokenType, string> ret = orig;
+
+            if (peekCheck(TokenType.INT) || peekCheck(TokenType.STR) || peekCheck(TokenType.BOOL))
+            {
+                TokenType tt = nextToken().type;
+
+                if (peekCheck(TokenType.IDENTIFIER))
+                {
+                    ret.Add(tt, nextToken().value);
+                    return ret;
+                }
+                else
+                {
+                    throw new ParsingException("Expected an identifier", this);
+                }
+            }
+            else
+            {
+                throw new ParsingException("Expected an object type", this);
+            }
+        }
+
+        /// <summary>
+        /// Parses a method declaration
+        /// ::
+        /// def (...) { ... }
+        /// </summary>
+        /// <returns>MethodNode</returns>
+        public MethodNode parseMethod()
+        {
+            nextTokenNewline();
+
+            if (peekCheck(TokenType.IDENTIFIER))
+            {
+                string name = nextTokenNewline().value;
+
+                if (peekCheck(TokenType.LPAREN))
+                {
+                    nextTokenNewline();
+                    Dictionary<TokenType, string> args = new Dictionary<TokenType, string>();
+                    TokenType retType = TokenType.VOID;
+                    
+                    while (!peekCheck(TokenType.RPAREN))
+                    {
+                        args = parseNextArg(args);
+                        skipNewline();
+                    }
+
+                    if (peekCheck(TokenType.RPAREN))
+                    {
+                        nextTokenNewline();
+
+                        if (peekCheck(TokenType.ARROW))
+                        {
+                            nextTokenNewline();
+
+                            if (peekCheck(TokenType.INT) || peekCheck(TokenType.STR) || peekCheck(TokenType.BOOL))
+                            {
+                                retType = nextToken().type;
+                            }
+                            else
+                            {
+                                throw new ParsingException("Expected an object type", this);
+                            }
+                        }
+
+                        if (peekCheck(TokenType.LBRACE))
+                        {
+                            nextTokenNewline();
+
+                            List<Node> body = new List<Node>();
+
+                            while (!peekCheck(TokenType.RBRACE))
+                            {
+                                var nextNode = parse();
+                                skipNewline();
+
+                                body.Add(nextNode);
+                            }
+
+                            if (peekCheck(TokenType.RBRACE))
+                            {
+                                nextTokenNewline();
+                                var methodNode = new MethodNode(name, retType, args, body);
+                                methodNode.generate(null);
+                                return methodNode;
+                            }
+                            else
+                            {
+                                throw new ParsingException("Expected a \"}\"", this);
+                            }
+                        }
+                        else
+                        {
+                            throw new ParsingException("Expected a \"{\"", this);
+                        }
+                    }
+                    else
+                    {
+                        throw new ParsingException("Expected a \")\"", this);
+                    }
+                }
+                else
+                {
+                    throw new ParsingException("Expected a \"(\"", this);
+                }
+            }
+            else
+            {
+                throw new ParsingException("Expected a method name", this);
             }
         }
 
@@ -532,10 +681,12 @@ namespace Iode.Analysis.Syntactic
                     return parseIdentifier();
                 case TokenType.IF:
                     return parseIf();
+                case TokenType.DEF:
+                    return parseMethod();
                 case TokenType.NEWLINE:
                     return parseNewline();
                 default:
-                    throw new ParsingException("Invalid token: " + t.ToString(), line);
+                    throw new ParsingException("Invalid token: " + t.ToString(), this);
             }
         }
     }

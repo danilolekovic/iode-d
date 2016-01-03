@@ -33,13 +33,14 @@
         // Keywords
         IF,
         ELSE,
-        FUNCTION,
+        DEF,
         VAR,
         INT,
         STR,
         BOOL,
 
         // Special
-        NEWLINE
+        NEWLINE,
+        VOID
     }
 }

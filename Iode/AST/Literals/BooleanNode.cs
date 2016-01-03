@@ -16,7 +16,9 @@ namespace Iode.AST
             }
         }
 
-        // Boolean value
+        /// <summary>
+        /// Boolean value
+        /// </summary>
         public bool value { get; set; }
 
         public BooleanNode(bool value)

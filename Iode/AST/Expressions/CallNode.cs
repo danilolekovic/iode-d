@@ -1,5 +1,8 @@
-﻿using Iode.Exceptions;
+﻿using Iode.Analysis.Types;
+using Iode.CodeGen;
+using Iode.Exceptions;
 using Iode.Library;
+using Iode.Methods;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -37,16 +40,42 @@ namespace Iode.AST
 
         public override void generate(ILGenerator ilg)
         {
-            if (name.StartsWith("puts"))
+            if (Stash.libMethodExists(name))
             {
-                if (args.Count > 1)
+                LibraryMethod lm = Stash.getLibMethod(name);
+
+                if (args.Count != 0)
                 {
-                    throw new CodeGenException("\"" + name + "\" method accepts 1 argument.");
+                    if (lm.types.Length != args.Count)
+                    {
+                        throw new CodeGenException("Method \"" + name + "\" does not expect " + args.Count + " params, it expects " + lm.types.Length + " params.");
+                    }
+
+                    for (int i = 0; i < args.Count; i++)
+                    {
+                        if (!TypeChecker.sameType(args[i], lm.types[i]))
+                        {
+                            throw new CodeGenException("Method \"" + name + "\": param #" + (i + 1) + " is expected to have the type of \"" + lm.types[i].ToString() + "\"");
+                        }
+                        else
+                        {
+                            args[i].generate(ilg);
+                        }
+                    }
                 }
 
-                ilg.Emit(OpCodes.Ldstr, args[0].ToString());
-
-                ilg.Emit(OpCodes.Call, typeof(Puts).GetMethod("puts", new Type[] { typeof(string) }));
+                if (lm.types.Length == 0)
+                {
+                    ilg.Emit(OpCodes.Call, lm.GetType().GetMethod("generate"));
+                }
+                else
+                {
+                    ilg.Emit(OpCodes.Call, lm.GetType().GetMethod("generate", lm.types));
+                }
+            }
+            else if (Stash.methodExists(name))
+            {
+                // todo
             }
         }
 

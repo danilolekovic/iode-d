@@ -108,7 +108,7 @@ namespace Iode.Analysis.Lexical
                     }
                     else if (str == "def")
                     {
-                        tokens.Add(new Token(TokenType.FUNCTION, str));
+                        tokens.Add(new Token(TokenType.DEF, str));
                     }
 
                     // checking for bools and nil values
@@ -180,9 +180,9 @@ namespace Iode.Analysis.Lexical
                 // checking for whitespace & newlines
                 else if (code[pos] == '\n' || code[pos] == ';')
                 {
+                    tokens.Add(new Token(TokenType.NEWLINE, code[pos].ToString()));
                     line++;
                     pos++;
-                    tokens.Add(new Token(TokenType.NEWLINE, code[pos].ToString()));
                 }
                 else if (char.IsWhiteSpace(code[pos]))
                 {
