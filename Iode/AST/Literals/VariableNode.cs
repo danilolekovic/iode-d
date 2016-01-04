@@ -27,6 +27,14 @@ namespace Iode.AST
         /// </summary>
         public NodeType variableType { get; set; }
 
+        public override dynamic value
+        {
+            get
+            {
+                return Stash.getVariable(name);
+            }
+        }
+
         public VariableNode(string name)
         {
             this.name = name;

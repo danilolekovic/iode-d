@@ -19,11 +19,19 @@ namespace Iode.AST
         /// <summary>
         /// Boolean value
         /// </summary>
-        public bool value { get; set; }
+        public bool _value { get; set; }
+
+        public override dynamic value
+        {
+            get
+            {
+                return this._value;
+            }
+        }
 
         public BooleanNode(bool value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public override void generate(ILGenerator ilg)

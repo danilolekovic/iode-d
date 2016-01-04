@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 
 namespace Iode.AST
 {
@@ -18,11 +19,19 @@ namespace Iode.AST
         /// <summary>
         /// String value
         /// </summary>
-        public string value { get; set; }
+        public string _value { get; set; }
+
+        public override dynamic value
+        {
+            get
+            {
+                return _value;
+            }
+        }
 
         public StringNode(string value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public override void generate(ILGenerator ilg)

@@ -1,5 +1,8 @@
-﻿using Iode.Methods;
+﻿using Iode.AST;
+using Iode.Methods;
 using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace Iode.Library
 {
@@ -28,13 +31,21 @@ namespace Iode.Library
         {
             get
             {
-                return new Type[] { typeof(string) };
+                return new Type[] { typeof(double) };
             }
         }
 
-        public static void generate(string msg)
+        public override void generate(List<Expression> args, ILGenerator ilg)
         {
-            Console.WriteLine(msg);
+            foreach (Expression n in args)
+            {
+                string val = Convert.ToString(n.value);
+                ilg.Emit(OpCodes.Ldstr, val);
+                ilg.Emit(OpCodes.Call, typeof(Console).GetMethod("Write", new Type[] { typeof(string) }));
+            }
+
+            ilg.Emit(OpCodes.Ldstr, "\n");
+            ilg.Emit(OpCodes.Call, typeof(Console).GetMethod("Write", new Type[] { typeof(string) }));
         }
     }
 }

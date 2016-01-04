@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System;
+using System.Reflection.Emit;
 
 namespace Iode.AST
 {
@@ -14,6 +15,15 @@ namespace Iode.AST
                 return NodeType.NULL;
             }
         }
+
+        public override dynamic value
+        {
+            get
+            {
+                return '\n';
+            }
+        }
+
         public override void generate(ILGenerator ilg)
         {
         }

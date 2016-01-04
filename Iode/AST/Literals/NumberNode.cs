@@ -19,16 +19,24 @@ namespace Iode.AST
         /// <summary>
         /// Double value
         /// </summary>
-        public double value { get; set; }
+        public double _value { get; set; }
+
+        public override dynamic value
+        {
+            get
+            {
+                return _value;
+            }
+        }
 
         public NumberNode(double value)
         {
-            this.value = value;
+            this._value = value;
         }
 
         public override void generate(ILGenerator ilg)
         {
-            ilg.Emit(OpCodes.Ldind_I4, value);
+            ilg.Emit(OpCodes.Ldc_I4, value);
         }
 
         public override string ToString()

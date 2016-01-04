@@ -61,7 +61,7 @@ namespace Iode.Analysis.Types
         /// <returns>Boolean</returns>
         public static bool sameType(Node value, Type type)
         {
-            if (type == typeof(int))
+            if (type == typeof(int) || type == typeof(double))
             {
                 if (value.type == NodeType.VARIABLE)
                 {

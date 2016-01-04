@@ -16,6 +16,14 @@ namespace Iode.AST
             }
         }
 
+        public override dynamic value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public override void generate(ILGenerator ilg)
         {
             ilg.Emit(OpCodes.Ldnull);

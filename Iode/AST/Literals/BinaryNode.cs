@@ -16,38 +16,62 @@ namespace Iode.AST
             }
         }
 
-        public Node left { get; set; }
+        public Expression left { get; set; }
         public char op { get; set; }
-        public Node right { get; set; }
+        public Expression right { get; set; }
 
-        public BinaryNode(Node left, char op, Node right)
+        private string _value { get; set; }
+
+        public override dynamic value
+        {
+            get
+            {
+                return _value;
+            }
+        }
+
+        public BinaryNode(Expression left, char op, Expression right)
         {
             this.left = left;
             this.op = op;
             this.right = right;
+
+            if (left.type == NodeType.STRING && right.type == NodeType.STRING)
+            {
+                StringNode leftStr = (StringNode)left;
+                StringNode rightStr = (StringNode)right;
+                this._value = leftStr.value + rightStr.value;
+            }
         }
 
         public override void generate(ILGenerator ilg)
         {
-            left.generate(ilg);
-
-            switch (op)
+            if (left.type == NodeType.NUMBER && right.type == NodeType.NUMBER)
             {
-                case '+':
-                    ilg.Emit(OpCodes.Add);
-                    break;
-                case '-':
-                    ilg.Emit(OpCodes.Sub);
-                    break;
-                case '*':
-                    ilg.Emit(OpCodes.Mul);
-                    break;
-                case '/':
-                    ilg.Emit(OpCodes.Div);
-                    break;
-            }
+                left.generate(ilg);
 
-            right.generate(ilg);
+                switch (op)
+                {
+                    case '+':
+                        ilg.Emit(OpCodes.Add);
+                        break;
+                    case '-':
+                        ilg.Emit(OpCodes.Sub);
+                        break;
+                    case '*':
+                        ilg.Emit(OpCodes.Mul);
+                        break;
+                    case '/':
+                        ilg.Emit(OpCodes.Div);
+                        break;
+                }
+
+                right.generate(ilg);
+            }
+            else if (left.type == NodeType.STRING && right.type == NodeType.STRING)
+            {
+                ilg.Emit(OpCodes.Ldstr, _value);
+            }
         }
 
         public override string ToString()

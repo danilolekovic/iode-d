@@ -187,11 +187,11 @@ namespace Iode.Analysis.Syntactic
                 nextToken();
                 skipNewline();
 
-                List<Node> args = new List<Node>();
+                List<Expression> args = new List<Expression>();
 
                 while (!(peekCheck(TokenType.RPAREN)))
                 {
-                    Node arg = parseExpression();
+                    Expression arg = parseExpression();
                     skipNewline();
 
                     args.Add(arg);
@@ -574,10 +574,10 @@ namespace Iode.Analysis.Syntactic
         /// Parses the next expression
         /// </summary>
         /// <returns>Node</returns>
-        public Node parseExpression()
+        public Expression parseExpression()
         {
             Token t = peekToken();
-            Node original;
+            Expression original;
 
             if (t.type == TokenType.NUMBER)
             {
@@ -606,9 +606,9 @@ namespace Iode.Analysis.Syntactic
 
             if (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB) || peekCheck(TokenType.DIV) || peekCheck(TokenType.MUL))
             {
-                Node left = original;
+                Expression left = original;
                 char op = peekToken().value[0];
-                Node right = null;
+                Expression right = null;
 
                 while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB) || peekCheck(TokenType.DIV) || peekCheck(TokenType.MUL))
                 {

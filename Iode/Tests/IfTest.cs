@@ -24,7 +24,7 @@ namespace Iode.Tests
             var methodBuilder = new DynamicMethod("Main", typeof(void), null);
             var ilGenerator = methodBuilder.GetILGenerator();
 
-            new IfNode(new BooleanNode(true), new List<Node>() { new CallNode("puts", new List<Node>() { new StringNode("Hello") }) }).generate(ilGenerator);
+            new IfNode(new BooleanNode(true), new List<Node>() { new CallNode("puts", new List<Expression>() { new StringNode("Hello") }) }).generate(ilGenerator);
 
             ilGenerator.Emit(OpCodes.Ret);
 

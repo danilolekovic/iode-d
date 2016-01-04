@@ -25,7 +25,7 @@ namespace Iode.CodeGen
 
             TypeBuilder typeBuilder = moduleBuilder.DefineType("Iode." + programName, TypeAttributes.Public | TypeAttributes.Class);
 
-            Lexer lexer = new Lexer("def main() { (msg, name) = \"Hello\", \"John\"; puts(name); }");
+            Lexer lexer = new Lexer("def main() { puts(\"Hello\" + \" world!\"); }");
             lexer.tokenize();
 
             Parser parser = new Parser(lexer);

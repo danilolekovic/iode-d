@@ -26,6 +26,10 @@ namespace Iode.AST
 
     public abstract class Expression : Node
     {
+        /// <summary>
+        /// Value
+        /// </summary>
+        public abstract dynamic value { get; }
     }
 
     public abstract class Statement : Node

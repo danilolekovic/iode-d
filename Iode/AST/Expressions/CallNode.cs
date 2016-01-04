@@ -2,6 +2,7 @@
 using Iode.CodeGen;
 using Iode.Exceptions;
 using Iode.Methods;
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
@@ -28,9 +29,9 @@ namespace Iode.AST
         /// <summary>
         /// Arguments in the call
         /// </summary>
-        public List<Node> args { get; set; }
+        public List<Expression> args { get; set; }
 
-        public CallNode(string name, List<Node> args)
+        public CallNode(string name, List<Expression> args)
         {
             this.name = name;
             this.args = args;
@@ -42,7 +43,7 @@ namespace Iode.AST
             {
                 LibraryMethod lm = Stash.getLibMethod(name);
 
-                if (args.Count != 0)
+                /*if (args.Count != 0)
                 {
                     if (lm.types.Length != args.Count)
                     {
@@ -69,7 +70,9 @@ namespace Iode.AST
                 else
                 {
                     ilg.Emit(OpCodes.Call, lm.GetType().GetMethod("generate", lm.types));
-                }
+                }*/
+
+                lm.generate(args, ilg);
             }
             else if (Stash.methodExists(name))
             {
