@@ -17,7 +17,7 @@ namespace Iode.CodeGen
         /// <summary>
         /// Keeps track of all global variables
         /// </summary>
-        public static Dictionary<string, Node> variables = new Dictionary<string, Node>()
+        public static Dictionary<string, Expression> variables = new Dictionary<string, Expression>()
         {
             { "version_iode", new StringNode("1.0.0.0") }
         };
@@ -64,7 +64,7 @@ namespace Iode.CodeGen
         /// </summary>
         /// <param name="name">Variable name</param>
         /// <param name="value">Variable value</param>
-        public static void pushVariable(string name, Node value)
+        public static void pushVariable(string name, Expression value)
         {
             // not going to use variables.add(.., ..);
             variables[name] = value;
@@ -75,7 +75,7 @@ namespace Iode.CodeGen
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static Node getVariable(string name)
+        public static Expression getVariable(string name)
         {
             return variables[name];
         }

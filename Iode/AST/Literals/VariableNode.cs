@@ -31,7 +31,7 @@ namespace Iode.AST
         {
             get
             {
-                return Stash.getVariable(name);
+                return Stash.getVariable(name).value;
             }
         }
 

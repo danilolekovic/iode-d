@@ -26,9 +26,9 @@ namespace Iode.AST
         /// <summary>
         /// All variable values
         /// </summary>
-        public List<Node> values { get; set; }
+        public List<Expression> values { get; set; }
 
-        public LongDeclarationNode(List<string> names, List<Node> values)
+        public LongDeclarationNode(List<string> names, List<Expression> values)
         {
             this.names = names;
             this.values = values;

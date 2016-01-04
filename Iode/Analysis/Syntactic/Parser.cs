@@ -237,7 +237,7 @@ namespace Iode.Analysis.Syntactic
                 skipNewline();
                 nextToken();
                 skipNewline();
-                Node value = parseExpression();
+                Expression value = parseExpression();
 
                 if (peekCheck(TokenType.ARROW))
                 {
@@ -429,7 +429,7 @@ namespace Iode.Analysis.Syntactic
                 throw new ParsingException("Expected \"=\", got a \"" + peekToken().type.ToString().ToLower() + "\"", this);
             }
 
-            List<Node> values = parseListNodes();
+            List<Expression> values = parseListNodes();
 
             if (peekCheck(TokenType.NEWLINE))
             {
@@ -546,9 +546,9 @@ namespace Iode.Analysis.Syntactic
         /// Parses a list of expressions
         /// </summary>
         /// <returns>List of nodes</returns>
-        public List<Node> parseListNodes()
+        public List<Expression> parseListNodes()
         {
-            List<Node> paramList = new List<Node>();
+            List<Expression> paramList = new List<Expression>();
 
             paramList.Add(parseExpression());
             skipNewline();
