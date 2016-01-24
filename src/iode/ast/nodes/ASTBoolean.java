@@ -18,8 +18,11 @@ public class ASTBoolean extends Node {
 
 	@Override
 	public String generate() {
-		// TODO Auto-generated method stub
-		return null;
+		if (value) {
+			return "1";
+		} else {
+			return "0";
+		}
 	}
 
 	public boolean getValue() {
