@@ -1,0 +1,5 @@
+import stdio
+
+fn main() > Int {
+  printf("Hello world!")
+}
