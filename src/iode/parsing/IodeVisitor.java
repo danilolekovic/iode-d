@@ -5,6 +5,7 @@ import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
+import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
 import iode.ast.nodes.ASTNewline;
@@ -39,6 +40,11 @@ public class IodeVisitor implements IVisitor {
 	@Override
 	public ASTDeclaration Visit(ASTDeclaration decl) {
 		return decl;
+	}
+	
+	@Override
+	public ASTEnum Visit(ASTEnum enumer) {
+		return enumer;
 	}
 
 	@Override

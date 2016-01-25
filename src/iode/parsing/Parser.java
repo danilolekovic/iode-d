@@ -10,6 +10,7 @@ import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
+import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
 import iode.ast.nodes.ASTNewline;
@@ -96,6 +97,8 @@ public class Parser implements IParser {
 			return parseIdentifier();
 		case RETURN:
 			return parseReturn();
+		case ENUM:
+			return parseEnum();
 		case NEWLINE:
 			nextToken();
 			skipNewline();
@@ -281,6 +284,62 @@ public class Parser implements IParser {
 				}
 			} else {
 				Errors.throwException(new ParserException("Expected ':'", line));
+			}
+		} else {
+			Errors.throwException(new ParserException("Expected a name", line));
+		}
+		
+		return null;
+	}
+
+	@Override
+	public ASTEnum parseEnum() {
+		nextToken();
+		skipNewline();
+		
+		if (peekCheck(TokenType.IDENTIFIER)) {
+			String name = nextToken().getValue();
+			skipNewline();
+			
+			if (peekCheck(TokenType.LPAREN)) {
+				nextToken();
+				skipNewline();
+				ArrayList<Node> elements = new ArrayList<Node>();
+				
+				while (!peekCheck(TokenType.RPAREN)) {
+					if (peekCheck(TokenType.IDENTIFIER)) {
+						elements.add(parseVariable());
+					} else {
+						Errors.throwException(new ParserException("Expected an identifier", line));
+					}
+					
+					if (peekCheck(TokenType.COMMA)) {
+						nextToken();
+						skipNewline();
+						continue;
+					} else if (peekCheck(TokenType.RPAREN)) {
+						break;
+					} else {
+						Errors.throwException(new ParserException("Expected ',' or ')'", line));
+					}
+				}
+				
+				if (peekCheck(TokenType.RPAREN)) {
+					nextToken();
+					
+					if (peekCheck(TokenType.NEWLINE)) {
+						nextToken();
+						skipNewline();
+						
+						return new ASTEnum(name, elements);
+					} else {
+						Errors.throwException(new ParserException("Expected a new line", line));
+					}
+				} else {
+					Errors.throwException(new ParserException("Expected ')'", line));
+				}
+			} else {
+				Errors.throwException(new ParserException("Expected '('", line));
 			}
 		} else {
 			Errors.throwException(new ParserException("Expected a name", line));

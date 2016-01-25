@@ -8,6 +8,7 @@ public interface IVisitor {
 	ASTCall Visit(ASTCall call);
 	ASTConstant Visit(ASTConstant constant);
 	ASTDeclaration Visit(ASTDeclaration decl);
+	ASTEnum Visit(ASTEnum enumer);
 	ASTFunction Visit(ASTFunction func);
 	ASTImport Visit(ASTImport imp);
 	ASTNewline Visit(ASTNewline nl);

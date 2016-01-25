@@ -64,6 +64,8 @@ public class Lexer implements ILexer {
 					tokens.add(new Token(TokenType.IMPORT, buffer));
 				} else if (buffer.equals("return")) {
 					tokens.add(new Token(TokenType.RETURN, buffer));
+				} else if (buffer.equals("enum")) {
+					tokens.add(new Token(TokenType.ENUM, buffer));
 				} else if (buffer.equals("true") || buffer.equals("false")) {
 					tokens.add(new Token(TokenType.BOOLEAN, buffer));
 				} else {

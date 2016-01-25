@@ -13,6 +13,7 @@ public enum TokenType {
 	FUNCTION,
 	IMPORT,
 	RETURN,
+	ENUM,
 	
 	// Symbols
 	EQUALS,
