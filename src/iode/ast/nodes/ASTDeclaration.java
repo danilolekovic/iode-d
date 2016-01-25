@@ -2,6 +2,7 @@ package iode.ast.nodes;
 
 import iode.ast.Node;
 import iode.parsing.IVisitor;
+import iode.util.Errors;
 
 public class ASTDeclaration extends Node {
 
@@ -54,6 +55,8 @@ public class ASTDeclaration extends Node {
 			}
 			
 			sb.append("[]");
+		} else {
+			Errors.throwException(new Exception("'" + type + "' is not a valid object type"));
 		}
 		
 		if (value != null) {

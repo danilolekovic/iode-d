@@ -36,7 +36,11 @@ public class ASTFunction extends Node {
 		} else if (returnType.equals("Bool")) {
 			sb.append("bool ");
 		} else if (returnType.equals("String")) {
-			sb.append("string ");
+			sb.append("char *");
+		} else if (returnType.equals("Double")) {
+			sb.append("double ");
+		} else if (returnType.equals("Char")) {
+			sb.append("char ");
 		} else {
 			sb.append("void ");
 		}
@@ -46,7 +50,20 @@ public class ASTFunction extends Node {
 		
 		if (!args.isEmpty()) {
 			for (String name : args.keySet()) {
-				sb.append(args.get(name));
+				if (args.get(name).equals("Int")) {
+					sb.append("int ");
+				} else if (args.get(name).equals("Bool")) {
+					sb.append("bool ");
+				} else if (args.get(name).equals("String")) {
+					sb.append("char *");
+				} else if (args.get(name).equals("Double")) {
+					sb.append("double ");
+				} else if (args.get(name).equals("Char")) {
+					sb.append("char ");
+				} else {
+					sb.append("void ");
+				}
+				
 				sb.append(" ");
 				sb.append(name);
 				sb.append(", ");

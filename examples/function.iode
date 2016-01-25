@@ -1,0 +1,5 @@
+import cstdio
+
+fn printName(String name) > Void {
+  printf("Hey %s!\n", name)
+}

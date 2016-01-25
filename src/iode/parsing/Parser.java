@@ -397,6 +397,8 @@ public class Parser implements IParser {
 							if (peekCheck(TokenType.COMMA)) {
 								nextToken();
 								skipNewline();
+							} else if (peekCheck(TokenType.RPAREN)) {
+								break;
 							} else {
 								Errors.throwException(new ParserException("Expected ','", line));
 							}

@@ -1,4 +1,4 @@
-import windows
+import cwindows
 
 fn main() > Int {
   MessageBox(0, "Blah blah", "App", MB_SETFOREGROUND)

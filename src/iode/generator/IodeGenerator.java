@@ -1,6 +1,7 @@
 package iode.generator;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,9 +18,13 @@ import iode.parsing.Parser;
 import iode.scanning.Lexer;
 
 public class IodeGenerator {
+	public static String currentPath = "";
+	
 	public static void Generate(String filename) {
 		String os = System.getProperty("os.name").toLowerCase();
 		Systems system = detectOS(os);
+		currentPath = Paths.get(filename.replace(".iode", "")).toString().substring(0, Paths.get(filename.replace(".iode", "")).toString().lastIndexOf(File.separator));
+
 		
 		List<String> lines = null;
 		
@@ -146,6 +151,54 @@ public class IodeGenerator {
 			}
 		}
 	}
+	
+	public static void SilentCompile(String filename) {
+		List<String> lines = null;
+		
+		try {
+			lines = Files.readAllLines(Paths.get(filename),
+			        Charset.defaultCharset());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		StringBuilder codeBuilder = new StringBuilder();
+		
+        for (String line : lines) {
+            codeBuilder.append(line + "\n");
+        }
+        
+        String code = codeBuilder.toString();
+		
+		Lexer lexer = new Lexer(code);
+		lexer.tokenize();
+		
+		Parser parser = new Parser(lexer);
+		ArrayList<Node> ast = new ArrayList<Node>();
+		
+		while (parser.getPos() != parser.getTotalTokens()) {
+			ast.add(parser.start());
+		}
+		
+		StringBuilder cBuilder = new StringBuilder();
+		
+		for (Node n : ast) {
+			cBuilder.append(n.generate());
+		}
+		
+		String cCode = cBuilder.toString();
+		
+		PrintWriter writer;
+		
+		try {
+			writer = new PrintWriter(Paths.get(filename.replace(".iode", ".c")).toString(), "UTF-8");
+			writer.print(cCode);
+			writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	public static Systems detectOS(String os) {
         if (isWindows(os)) {
