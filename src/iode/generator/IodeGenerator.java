@@ -16,6 +16,7 @@ import java.util.List;
 import iode.ast.Node;
 import iode.parsing.Parser;
 import iode.scanning.Lexer;
+import iode.util.Stopwatch;
 
 public class IodeGenerator {
 	public static String currentPath = "";
@@ -34,6 +35,8 @@ public class IodeGenerator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		Stopwatch watch = new Stopwatch();
 		
 		StringBuilder codeBuilder = new StringBuilder();
 		
@@ -71,6 +74,8 @@ public class IodeGenerator {
 			e.printStackTrace();
 		}
 		
+		double elapsed = watch.elapsedTime();
+		
 		if (system == Systems.WINDOWS) {
 			String windowsCompiler = "C:\\MinGW\\bin\\gcc.exe";
 			
@@ -78,6 +83,7 @@ public class IodeGenerator {
 			String[] commands = { windowsCompiler, "-o", Paths.get(filename.replace(".iode", ".exe")).toString(), Paths.get(filename.replace(".iode", ".c")).toString() };
 			String[] execCommands = { Paths.get(filename.replace(".iode", ".exe")).toString() };
 			Process proc = null;
+			Stopwatch cWatch = new Stopwatch();
 			
 			try {
 				proc = rt.exec(commands);
@@ -86,6 +92,8 @@ public class IodeGenerator {
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			double cElapsed = cWatch.elapsedTime();
 
 			BufferedReader stdInput = new BufferedReader(new 
 			     InputStreamReader(proc.getInputStream()));
@@ -110,6 +118,8 @@ public class IodeGenerator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			System.out.println("Compiled & executed in " + cElapsed + "ms");
 		} else {
 			String linuxCompiler = "gcc";
 			
@@ -117,6 +127,7 @@ public class IodeGenerator {
 			String[] commands = { linuxCompiler, "-o", Paths.get(filename.replace(".iode", "")).toString(), Paths.get(filename.replace(".iode", ".c")).toString() };
 			String[] execCommands = { "./" + Paths.get(filename.replace(".iode", "")).toString() };
 			Process proc = null;
+			Stopwatch cWatch = new Stopwatch();
 			
 			try {
 				proc = rt.exec(commands);
@@ -125,6 +136,8 @@ public class IodeGenerator {
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			double cElapsed = cWatch.elapsedTime();
 
 			BufferedReader stdInput = new BufferedReader(new 
 			     InputStreamReader(proc.getInputStream()));
@@ -149,7 +162,11 @@ public class IodeGenerator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			System.out.println("Compiled & executed in " + cElapsed + "ms");
 		}
+		
+		System.out.println("Parsed in " + elapsed + "ms");
 	}
 	
 	public static void SilentCompile(String filename) {
