@@ -18,7 +18,7 @@ public class ASTImport extends Node {
 
 	@Override
 	public String generate() {
-		return "#include <" + module + ".h>";
+		return "#include <" + module + ".h>\n";
 	}
 
 	public String getModule() {

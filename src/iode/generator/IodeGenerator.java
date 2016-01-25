@@ -71,7 +71,7 @@ public class IodeGenerator {
 			
 			Runtime rt = Runtime.getRuntime();
 			String[] commands = { windowsCompiler, Paths.get(filename.replace(".iode", ".c")).toString() };
-			String[] execCommands = { "a.exe" };
+			String[] execCommands = { Paths.get("a.exe").toString() };
 			Process proc = null;
 			
 			try {

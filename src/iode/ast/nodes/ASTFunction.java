@@ -55,7 +55,7 @@ public class ASTFunction extends Node {
 			sb.setLength(sb.length() - 2);
 		}
 		
-		sb.append(") {\n");
+		sb.append(") {");
 		
 		for (Node n : body) {
 			sb.append("  ");

@@ -43,11 +43,11 @@ public class Lexer implements ILexer {
 		while (pos < code.length()) {
 			StringBuilder sb = new StringBuilder();
 			
-			if (Character.isLetter(code.charAt(pos))) {
+			if (Character.isLetter(code.charAt(pos)) || code.charAt(pos) == '_') {
 				sb.append(code.charAt(pos));
 				pos++;
 				
-				while (pos < code.length() && Character.isLetterOrDigit(code.charAt(pos))) {
+				while (pos < code.length() && Character.isLetterOrDigit(code.charAt(pos)) || code.charAt(pos) == '_') {
 					sb.append(code.charAt(pos));
 					pos++;
 				}

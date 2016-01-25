@@ -15,6 +15,6 @@ public class ASTNewline extends Node {
 
 	@Override
 	public String generate() {
-		return "\n";
+		return "";
 	}
 }

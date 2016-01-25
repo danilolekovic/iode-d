@@ -20,8 +20,29 @@ public class ASTDeclaration extends Node {
 
 	@Override
 	public String generate() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+				
+		if (value instanceof ASTBoolean) {
+			sb.append("typedef enum { false, true } bool;\n");
+			sb.append("bool ");
+			sb.append(name);
+		} else if (value instanceof ASTNumber) {
+			sb.append("int ");
+			sb.append(name);
+		} else if (value instanceof ASTString) {
+			sb.append("char ");
+			sb.append(name);
+			sb.append("[");
+			ASTString valStr = (ASTString) value;
+			sb.append(valStr.getValue().length());
+			sb.append("]");
+		}
+		
+		sb.append(" = ");
+		sb.append(value.generate());
+		sb.append(";\n");
+		
+		return sb.toString();
 	}
 
 	public String getName() {

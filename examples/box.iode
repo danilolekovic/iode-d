@@ -1,0 +1,6 @@
+import windows
+
+fn main() > Int {
+  MessageBox(0, "Blah blah", "App", MB_SETFOREGROUND)
+  return 0
+}

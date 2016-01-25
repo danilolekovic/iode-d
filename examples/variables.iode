@@ -1,0 +1,7 @@
+let name = "John"
+let age = 22
+let alive = true
+
+fn main() > Int {
+  printf("%s", name)
+}
