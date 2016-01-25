@@ -4,6 +4,7 @@ import iode.ast.nodes.*;
 
 public interface IVisitor {
 	ASTArray Visit(ASTArray array);
+	ASTBinaryOp Visit(ASTBinaryOp bop);
 	ASTBoolean Visit(ASTBoolean bool);
 	ASTCall Visit(ASTCall call);
 	ASTChar Visit(ASTChar car);

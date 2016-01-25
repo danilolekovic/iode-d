@@ -1,0 +1,51 @@
+package iode.ast.nodes;
+
+import iode.ast.Node;
+import iode.parsing.IVisitor;
+
+public class ASTBinaryOp extends Node {
+	
+	private Node left;
+	private String op;
+	private Node right;
+	
+	public ASTBinaryOp(Node left, String op, Node right) {
+		this.left = left;
+		this.op = op;
+		this.right = right;
+	}
+
+	@Override
+	public Node visit(IVisitor visitor) {
+		return visitor.Visit(this);
+	}
+
+	@Override
+	public String generate() {
+		return left.generate() + " " + op + " " + right.generate();
+	}
+
+	public Node getLeft() {
+		return left;
+	}
+
+	public void setLeft(Node left) {
+		this.left = left;
+	}
+
+	public String getOp() {
+		return op;
+	}
+
+	public void setOp(String op) {
+		this.op = op;
+	}
+
+	public Node getRight() {
+		return right;
+	}
+
+	public void setRight(Node right) {
+		this.right = right;
+	}
+}

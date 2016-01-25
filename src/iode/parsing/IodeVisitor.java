@@ -1,6 +1,7 @@
 package iode.parsing;
 
 import iode.ast.nodes.ASTArray;
+import iode.ast.nodes.ASTBinaryOp;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTChar;
@@ -25,6 +26,11 @@ public class IodeVisitor implements IVisitor {
 		return arr;
 	}
 	
+	@Override
+	public ASTBinaryOp Visit(ASTBinaryOp bop) {
+		return bop;
+	}
+
 	@Override
 	public ASTBoolean Visit(ASTBoolean bool) {
 		return bool;
