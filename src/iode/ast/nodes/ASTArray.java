@@ -29,7 +29,7 @@ public class ASTArray extends Node {
 		}
 		
 		sb.setLength(sb.length() - 2);
-		sb.append("}");
+		sb.append(" }");
 		
 		return sb.toString();
 	}

@@ -255,9 +255,9 @@ public class Parser implements IParser {
 				
 				if (peekCheck(TokenType.IDENTIFIER)) {
 					String type = nextToken().getValue();
-					skipNewline();
 					
 					if (peekCheck(TokenType.EQUALS)) {
+						skipNewline();
 						nextToken();
 						skipNewline();
 						
@@ -271,8 +271,10 @@ public class Parser implements IParser {
 						} else {
 							Errors.throwException(new ParserException("Expected a new line", line));
 						}
+					} else if (peekCheck(TokenType.NEWLINE)) {
+						return new ASTDeclaration(name, type, null);
 					} else {
-						Errors.throwException(new ParserException("Expected '='", line));
+						Errors.throwException(new ParserException("Expected '=' or a new line", line));
 					}
 				} else {
 					Errors.throwException(new ParserException("Expected a type", line));
