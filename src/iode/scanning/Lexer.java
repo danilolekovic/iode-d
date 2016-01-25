@@ -146,6 +146,16 @@ public class Lexer implements ILexer {
 			} else if (code.charAt(pos) == '=') {
 				pos++;
 				tokens.add(new Token(TokenType.EQUALS, "="));
+			} else if (code.charAt(pos) == '#') {
+				pos++;
+				
+				while (code.charAt(pos) != '\n') {
+					pos++;
+				}
+				
+				pos++;
+				
+				line++;
 			} else {
 				Errors.throwException(new LexerException("Illegal symbol: " + code.charAt(pos), line));
 			}
