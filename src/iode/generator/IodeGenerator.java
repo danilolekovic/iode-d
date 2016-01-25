@@ -119,7 +119,7 @@ public class IodeGenerator {
 				e.printStackTrace();
 			}
 			
-			System.out.println("Compiled & executed in " + cElapsed + "ms");
+			System.out.println("\n[Benchmark] Compiled & executed in " + cElapsed + "ms");
 		} else {
 			String linuxCompiler = "gcc";
 			
@@ -163,10 +163,10 @@ public class IodeGenerator {
 				e.printStackTrace();
 			}
 			
-			System.out.println("Compiled & executed in " + cElapsed + "ms");
+			System.out.println("\n[Benchmark] Compiled & executed in " + cElapsed + "ms");
 		}
 		
-		System.out.println("Parsed in " + elapsed + "ms");
+		System.out.println("[Benchmark] Parsed in " + elapsed + "ms");
 	}
 	
 	public static void SilentCompile(String filename) {
