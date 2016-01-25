@@ -11,6 +11,7 @@ import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
 import iode.ast.nodes.ASTNewline;
+import iode.ast.nodes.ASTNil;
 import iode.ast.nodes.ASTNumber;
 import iode.ast.nodes.ASTReturn;
 import iode.ast.nodes.ASTSetting;
@@ -72,6 +73,11 @@ public class IodeVisitor implements IVisitor {
 	@Override
 	public ASTNewline Visit(ASTNewline nl) {
 		return nl;
+	}
+
+	@Override
+	public ASTNil Visit(ASTNil nil) {
+		return nil;
 	}
 
 	@Override

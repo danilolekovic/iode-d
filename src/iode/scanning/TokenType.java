@@ -8,6 +8,7 @@ public enum TokenType {
 	NUMBER,
 	DOUBLE,
 	BOOLEAN,
+	NIL,
 	
 	// Keywords
 	LET,

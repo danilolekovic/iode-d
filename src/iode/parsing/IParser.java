@@ -10,6 +10,7 @@ import iode.ast.nodes.ASTDouble;
 import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
+import iode.ast.nodes.ASTNil;
 import iode.ast.nodes.ASTNumber;
 import iode.ast.nodes.ASTReturn;
 import iode.ast.nodes.ASTSetting;
@@ -39,6 +40,7 @@ public interface IParser {
 	ASTEnum parseEnum();
 	ASTFunction parseFunction();
 	ASTImport parseImport();
+	ASTNil parseNil();
 	ASTNumber parseNumber();
 	ASTReturn parseReturn();
 	ASTSetting parseSetting();

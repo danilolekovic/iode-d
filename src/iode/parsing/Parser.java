@@ -16,6 +16,7 @@ import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
 import iode.ast.nodes.ASTNewline;
+import iode.ast.nodes.ASTNil;
 import iode.ast.nodes.ASTNumber;
 import iode.ast.nodes.ASTReturn;
 import iode.ast.nodes.ASTSetting;
@@ -130,6 +131,8 @@ public class Parser implements IParser {
 			return parseVariable();
 		case CHAR:
 			return parseChar();
+		case NIL:
+			return parseNil();
 		default:
 			Errors.throwException(new ParserException("Unexpected token: " + t + ". Expected a boolean, number, string, identifier or other literal type.", line));
 			return null;
@@ -480,6 +483,12 @@ public class Parser implements IParser {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public ASTNil parseNil() {
+		nextToken();
+		return new ASTNil();
 	}
 
 	@Override

@@ -14,6 +14,7 @@ public interface IVisitor {
 	ASTFunction Visit(ASTFunction func);
 	ASTImport Visit(ASTImport imp);
 	ASTNewline Visit(ASTNewline nl);
+	ASTNil Visit(ASTNil nil);
 	ASTNumber Visit(ASTNumber num);
 	ASTReturn Visit(ASTReturn ret);
 	ASTSetting Visit(ASTSetting set);
