@@ -22,6 +22,7 @@ public class IodeGenerator {
 		Systems system = detectOS(os);
 		
 		List<String> lines = null;
+		
 		try {
 			lines = Files.readAllLines(Paths.get(filename),
 			        Charset.defaultCharset());
@@ -66,17 +67,18 @@ public class IodeGenerator {
 		}
 		
 		if (system == Systems.WINDOWS) {
-			String windowsCompiler = "C:\\MinGW\\bin\\cc.exe";
+			String windowsCompiler = "C:\\MinGW\\bin\\gcc.exe";
 			
 			Runtime rt = Runtime.getRuntime();
-			String[] commands = { windowsCompiler, Paths.get(filename.replace(".iode", ".c")).toString() };
-			String[] execCommands = { Paths.get("a.exe").toString() };
+			String[] commands = { windowsCompiler, "-o", Paths.get(filename.replace(".iode", ".exe")).toString(), Paths.get(filename.replace(".iode", ".c")).toString() };
+			String[] execCommands = { Paths.get(filename.replace(".iode", ".exe")).toString() };
 			Process proc = null;
 			
 			try {
 				proc = rt.exec(commands);
+				proc.waitFor();
 				proc = rt.exec(execCommands);
-			} catch (IOException e) {
+			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
 

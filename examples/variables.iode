@@ -3,5 +3,6 @@ let age = 22
 let alive = true
 
 fn main() > Int {
+  name = "Billy"
   printf("%s", name)
 }

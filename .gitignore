@@ -12,6 +12,7 @@ local.properties
 *.exe
 *.jar
 examples/*.c
+target/
 
 # Eclipse Core
 .project

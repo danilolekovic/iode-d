@@ -30,12 +30,9 @@ public class ASTDeclaration extends Node {
 			sb.append("int ");
 			sb.append(name);
 		} else if (value instanceof ASTString) {
-			sb.append("char ");
+			sb.append("char *");
 			sb.append(name);
-			sb.append("[");
 			ASTString valStr = (ASTString) value;
-			sb.append(valStr.getValue().length());
-			sb.append("]");
 		}
 		
 		sb.append(" = ");
