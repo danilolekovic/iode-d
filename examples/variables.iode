@@ -1,6 +1,6 @@
-var name = "John" # var is mutable #
+var name:String = "John" # var is mutable #
 let age = 22 # let is constant #
-let alive = true
+let alive = true # constants don't need a variable type #
 
 fn main() > Int {
   name = "Billy"

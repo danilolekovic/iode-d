@@ -1,5 +1,6 @@
 package iode.parsing;
 
+import iode.ast.nodes.ASTArray;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTConstant;
@@ -25,6 +26,7 @@ public interface IParser {
 	Node start();
 	Node literal();
 	
+	ASTArray parseArray();
 	ASTBoolean parseBoolean();
 	ASTCall parseCall();
 	ASTConstant parseConstant();

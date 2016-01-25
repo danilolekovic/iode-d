@@ -24,6 +24,7 @@ public enum TokenType {
 	LT,
 	DOT,
 	COMMA,
+	COLON,
 	LPAREN,
 	RPAREN,
 	LBRACE,

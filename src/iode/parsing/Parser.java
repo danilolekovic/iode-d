@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import iode.ast.Node;
+import iode.ast.nodes.ASTArray;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTConstant;
@@ -110,6 +111,8 @@ public class Parser implements IParser {
 		TokenType t = peekToken().getType();
 		
 		switch (t) {
+		case LBRACK:
+			return parseArray();
 		case BOOLEAN:
 			return parseBoolean();
 		case NUMBER:
@@ -122,6 +125,35 @@ public class Parser implements IParser {
 			Errors.throwException(new ParserException("Unexpected token: " + t + ". Expected a boolean, number, string, identifier or other literal type.", line));
 			return null;
 		}
+	}
+	
+	@Override
+	public ASTArray parseArray() {
+		nextToken();
+		skipNewline();
+		ArrayList<Node> values = new ArrayList<Node>();
+		
+		while (!peekCheck(TokenType.RBRACK)) {
+			values.add(literal());
+			
+			if (peekCheck(TokenType.COMMA)) {
+				nextToken();
+				skipNewline();
+				continue;
+			} else if (peekCheck(TokenType.RBRACK)) {
+				break;
+			} else {
+				Errors.throwException(new ParserException("Expected ',' or ']'", line));
+			}
+		}
+		
+		if (peekCheck(TokenType.RBRACK)) {
+			nextToken();
+		} else {
+			Errors.throwException(new ParserException("Expected ']'", line));
+		}
+		
+		return new ASTArray(values);
 	}
 
 	@Override
@@ -217,22 +249,36 @@ public class Parser implements IParser {
 			String name = nextToken().getValue();
 			skipNewline();
 			
-			if (peekCheck(TokenType.EQUALS)) {
+			if (peekCheck(TokenType.COLON)) {
 				nextToken();
 				skipNewline();
 				
-				Node value = literal();
-				
-				if (peekCheck(TokenType.NEWLINE)) {
-					nextToken();
+				if (peekCheck(TokenType.IDENTIFIER)) {
+					String type = nextToken().getValue();
 					skipNewline();
 					
-					return new ASTDeclaration(name, value);
+					if (peekCheck(TokenType.EQUALS)) {
+						nextToken();
+						skipNewline();
+						
+						Node value = literal();
+						
+						if (peekCheck(TokenType.NEWLINE)) {
+							nextToken();
+							skipNewline();
+							
+							return new ASTDeclaration(name, type, value);
+						} else {
+							Errors.throwException(new ParserException("Expected a new line", line));
+						}
+					} else {
+						Errors.throwException(new ParserException("Expected '='", line));
+					}
 				} else {
-					Errors.throwException(new ParserException("Expected a new line", line));
+					Errors.throwException(new ParserException("Expected a type", line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected '='", line));
+				Errors.throwException(new ParserException("Expected ':'", line));
 			}
 		} else {
 			Errors.throwException(new ParserException("Expected a name", line));

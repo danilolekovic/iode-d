@@ -3,6 +3,7 @@ package iode.parsing;
 import iode.ast.nodes.*;
 
 public interface IVisitor {
+	ASTArray Visit(ASTArray array);
 	ASTBoolean Visit(ASTBoolean bool);
 	ASTCall Visit(ASTCall call);
 	ASTConstant Visit(ASTConstant constant);
