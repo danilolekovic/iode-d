@@ -8,8 +8,10 @@ import iode.ast.Node;
 import iode.ast.nodes.ASTArray;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
+import iode.ast.nodes.ASTChar;
 import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
+import iode.ast.nodes.ASTDouble;
 import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
@@ -120,10 +122,14 @@ public class Parser implements IParser {
 			return parseBoolean();
 		case NUMBER:
 			return parseNumber();
+		case DOUBLE:
+			return parseDouble();
 		case STRING:
 			return parseString();
 		case IDENTIFIER:
 			return parseVariable();
+		case CHAR:
+			return parseChar();
 		default:
 			Errors.throwException(new ParserException("Unexpected token: " + t + ". Expected a boolean, number, string, identifier or other literal type.", line));
 			return null;
@@ -211,6 +217,11 @@ public class Parser implements IParser {
 	}
 	
 	@Override
+	public ASTChar parseChar() {
+		return new ASTChar(nextToken().getValue().charAt(0));
+	}
+
+	@Override
 	public ASTConstant parseConstant() {
 		nextToken();
 		skipNewline();
@@ -290,6 +301,11 @@ public class Parser implements IParser {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public ASTDouble parseDouble() {
+		return new ASTDouble(Double.parseDouble(nextToken().getValue()));
 	}
 
 	@Override

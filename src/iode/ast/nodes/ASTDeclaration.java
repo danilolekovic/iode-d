@@ -31,6 +31,12 @@ public class ASTDeclaration extends Node {
 		} else if (type.equals("Int")) {
 			sb.append("int ");
 			sb.append(name);
+		} else if (type.equals("Double")) {
+			sb.append("double ");
+			sb.append(name);
+		} else if (type.equals("Char")) {
+			sb.append("char ");
+			sb.append(name);
 		} else if (type.equals("String")) {
 			sb.append("char *");
 			sb.append(name);

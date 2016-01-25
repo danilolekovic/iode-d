@@ -76,15 +76,33 @@ public class Lexer implements ILexer {
 			} else if (Character.isDigit(code.charAt(pos))) {
 				sb.append(code.charAt(pos));
 				pos++;
+				boolean decimalPlaced = false;
 				
-				while (pos < code.length() && Character.isDigit(code.charAt(pos))) {
+				while (pos < code.length() && Character.isDigit(code.charAt(pos))
+						|| code.charAt(pos) == '.' || code.charAt(pos) == '_') {
+					if (code.charAt(pos) == '.') {
+						if (decimalPlaced) {
+							Errors.throwException(new LexerException("Number cannot mathematically have more than one decimal point", line));
+						} else {
+							decimalPlaced = true;
+						}
+					}
+					
+					if (code.charAt(pos) == '_') {
+						pos++;
+					}
+					
 					sb.append(code.charAt(pos));
 					pos++;
 				}
 				
 				String buffer = sb.toString();
 				
-				tokens.add(new Token(TokenType.NUMBER, buffer));
+				if (decimalPlaced) {
+					tokens.add(new Token(TokenType.DOUBLE, buffer));
+				} else {
+					tokens.add(new Token(TokenType.NUMBER, buffer));
+				}
 				sb = new StringBuilder();
 			} else if (code.charAt(pos) == '"') {
 				pos++;
@@ -99,6 +117,20 @@ public class Lexer implements ILexer {
 				pos++;
 				
 				tokens.add(new Token(TokenType.STRING, buffer));
+				sb = new StringBuilder();
+			} else if (code.charAt(pos) == '\'') {
+				pos++;
+				
+				if (pos < code.length() && code.charAt(pos) != '\'') {
+					sb.append(code.charAt(pos));
+					pos++;
+				}
+				
+				String buffer = sb.toString();
+				
+				pos++;
+				
+				tokens.add(new Token(TokenType.CHAR, buffer));
 				sb = new StringBuilder();
 			} else if (code.charAt(pos) == '\n') {
 				pos++;

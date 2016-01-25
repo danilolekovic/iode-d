@@ -3,8 +3,10 @@ package iode.parsing;
 import iode.ast.nodes.ASTArray;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
+import iode.ast.nodes.ASTChar;
 import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
+import iode.ast.nodes.ASTDouble;
 import iode.ast.nodes.ASTEnum;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
@@ -33,6 +35,11 @@ public class IodeVisitor implements IVisitor {
 	}
 	
 	@Override
+	public ASTChar Visit(ASTChar car) {
+		return car;
+	}
+
+	@Override
 	public ASTConstant Visit(ASTConstant constant) {
 		return constant;
 	}
@@ -42,6 +49,11 @@ public class IodeVisitor implements IVisitor {
 		return decl;
 	}
 	
+	@Override
+	public ASTDouble Visit(ASTDouble doub) {
+		return doub;
+	}
+
 	@Override
 	public ASTEnum Visit(ASTEnum enumer) {
 		return enumer;

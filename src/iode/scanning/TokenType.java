@@ -4,7 +4,9 @@ public enum TokenType {
 	// Regular	
 	IDENTIFIER,
 	STRING,
+	CHAR,
 	NUMBER,
+	DOUBLE,
 	BOOLEAN,
 	
 	// Keywords
