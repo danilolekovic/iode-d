@@ -7,6 +7,7 @@ import java.util.Map;
 import iode.ast.Node;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
+import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
@@ -83,6 +84,8 @@ public class Parser implements IParser {
 		
 		switch (t) {
 		case LET:
+			return parseConstant();
+		case VAR:
 			return parseDeclaration();
 		case FUNCTION:
 			return parseFunction();
@@ -116,7 +119,7 @@ public class Parser implements IParser {
 		case IDENTIFIER:
 			return parseVariable();
 		default:
-			Errors.throwException(new ParserException("Unexpected token: " + t, line));
+			Errors.throwException(new ParserException("Unexpected token: " + t + ". Expected a boolean, number, string, identifier or other literal type.", line));
 			return null;
 		}
 	}
@@ -167,6 +170,39 @@ public class Parser implements IParser {
 			}
 		} else {
 			Errors.throwException(new ParserException("Expected '('", line));
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public ASTConstant parseConstant() {
+		nextToken();
+		skipNewline();
+		
+		if (peekCheck(TokenType.IDENTIFIER)) {
+			String name = nextToken().getValue();
+			skipNewline();
+			
+			if (peekCheck(TokenType.EQUALS)) {
+				nextToken();
+				skipNewline();
+				
+				Node value = literal();
+				
+				if (peekCheck(TokenType.NEWLINE)) {
+					nextToken();
+					skipNewline();
+					
+					return new ASTConstant(name, value);
+				} else {
+					Errors.throwException(new ParserException("Expected a new line", line));
+				}
+			} else {
+				Errors.throwException(new ParserException("Expected '='", line));
+			}
+		} else {
+			Errors.throwException(new ParserException("Expected a name", line));
 		}
 		
 		return null;

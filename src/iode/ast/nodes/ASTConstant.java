@@ -3,12 +3,12 @@ package iode.ast.nodes;
 import iode.ast.Node;
 import iode.parsing.IVisitor;
 
-public class ASTDeclaration extends Node {
+public class ASTConstant extends Node {
 
 	private String name;
 	private Node value;
 
-	public ASTDeclaration(String name, Node value) {
+	public ASTConstant(String name, Node value) {
 		this.name = name;
 		this.value = value;
 	}
@@ -22,21 +22,11 @@ public class ASTDeclaration extends Node {
 	public String generate() {
 		StringBuilder sb = new StringBuilder();
 				
-		if (value instanceof ASTBoolean) {
-			sb.append("typedef enum { false, true } bool;\n");
-			sb.append("bool ");
-			sb.append(name);
-		} else if (value instanceof ASTNumber) {
-			sb.append("int ");
-			sb.append(name);
-		} else if (value instanceof ASTString) {
-			sb.append("char *");
-			sb.append(name);
-		}
-		
-		sb.append(" = ");
+		sb.append("#DEFINE ");
+		sb.append(name);
+		sb.append(" ");
 		sb.append(value.generate());
-		sb.append(";\n");
+		sb.append("\n");
 		
 		return sb.toString();
 	}

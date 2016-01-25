@@ -9,6 +9,7 @@ public enum TokenType {
 	
 	// Keywords
 	LET,
+	VAR,
 	FUNCTION,
 	IMPORT,
 	RETURN,

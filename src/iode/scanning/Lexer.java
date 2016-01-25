@@ -56,6 +56,8 @@ public class Lexer implements ILexer {
 				
 				if (buffer.equals("let")) {
 					tokens.add(new Token(TokenType.LET, buffer));
+				} else if (buffer.equals("var")) {
+					tokens.add(new Token(TokenType.VAR, buffer));
 				} else if (buffer.equals("fn")) {
 					tokens.add(new Token(TokenType.FUNCTION, buffer));
 				} else if (buffer.equals("import")) {
@@ -149,7 +151,7 @@ public class Lexer implements ILexer {
 			} else if (code.charAt(pos) == '#') {
 				pos++;
 				
-				while (code.charAt(pos) != '\n') {
+				while (code.charAt(pos) != '#') {
 					pos++;
 				}
 				

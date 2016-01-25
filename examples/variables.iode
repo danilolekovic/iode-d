@@ -1,5 +1,5 @@
-let name = "John"
-let age = 22
+var name = "John" # var is mutable #
+let age = 22 # let is constant #
 let alive = true
 
 fn main() > Int {

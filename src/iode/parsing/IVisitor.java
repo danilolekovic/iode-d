@@ -5,6 +5,7 @@ import iode.ast.nodes.*;
 public interface IVisitor {
 	ASTBoolean Visit(ASTBoolean bool);
 	ASTCall Visit(ASTCall call);
+	ASTConstant Visit(ASTConstant constant);
 	ASTDeclaration Visit(ASTDeclaration decl);
 	ASTFunction Visit(ASTFunction func);
 	ASTImport Visit(ASTImport imp);

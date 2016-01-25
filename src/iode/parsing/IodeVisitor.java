@@ -2,6 +2,7 @@ package iode.parsing;
 
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
+import iode.ast.nodes.ASTConstant;
 import iode.ast.nodes.ASTDeclaration;
 import iode.ast.nodes.ASTFunction;
 import iode.ast.nodes.ASTImport;
@@ -22,6 +23,11 @@ public class IodeVisitor implements IVisitor {
 	@Override
 	public ASTCall Visit(ASTCall call) {
 		return call;
+	}
+	
+	@Override
+	public ASTConstant Visit(ASTConstant constant) {
+		return constant;
 	}
 
 	@Override
