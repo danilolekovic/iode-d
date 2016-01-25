@@ -12,4 +12,4 @@
 - [ ] conditional operators
 - [ ] make functions be able to return arrays
 - [ ] fix line numbers
-- [ ] new differentiation between c imports and iode imports
+- [x] new differentiation between c imports and iode imports

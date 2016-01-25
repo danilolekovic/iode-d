@@ -470,18 +470,35 @@ public class Parser implements IParser {
 		skipNewline();
 		
 		if (peekCheck(TokenType.IDENTIFIER)) {
-			String module = nextToken().getValue();
-			
-			if (peekCheck(TokenType.NEWLINE)) {
-				nextToken();
-				skipNewline();
-				
-				return new ASTImport(module);
+			if (peekToken().getValue() == "std") {
+				if (peekCheck(TokenType.IDENTIFIER)) {
+					String module = nextToken().getValue();
+					
+					if (peekCheck(TokenType.NEWLINE)) {
+						nextToken();
+						skipNewline();
+						
+						return new ASTImport(module, true);
+					} else {
+						Errors.throwException(new ParserException("Expected a new line", line));
+					}
+				} else {
+					Errors.throwException(new ParserException("Expected an std module name", line));
+				}
 			} else {
-				Errors.throwException(new ParserException("Expected a new line", line));
+				String module = nextToken().getValue();
+				
+				if (peekCheck(TokenType.NEWLINE)) {
+					nextToken();
+					skipNewline();
+					
+					return new ASTImport(module, true);
+				} else {
+					Errors.throwException(new ParserException("Expected a new line", line));
+				}
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a module name", line));
+			Errors.throwException(new ParserException("Expected a module name or 'std' specification", line));
 		}
 		
 		return null;

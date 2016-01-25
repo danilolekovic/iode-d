@@ -2,7 +2,6 @@ package iode.ast.nodes;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import iode.ast.Node;
@@ -13,9 +12,11 @@ import iode.util.Errors;
 public class ASTImport extends Node {
 
 	private String module;
+	private boolean cImport = false;
 	
-	public ASTImport(String module) {
+	public ASTImport(String module, boolean cImport) {
 		this.module = module;
+		this.cImport = cImport;
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class ASTImport extends Node {
 
 	@Override
 	public String generate() {
-		if (!module.startsWith("c")) { // TODO: Change this
+		if (!cImport) {
 			if (Files.exists(Paths.get(IodeGenerator.currentPath + File.separator + module + ".iode"))) {
 				IodeGenerator.SilentCompile(Paths.get(IodeGenerator.currentPath + File.separator + module + ".iode").toString());
 				return "#include \"" + module + ".c\"\n";
@@ -43,5 +44,13 @@ public class ASTImport extends Node {
 
 	public void setModule(String module) {
 		this.module = module;
+	}
+
+	public boolean iscImport() {
+		return cImport;
+	}
+
+	public void setcImport(boolean cImport) {
+		this.cImport = cImport;
 	}
 }
