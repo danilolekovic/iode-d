@@ -347,7 +347,27 @@ public class Parser implements IParser {
 
 	@Override
 	public ASTSetting parseSetting() {
-		// TODO Auto-generated method stub
+		String name = nextToken().getValue();
+		skipNewline();
+		
+		if (peekCheck(TokenType.EQUALS)) {
+			nextToken();
+			skipNewline();
+			
+			Node expression = literal();
+			
+			if (peekCheck(TokenType.NEWLINE)) {
+				nextToken();
+				skipNewline();
+				
+				return new ASTSetting(name, expression);
+			} else {
+				Errors.throwException(new ParserException("Expected a new line", line));
+			}
+		} else {
+			Errors.throwException(new ParserException("Expected an expression", line));
+		}
+		
 		return null;
 	}
 
@@ -365,6 +385,8 @@ public class Parser implements IParser {
 	public Node parseIdentifier() {
 		if (peekSpecificCheck(TokenType.LPAREN, 2)) {
 			return parseCall();
+		} else if (peekSpecificCheck(TokenType.EQUALS, 2)) {
+			return parseSetting();
 		} else {
 			Errors.throwException(new ParserException("Expected a '(' after identifier", line));
 		}

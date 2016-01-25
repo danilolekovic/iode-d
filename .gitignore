@@ -9,6 +9,9 @@ tmp/
 local.properties
 .settings/
 .loadpath
+*.exe
+*.jar
+examples/*.c
 
 # Eclipse Core
 .project

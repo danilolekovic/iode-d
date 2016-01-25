@@ -20,8 +20,7 @@ public class ASTSetting extends Node {
 
 	@Override
 	public String generate() {
-		// TODO Auto-generated method stub
-		return null;
+		return name + " = " + value.generate() + ";\n";
 	}
 
 	public String getName() {
