@@ -105,10 +105,45 @@ public class IodeGenerator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else if (system == Systems.MAC) {
-			// TODO: Mac support
-		} else if (system == Systems.LINUX) {
-			// TODO: Linux support
+		} else {
+			String linuxCompiler = "gcc";
+			
+			Runtime rt = Runtime.getRuntime();
+			String[] commands = { linuxCompiler, "-o", Paths.get(filename.replace(".iode", "")).toString(), Paths.get(filename.replace(".iode", ".c")).toString() };
+			String[] execCommands = { "./" + Paths.get(filename.replace(".iode", "")).toString() };
+			Process proc = null;
+			
+			try {
+				proc = rt.exec(commands);
+				proc.waitFor();
+				proc = rt.exec(execCommands);
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			BufferedReader stdInput = new BufferedReader(new 
+			     InputStreamReader(proc.getInputStream()));
+
+			BufferedReader stdError = new BufferedReader(new 
+			     InputStreamReader(proc.getErrorStream()));
+
+			String s = null;
+			
+			try {
+				while ((s = stdInput.readLine()) != null) {
+				    System.out.println(s);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				while ((s = stdError.readLine()) != null) {
+				    System.out.println(s);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
