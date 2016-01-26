@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTBinaryOp extends Node {
 	
@@ -13,11 +12,6 @@ public class ASTBinaryOp extends Node {
 		this.left = left;
 		this.op = op;
 		this.right = right;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

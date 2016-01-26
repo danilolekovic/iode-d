@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTReturn extends Node {
 
@@ -9,11 +8,6 @@ public class ASTReturn extends Node {
 	
 	public ASTReturn(Node expression) {
 		this.expression = expression;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

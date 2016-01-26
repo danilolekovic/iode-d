@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTFunction extends Node {
 
@@ -18,11 +17,6 @@ public class ASTFunction extends Node {
 		this.args = args;
 		this.body = body;
 		this.returnType = returnType;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTVariable extends Node {
 
@@ -9,11 +8,6 @@ public class ASTVariable extends Node {
 	
 	public ASTVariable(String ident) {
 		this.ident = ident;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTBoolean extends Node {
 
@@ -9,11 +8,6 @@ public class ASTBoolean extends Node {
 	
 	public ASTBoolean(boolean value) {
 		this.value = value;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

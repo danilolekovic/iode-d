@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 import iode.util.Errors;
 
 public class ASTDeclaration extends Node {
@@ -14,11 +13,6 @@ public class ASTDeclaration extends Node {
 		this.name = name;
 		this.type = type;
 		this.value = value;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

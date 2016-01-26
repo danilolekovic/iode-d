@@ -3,7 +3,6 @@ package iode.ast.nodes;
 import java.util.ArrayList;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTCall extends Node {
 
@@ -29,11 +28,6 @@ public class ASTCall extends Node {
 
 	public void setArgs(ArrayList<Node> args) {
 		this.args = args;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 	
 	@Override

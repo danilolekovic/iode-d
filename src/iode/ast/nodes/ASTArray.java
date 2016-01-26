@@ -3,7 +3,6 @@ package iode.ast.nodes;
 import java.util.ArrayList;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTArray extends Node {
 
@@ -11,11 +10,6 @@ public class ASTArray extends Node {
 	
 	public ASTArray(ArrayList<Node> value) {
 		this.value = value;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

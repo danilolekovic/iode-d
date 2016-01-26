@@ -1,7 +1,6 @@
 package iode.ast.nodes;
 
 import iode.ast.Node;
-import iode.parsing.IVisitor;
 
 public class ASTSetting extends Node {
 
@@ -11,11 +10,6 @@ public class ASTSetting extends Node {
 	public ASTSetting(String name, Node value) {
 		this.name = name;
 		this.value = value;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override

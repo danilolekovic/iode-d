@@ -18,6 +18,7 @@ import iode.ast.nodes.ASTImport;
 import iode.ast.nodes.ASTNewline;
 import iode.ast.nodes.ASTNil;
 import iode.ast.nodes.ASTNumber;
+import iode.ast.nodes.ASTParenthesis;
 import iode.ast.nodes.ASTReturn;
 import iode.ast.nodes.ASTSetting;
 import iode.ast.nodes.ASTString;
@@ -117,6 +118,8 @@ public class Parser implements IParser {
 		TokenType t = peekToken().getType();
 		
 		switch (t) {
+		case LPAREN:
+			return parseParens();
 		case LBRACK:
 			return parseArray();
 		case BOOLEAN:
@@ -518,6 +521,24 @@ public class Parser implements IParser {
 		return new ASTNumber(Integer.parseInt(nextToken().getValue()));
 	}
 	
+	@Override
+	public ASTParenthesis parseParens() {
+		nextToken();
+		skipNewline();
+		Node n = literal();
+		
+		if (peekCheck(TokenType.RPAREN)) {
+			nextToken();
+			skipNewline();
+			
+			return new ASTParenthesis(n);
+		} else {
+			Errors.throwException(new ParserException("Expected ')", line));
+		}
+		
+		return null;
+	}
+
 	@Override
 	public ASTReturn parseReturn() {
 		nextToken();

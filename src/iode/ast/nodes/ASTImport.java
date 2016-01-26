@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 
 import iode.ast.Node;
 import iode.generator.IodeGenerator;
-import iode.parsing.IVisitor;
 import iode.util.Errors;
 
 public class ASTImport extends Node {
@@ -17,11 +16,6 @@ public class ASTImport extends Node {
 	public ASTImport(String module, boolean cImport) {
 		this.module = module;
 		this.cImport = cImport;
-	}
-
-	@Override
-	public Node visit(IVisitor visitor) {
-		return visitor.Visit(this);
 	}
 
 	@Override
