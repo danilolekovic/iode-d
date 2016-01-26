@@ -27,11 +27,11 @@ public class IodeGenerator {
 		currentPath = Paths.get(filename.replace(".iode", "")).toString().substring(0, Paths.get(filename.replace(".iode", "")).toString().lastIndexOf(File.separator));
 
 		
-		List<String> lines = null;
+		ArrayList<String> lines = new ArrayList<String>();
 		
 		try {
-			lines = Files.readAllLines(Paths.get(filename),
-			        Charset.defaultCharset());
+			lines.addAll(Files.readAllLines(Paths.get(filename),
+			        Charset.defaultCharset()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,7 +57,7 @@ public class IodeGenerator {
 		}
 		
 		StringBuilder cBuilder = new StringBuilder();
-		
+				
 		for (Node n : ast) {
 			cBuilder.append(n.generate());
 		}

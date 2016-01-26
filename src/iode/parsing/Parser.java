@@ -470,7 +470,10 @@ public class Parser implements IParser {
 		skipNewline();
 		
 		if (peekCheck(TokenType.IDENTIFIER)) {
-			if (peekToken().getValue() == "std") {
+			if (peekToken().getValue().equals("std")) {
+				nextToken();
+				skipNewline();
+				
 				if (peekCheck(TokenType.IDENTIFIER)) {
 					String module = nextToken().getValue();
 					
