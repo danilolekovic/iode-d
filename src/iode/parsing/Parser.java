@@ -108,7 +108,7 @@ public class Parser implements IParser {
 			skipNewline();
 			return new ASTNewline();
 		default:
-			Errors.throwException(new ParserException("Unexpected token: " + t, line));
+			Errors.throwException(new ParserException("Unexpected token: " + t, line, "constant declaration, variable declaration, function, import, call, return, enumeration, or new line"));
 			return null;
 		}
 	}
@@ -137,7 +137,7 @@ public class Parser implements IParser {
 		case NIL:
 			return parseNil();
 		default:
-			Errors.throwException(new ParserException("Unexpected token: " + t + ". Expected a boolean, number, string, identifier or other literal type.", line));
+			Errors.throwException(new ParserException("Unexpected token: " + t, line, "parenthesis, array, boolean, number, double, string, identifier, character, or nil"));
 			return null;
 		}
 	}
@@ -158,14 +158,14 @@ public class Parser implements IParser {
 			} else if (peekCheck(TokenType.RBRACK)) {
 				break;
 			} else {
-				Errors.throwException(new ParserException("Expected ',' or ']'", line));
+				Errors.throwException(new ParserException("Expected ',' or ']'", peekToken().getValue(), line));
 			}
 		}
 		
 		if (peekCheck(TokenType.RBRACK)) {
 			nextToken();
 		} else {
-			Errors.throwException(new ParserException("Expected ']'", line));
+			Errors.throwException(new ParserException("Expected ']'", peekToken().getValue(), line));
 		}
 		
 		return new ASTArray(values);
@@ -197,7 +197,7 @@ public class Parser implements IParser {
 				} else if (peekCheck(TokenType.RPAREN)) {
 					break;
 				} else {
-					Errors.throwException(new ParserException("Expected ',' or ')'", line));
+					Errors.throwException(new ParserException("Expected ',' or ')'", peekToken().getValue(), line));
 				}
 			}
 			
@@ -210,13 +210,13 @@ public class Parser implements IParser {
 					
 					return new ASTCall(name, args);
 				} else {
-					Errors.throwException(new ParserException("Expected a newline", line));
+					Errors.throwException(new ParserException("Expected a newline", peekToken().getValue(), line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected ')'", line));
+				Errors.throwException(new ParserException("Expected ')'", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected '('", line));
+			Errors.throwException(new ParserException("Expected '('", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -248,13 +248,13 @@ public class Parser implements IParser {
 					
 					return new ASTConstant(name, value);
 				} else {
-					Errors.throwException(new ParserException("Expected a new line", line));
+					Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected '='", line));
+				Errors.throwException(new ParserException("Expected '='", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a name", line));
+			Errors.throwException(new ParserException("Expected a name", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -289,21 +289,21 @@ public class Parser implements IParser {
 							
 							return new ASTDeclaration(name, type, value);
 						} else {
-							Errors.throwException(new ParserException("Expected a new line", line));
+							Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 						}
 					} else if (peekCheck(TokenType.NEWLINE)) {
 						return new ASTDeclaration(name, type, null);
 					} else {
-						Errors.throwException(new ParserException("Expected '=' or a new line", line));
+						Errors.throwException(new ParserException("Expected '=' or a new line", peekToken().getValue(), line));
 					}
 				} else {
-					Errors.throwException(new ParserException("Expected a type", line));
+					Errors.throwException(new ParserException("Expected a type", peekToken().getValue(), line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected ':'", line));
+				Errors.throwException(new ParserException("Expected ':'", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a name", line));
+			Errors.throwException(new ParserException("Expected a name", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -332,7 +332,7 @@ public class Parser implements IParser {
 					if (peekCheck(TokenType.IDENTIFIER)) {
 						elements.add(parseVariable());
 					} else {
-						Errors.throwException(new ParserException("Expected an identifier", line));
+						Errors.throwException(new ParserException("Expected an identifier", peekToken().getValue(), line));
 					}
 					
 					if (peekCheck(TokenType.COMMA)) {
@@ -342,7 +342,7 @@ public class Parser implements IParser {
 					} else if (peekCheck(TokenType.RPAREN)) {
 						break;
 					} else {
-						Errors.throwException(new ParserException("Expected ',' or ')'", line));
+						Errors.throwException(new ParserException("Expected ',' or ')'", peekToken().getValue(), line));
 					}
 				}
 				
@@ -355,16 +355,16 @@ public class Parser implements IParser {
 						
 						return new ASTEnum(name, elements);
 					} else {
-						Errors.throwException(new ParserException("Expected a new line", line));
+						Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 					}
 				} else {
-					Errors.throwException(new ParserException("Expected ')'", line));
+					Errors.throwException(new ParserException("Expected ')'", peekToken().getValue(), line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected '('", line));
+				Errors.throwException(new ParserException("Expected '('", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a name", line));
+			Errors.throwException(new ParserException("Expected a name", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -403,13 +403,13 @@ public class Parser implements IParser {
 							} else if (peekCheck(TokenType.RPAREN)) {
 								break;
 							} else {
-								Errors.throwException(new ParserException("Expected ','", line));
+								Errors.throwException(new ParserException("Expected ','", peekToken().getValue(), line));
 							}
 						} else {
-							Errors.throwException(new ParserException("Expected a parameter name", line));
+							Errors.throwException(new ParserException("Expected a parameter name", peekToken().getValue(), line));
 						}
 					} else {
-						Errors.throwException(new ParserException("Expected a parameter type", line));
+						Errors.throwException(new ParserException("Expected a parameter type", peekToken().getValue(), line));
 					}
 				}
 				
@@ -443,25 +443,25 @@ public class Parser implements IParser {
 									
 									return new ASTFunction(name, args, body, returnType);
 								} else {
-									Errors.throwException(new ParserException("Expected '}'", line));
+									Errors.throwException(new ParserException("Expected '}'", peekToken().getValue(), line));
 								}
 							} else {
-								Errors.throwException(new ParserException("Expected '{'", line));
+								Errors.throwException(new ParserException("Expected '{'", peekToken().getValue(), line));
 							}
 						} else {
-							Errors.throwException(new ParserException("Expected a return type", line));
+							Errors.throwException(new ParserException("Expected a return type", peekToken().getValue(), line));
 						}
 					} else {
-						Errors.throwException(new ParserException("Expected '>'", line));
+						Errors.throwException(new ParserException("Expected '>'", peekToken().getValue(), line));
 					}
 				} else {
-					Errors.throwException(new ParserException("Expected ')'", line));
+					Errors.throwException(new ParserException("Expected ')'", peekToken().getValue(), line));
 				}
 			} else {
-				Errors.throwException(new ParserException("Expected '('", line));
+				Errors.throwException(new ParserException("Expected '('", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a name", line));
+			Errors.throwException(new ParserException("Expected a name", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -486,10 +486,10 @@ public class Parser implements IParser {
 						
 						return new ASTImport(module, true);
 					} else {
-						Errors.throwException(new ParserException("Expected a new line", line));
+						Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 					}
 				} else {
-					Errors.throwException(new ParserException("Expected an std module name", line));
+					Errors.throwException(new ParserException("Expected an std module name", peekToken().getValue(), line));
 				}
 			} else {
 				String module = nextToken().getValue();
@@ -500,11 +500,11 @@ public class Parser implements IParser {
 					
 					return new ASTImport(module, true);
 				} else {
-					Errors.throwException(new ParserException("Expected a new line", line));
+					Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 				}
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected a module name or 'std' specification", line));
+			Errors.throwException(new ParserException("Expected a module name or 'std' specification", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -533,7 +533,7 @@ public class Parser implements IParser {
 			
 			return new ASTParenthesis(n);
 		} else {
-			Errors.throwException(new ParserException("Expected ')", line));
+			Errors.throwException(new ParserException("Expected ')", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -550,7 +550,7 @@ public class Parser implements IParser {
 			nextToken();
 			skipNewline();
 		} else {
-			Errors.throwException(new ParserException("Expected a new line", line));
+			Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 		}
 		
 		return new ASTReturn(expression);
@@ -573,10 +573,10 @@ public class Parser implements IParser {
 				
 				return new ASTSetting(name, expression);
 			} else {
-				Errors.throwException(new ParserException("Expected a new line", line));
+				Errors.throwException(new ParserException("Expected a new line", peekToken().getValue(), line));
 			}
 		} else {
-			Errors.throwException(new ParserException("Expected an expression", line));
+			Errors.throwException(new ParserException("Expected an expression", peekToken().getValue(), line));
 		}
 		
 		return null;
@@ -599,7 +599,7 @@ public class Parser implements IParser {
 		} else if (peekSpecificCheck(TokenType.EQUALS, 2)) {
 			return parseSetting();
 		} else {
-			Errors.throwException(new ParserException("Expected a '(' after identifier", line));
+			Errors.throwException(new ParserException("Expected a '(' after identifier", peekToken().getValue(), line));
 		}
 		
 		return null;
