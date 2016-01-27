@@ -1,3 +1,9 @@
-var fruits:String = ["Apple", "Blueberry", "Orange", "Banana"]
+fn getAges() > ArrayInt {
+  return [1, 2, 3]
+}
 
-fn main() > Int {}
+var myArray:String = ["Bob", "Jim", "Charlie"]
+
+fn main() > Int {
+  return 0
+}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import iode.ast.Node;
+import iode.util.Errors;
 
 public class ASTFunction extends Node {
 
@@ -35,8 +36,16 @@ public class ASTFunction extends Node {
 			sb.append("double ");
 		} else if (returnType.equals("Char")) {
 			sb.append("char ");
+		} else if (returnType.equals("ArrayInt")) {
+			sb.append("int *");
+		} else if (returnType.equals("ArrayString")) {
+			sb.append("char **");
+		} else if (returnType.equals("ArrayChar")) {
+			sb.append("char *");
+		} else if (returnType.equals("ArrayDouble")) {
+			sb.append("double *");
 		} else {
-			sb.append("void ");
+			sb.append("void");
 		}
 		
 		sb.append(name);
@@ -74,7 +83,7 @@ public class ASTFunction extends Node {
 			sb.append("\n");
 		}
 		
-		sb.append("}");
+		sb.append("}\n\n");
 		
 		return sb.toString();
 	}
