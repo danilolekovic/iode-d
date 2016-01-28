@@ -29,7 +29,7 @@ public class ASTImport extends Node {
 			}
 		}
 		
-		return "#include <" + module.substring(1, module.length()) + ".h>\n";
+		return "#include <" + module + ".h>\n";
 	}
 
 	public String getModule() {

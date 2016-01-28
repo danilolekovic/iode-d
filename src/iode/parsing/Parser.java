@@ -6,6 +6,7 @@ import java.util.Map;
 
 import iode.ast.Node;
 import iode.ast.nodes.ASTArray;
+import iode.ast.nodes.ASTBinaryOp;
 import iode.ast.nodes.ASTBoolean;
 import iode.ast.nodes.ASTCall;
 import iode.ast.nodes.ASTChar;
@@ -143,7 +144,7 @@ public class Parser implements IParser {
 	}
 	
 	@Override
-	public ASTArray parseArray() {
+	public Node parseArray() {
 		nextToken();
 		skipNewline();
 		ArrayList<Node> values = new ArrayList<Node>();
@@ -172,12 +173,12 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTBoolean parseBoolean() {
+	public Node parseBoolean() {
 		return new ASTBoolean(Boolean.parseBoolean(nextToken().getValue()));
 	}
 	
 	@Override
-	public ASTCall parseCall() {
+	public Node parseCall() {
 		String name = nextToken().getValue();
 		skipNewline();
 		
@@ -223,12 +224,12 @@ public class Parser implements IParser {
 	}
 	
 	@Override
-	public ASTChar parseChar() {
+	public Node parseChar() {
 		return new ASTChar(nextToken().getValue().charAt(0));
 	}
 
 	@Override
-	public ASTConstant parseConstant() {
+	public Node parseConstant() {
 		nextToken();
 		skipNewline();
 		
@@ -261,7 +262,7 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTDeclaration parseDeclaration() {
+	public Node parseDeclaration() {
 		nextToken();
 		skipNewline();
 		
@@ -310,12 +311,12 @@ public class Parser implements IParser {
 	}
 	
 	@Override
-	public ASTDouble parseDouble() {
+	public Node parseDouble() {
 		return new ASTDouble(Double.parseDouble(nextToken().getValue()));
 	}
 
 	@Override
-	public ASTEnum parseEnum() {
+	public Node parseEnum() {
 		nextToken();
 		skipNewline();
 		
@@ -371,7 +372,7 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTFunction parseFunction() {
+	public Node parseFunction() {
 		nextToken();
 		skipNewline();
 		
@@ -468,7 +469,7 @@ public class Parser implements IParser {
 	}
 	
 	@Override
-	public ASTImport parseImport() {
+	public Node parseImport() {
 		nextToken();
 		skipNewline();
 		
@@ -511,18 +512,35 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTNil parseNil() {
+	public Node parseNil() {
 		nextToken();
 		return new ASTNil();
 	}
 
 	@Override
-	public ASTNumber parseNumber() {
-		return new ASTNumber(Integer.parseInt(nextToken().getValue()));
+	public Node parseNumber() {
+		Node toReturn = new ASTNumber(Integer.parseInt(nextToken().getValue()));
+		
+		if (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+			while (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+				skipNewline();
+				String op = nextToken().getValue();
+				skipNewline();
+				
+				if (peekCheck(TokenType.IDENTIFIER) || peekCheck(TokenType.NUMBER)) {
+					Node next = literal();
+					toReturn = new ASTBinaryOp(toReturn, op, next);
+				} else {
+					Errors.throwException(new ParserException("Expected an identifier or a number", peekToken().getValue(), line));
+				}
+			}
+		}
+		
+		return toReturn;
 	}
 	
 	@Override
-	public ASTParenthesis parseParens() {
+	public Node parseParens() {
 		nextToken();
 		skipNewline();
 		Node n = literal();
@@ -540,7 +558,7 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTReturn parseReturn() {
+	public Node parseReturn() {
 		nextToken();
 		skipNewline();
 		
@@ -557,7 +575,7 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTSetting parseSetting() {
+	public Node parseSetting() {
 		String name = nextToken().getValue();
 		skipNewline();
 		
@@ -583,12 +601,12 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ASTString parseString() {
+	public Node parseString() {
 		return new ASTString(nextToken().getValue());
 	}
 
 	@Override
-	public ASTVariable parseVariable() {
+	public Node parseVariable() {
 		return new ASTVariable(nextToken().getValue());
 	}
 	

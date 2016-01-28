@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import iode.ast.Node;
-import iode.util.Errors;
 
 public class ASTFunction extends Node {
 
