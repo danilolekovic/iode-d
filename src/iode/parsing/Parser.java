@@ -602,12 +602,46 @@ public class Parser implements IParser {
 
 	@Override
 	public Node parseString() {
-		return new ASTString(nextToken().getValue());
+		Node toReturn = new ASTString(nextToken().getValue());
+		
+		if (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+			while (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+				skipNewline();
+				String op = nextToken().getValue();
+				skipNewline();
+				
+				if (peekCheck(TokenType.IDENTIFIER) || peekCheck(TokenType.STRING)) {
+					Node next = literal();
+					toReturn = new ASTBinaryOp(toReturn, op, next);
+				} else {
+					Errors.throwException(new ParserException("Expected an identifier or a number", peekToken().getValue(), line));
+				}
+			}
+		}
+		
+		return toReturn;
 	}
 
 	@Override
 	public Node parseVariable() {
-		return new ASTVariable(nextToken().getValue());
+		Node toReturn = new ASTVariable(nextToken().getValue());
+		
+		if (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+			while (peekCheck(TokenType.ADD) || peekCheck(TokenType.DIV) || peekCheck(TokenType.SUB) || peekCheck(TokenType.MUL)) {
+				skipNewline();
+				String op = nextToken().getValue();
+				skipNewline();
+				
+				if (peekCheck(TokenType.IDENTIFIER) || peekCheck(TokenType.STRING) || peekCheck(TokenType.NUMBER)) {
+					Node next = literal();
+					toReturn = new ASTBinaryOp(toReturn, op, next);
+				} else {
+					Errors.throwException(new ParserException("Expected an identifier or a number", peekToken().getValue(), line));
+				}
+			}
+		}
+		
+		return toReturn;
 	}
 	
 	@Override

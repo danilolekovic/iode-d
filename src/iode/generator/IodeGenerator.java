@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import iode.ast.Node;
+import iode.ast.nodes.ASTBinaryOp;
+import iode.ast.nodes.ASTString;
 import iode.parsing.Parser;
 import iode.scanning.Lexer;
 import iode.util.Stopwatch;
@@ -57,7 +59,7 @@ public class IodeGenerator {
 		}
 		
 		StringBuilder cBuilder = new StringBuilder();
-				
+		
 		for (Node n : ast) {
 			cBuilder.append(n.generate());
 		}
@@ -68,6 +70,10 @@ public class IodeGenerator {
 		
 		try {
 			writer = new PrintWriter(Paths.get(filename.replace(".iode", ".c")).toString(), "UTF-8");
+			writer.println("#include <stdio.h>\n");
+			writer.println("#include <stdlib.h>\n");
+			writer.println("#include <string.h>\n\n");
+			writer.println("char* combine(char *s1, char *s2){size_t len1 = strlen(s1);size_t len2 = strlen(s2);char *result = malloc(len1+len2+1);memcpy(result, s1, len1);memcpy(result+len1, s2, len2+1);return result;}\n");			
 			writer.print(cCode);
 			writer.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {

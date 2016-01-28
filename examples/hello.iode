@@ -1,5 +1,3 @@
-import cstdio
-
 fn main() > Int {
   printf("Hello world!")
 }

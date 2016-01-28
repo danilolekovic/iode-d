@@ -16,6 +16,10 @@ public class ASTBinaryOp extends Node {
 
 	@Override
 	public String generate() {
+		if (left instanceof ASTString || right instanceof ASTString) {
+			return "combine(" + left.generate() + ", " + right.generate() + ")";
+		}
+		
 		return left.generate() + " " + op + " " + right.generate();
 	}
 
