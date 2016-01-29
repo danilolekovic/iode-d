@@ -7,6 +7,8 @@ class Stash {
     public static LLVMValueRef[string] namedValues;
     public static LLVMModuleRef theModule;
     public static LLVMBuilderRef builder;
+    public static LLVMPassManagerRef passManager;
+    public static LLVMExecutionEngineRef engine;
 
     this(LLVMModuleRef theModule, LLVMBuilderRef builder) {
         this.theModule = theModule;
