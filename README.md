@@ -1,4 +1,4 @@
-# the iode programming language
+# ![Iode](http://i.imgur.com/icozONU.png)
 
 a multi-paradigm, imperative, procedural, object-oriented programming language inspired by Swift & Ruby. It is free and open-source.
 
