@@ -53,6 +53,10 @@ class Lexer {
                     case "let":
                         theType = TokenType.LET;
                         break;
+                    case "true":
+                    case "false":
+                        theType = TokenType.BOOL;
+                        break;
                 }
 
                 // push token
@@ -67,6 +71,17 @@ class Lexer {
 
                 tokens ~= new Token(TokenType.NUMBER, buffer);
                 buffer = "";
+            } else if (code[pos] == '\"') {
+                pos++;
+
+                while (pos < code.length && code[pos] != '\"') {
+                    buffer ~= code[pos];
+                    pos++;
+                }
+
+                tokens ~= new Token(TokenType.STRING, buffer);
+                buffer = "";
+                pos++;
             } else if (code[pos] == '\n') {
                 tokens ~= new Token(TokenType.NEWLINE, "\n");
                 pos++;
