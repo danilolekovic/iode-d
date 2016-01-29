@@ -1,6 +1,8 @@
 module iode.ast.node;
 
+import std.stdio;
 import llvm.c;
+import iode.gen.stash;
 
 /* base class */
 interface Node {
@@ -48,7 +50,7 @@ class NodeDeclaration : Node {
     }
 
     LLVMValueRef generate() {
-        // TODO: do this
-        return value.generate();
+        Stash.newVariable(name, value.generate());
+        return null;
     }
 }
