@@ -1,0 +1,12 @@
+{
+  "name": "iode",
+  "description": "A programming language",
+  "license": "MIT",
+  "copyright": "Copyright © 2016 Danilo Lekovic",
+	"authors": [
+		"Danilo Lekovic"
+	],
+  "dependencies": {
+		"llvm-d": "~master"
+	}
+}
