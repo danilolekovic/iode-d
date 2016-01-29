@@ -19,9 +19,10 @@ class Stash {
     }
 
     public static bool checkVariable(string name) {
-        LLVMValueRef* p;
-        p = (name in namedValues);
-
-        return p !is null;
+        if (name in namedValues) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -54,3 +54,19 @@ class NodeDeclaration : Node {
         return null;
     }
 }
+
+class NodeVariable : Node {
+    private string name;
+
+    this(string name) {
+        this.name = name;
+    }
+
+    LLVMValueRef generate() {
+        if (Stash.checkVariable(name)) {
+            return Stash.getVariable(name);
+        } else {
+            throw new Exception("Variable '" ~ name ~ "' does not exist");
+        }
+    }
+}
