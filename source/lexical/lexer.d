@@ -153,6 +153,10 @@ class Lexer {
                             tokens ~= new Token(TokenType.LT, toStr);
                         }
                         break;
+                    case '=':
+                        tokens ~= new Token(TokenType.EQUALS, toStr);
+                        pos++;
+                        break;
                 }
             }
         }

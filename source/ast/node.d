@@ -36,3 +36,19 @@ class NodeBoolean : Node {
         }
     }
 }
+
+/* representation of a variable declaration in the AST */
+class NodeDeclaration : Node {
+    private string name;
+    private Node value;
+
+    this(string name, Node value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        // TODO: do this
+        return value.generate();
+    }
+}

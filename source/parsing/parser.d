@@ -80,4 +80,58 @@ class Parser {
     public Node parseBoolean() {
         return new NodeNumber(to!bool(nextToken().getValue()));
     }
+
+    /* parses variable declaration */
+    public Node parseDeclaration() {
+        nextToken(true);
+
+        if (peekCheck(TokenType.IDENT)) {
+            string name = nextToken(true).getValue();
+
+            if (peekCheck(TokenType.EQUALS)) {
+                nextToken(true);
+
+                Node next = literal();
+
+                if (peekCheck(TokenType.NEWLINE)) {
+                    nextToken();
+                    skipNewline();
+
+                    return new NodeDeclaration(name, next);
+                } else {
+                    throw new Exception("Expected a newline on line #" ~ to!string(line));
+                }
+            } else {
+                throw new Exception("Expected '=' on line #" ~ to!string(line));
+            }
+        } else {
+            throw new Exception("Expected an identifier on line #" ~ to!string(line));
+        }
+    }
+
+    /* gets the next literal */
+    public Node literal() {
+        TokenType t = peekToken().getType();
+
+        switch (t) {
+            default:
+                throw new Exception("Unexpected token '" ~ t ~ "' on line #" ~ to!string(line));
+            case TokenType.NUMBER:
+                return parseNumber();
+            case TokenType.BOOL:
+                return parseBoolean();
+        }
+    }
+
+    /* gets the next statement */
+    public Node start() {
+        TokenType t = peekToken().getType();
+
+        switch (t) {
+            default:
+                throw new Exception("Unexpected token '" ~ t ~ "' on line #" ~ to!string(line));
+            case TokenType.VAR:
+                return parseDeclaration();
+        }
+    }
 }

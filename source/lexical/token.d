@@ -25,35 +25,36 @@ class Token {
 }
 
 /* Legal token types */
-enum TokenType {
+enum TokenType : string {
     // types
-    IDENT,
-    STRING,
-    NUMBER,
-    BOOL,
+    IDENT = "identifier",
+    STRING = "string",
+    NUMBER = "number",
+    BOOL = "boolean",
 
     // symbols
-    COMMA,
-    DOT,
-    HASHTAG,
-    COLON,
-    NEWLINE,
+    COMMA = "comma",
+    DOT = "dot",
+    HASHTAG = "hashtag",
+    COLON = "colon",
+    NEWLINE = "terminator",
 
     // math
-    ADD,
-    DIV,
-    MUL,
-    SUB,
-    MOD,
-    GT,
-    LT,
-    GTE,
-    LTE,
+    ADD = "add",
+    DIV = "divide",
+    MUL = "multiply",
+    SUB = "subtract",
+    MOD = "modulus",
+    GT = "greater-than",
+    LT = "less-than",
+    GTE = "greater-than-equal-to",
+    LTE = "less-than-equal-to",
+    EQUALS = "equals",
 
     // keywords
-    IF,
-    FN,
-    VAR,
-    LET,
-    TYPE
+    IF = "if",
+    FN = "function",
+    VAR = "variable",
+    LET = "constant variable",
+    TYPE = "type"
 }
