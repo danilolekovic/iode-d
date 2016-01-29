@@ -23,6 +23,19 @@ class NodeNumber : Node {
     }
 }
 
+/* representation of a string in the AST */
+class NodeString : Node {
+    private string value;
+
+    this(string value) {
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        return LLVMConstString(value.toStringz(), to!uint(value.length), false);
+    }
+}
+
 /* representation of a boolean in the AST */
 class NodeBoolean : Node {
     private bool value;

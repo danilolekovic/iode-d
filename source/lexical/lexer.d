@@ -42,7 +42,10 @@ class Lexer {
                 TokenType theType = TokenType.IDENT;
 
                 // check for keywords..
-                final switch (buffer) {
+                switch (buffer) {
+                    default:
+                        theType = TokenType.IDENT;
+                        break;
                     case "if":
                         theType = TokenType.IF;
                         break;

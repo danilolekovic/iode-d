@@ -10,9 +10,9 @@ import iode.errors.parserError;
 /* Converts tokens into AST */
 class Parser {
     private Lexer lexer;
-    private int pos;
+    public int pos;
     private int line;
-    private ulong totalTokens;
+    public ulong totalTokens;
 
     this(Lexer lexer) {
         this.lexer = lexer;
@@ -75,6 +75,11 @@ class Parser {
     /* parses numbers */
     public Node parseNumber() {
         return new NodeNumber(to!double(nextToken().getValue()));
+    }
+
+    /* parses strings */
+    public Node parseString() {
+        return new NodeString(nextToken().getValue());
     }
 
     /* parses boolean */
@@ -196,6 +201,8 @@ class Parser {
                 return parseBoolean();
             case TokenType.IDENT:
                 return parseIdentLiteral();
+            case TokenType.STRING:
+                return parseString();
         }
     }
 
