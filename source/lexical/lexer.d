@@ -72,6 +72,9 @@ class Lexer {
                 tokens ~= new Token(TokenType.NUMBER, buffer);
                 buffer = "";
             } else if (code[pos] == '\"') {
+                // string..
+
+                // remove quote
                 pos++;
 
                 while (pos < code.length && code[pos] != '\"') {
@@ -81,6 +84,8 @@ class Lexer {
 
                 tokens ~= new Token(TokenType.STRING, buffer);
                 buffer = "";
+
+                // remove quote
                 pos++;
             } else if (code[pos] == '\n') {
                 tokens ~= new Token(TokenType.NEWLINE, "\n");
@@ -88,6 +93,66 @@ class Lexer {
             } else if (isWhite(code[pos])) {
                 // ignore whitespace
                 pos++;
+            } else {
+                string toStr = "";
+                toStr ~= code[pos];
+
+                switch (code[pos]) {
+                    default:
+                        throw new Exception("Illegal symbol: " ~ toStr);
+                    case '+':
+                        tokens ~= new Token(TokenType.ADD, toStr);
+                        pos++;
+                        break;
+                    case '-':
+                        tokens ~= new Token(TokenType.SUB, toStr);
+                        pos++;
+                        break;
+                    case '*':
+                        tokens ~= new Token(TokenType.MUL, toStr);
+                        pos++;
+                        break;
+                    case '/':
+                        tokens ~= new Token(TokenType.DIV, toStr);
+                        pos++;
+                        break;
+                    case ':':
+                        tokens ~= new Token(TokenType.COLON, toStr);
+                        pos++;
+                        break;
+                    case '.':
+                        tokens ~= new Token(TokenType.DOT, toStr);
+                        pos++;
+                        break;
+                    case '#':
+                        tokens ~= new Token(TokenType.HASHTAG, toStr);
+                        pos++;
+                        break;
+                    case '%':
+                        tokens ~= new Token(TokenType.MOD, toStr);
+                        pos++;
+                        break;
+                    case '>':
+                        pos++;
+
+                        if (code.length < (pos + 1) && code[pos + 1] == '=') {
+                            pos++;
+                            tokens ~= new Token(TokenType.LTE, toStr);
+                        } else {
+                            tokens ~= new Token(TokenType.LT, toStr);
+                        }
+                        break;
+                    case '<':
+                        pos++;
+
+                        if (code.length < (pos + 1) && code[pos + 1] == '=') {
+                            pos++;
+                            tokens ~= new Token(TokenType.LTE, toStr);
+                        } else {
+                            tokens ~= new Token(TokenType.LT, toStr);
+                        }
+                        break;
+                }
             }
         }
     }

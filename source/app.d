@@ -5,7 +5,7 @@ import iode.lexical.token;
 import iode.lexical.lexer;
 
 void main(string[] args) {
-	Lexer lexer = new Lexer("\"Hello\"");
+	Lexer lexer = new Lexer("+");
 	lexer.tokenize();
 
 	writeln(lexer.tokens[0].getType());
