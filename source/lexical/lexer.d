@@ -1,8 +1,9 @@
 module iode.lexical.lexer;
 
 import std.stdio;
-import iode.lexical.token;
 import std.uni;
+import iode.lexical.token;
+import iode.errors.lexerError;
 
 /* Converts raw code into tokens */
 class Lexer {
@@ -100,7 +101,7 @@ class Lexer {
 
                 switch (code[pos]) {
                     default:
-                        throw new Exception("Illegal symbol: " ~ toStr);
+                        throw new LexerException("Illegal symbol: " ~ toStr, line);
                     case '+':
                         tokens ~= new Token(TokenType.ADD, toStr);
                         pos++;

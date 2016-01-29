@@ -5,6 +5,7 @@ import std.conv;
 import iode.lexical.lexer;
 import iode.lexical.token;
 import iode.ast.node;
+import iode.errors.parserError;
 
 /* Converts tokens into AST */
 class Parser {
@@ -99,13 +100,13 @@ class Parser {
 
                     return new NodeDeclaration(name, next);
                 } else {
-                    throw new Exception("Expected a newline on line #" ~ to!string(line));
+                    throw new ParserException("Expected a newline", line);
                 }
             } else {
-                throw new Exception("Expected '=' on line #" ~ to!string(line));
+                throw new ParserException("Expected '='", line);
             }
         } else {
-            throw new Exception("Expected an identifier on line #" ~ to!string(line));
+            throw new ParserException("Expected an identifier", line);
         }
     }
 
@@ -115,7 +116,7 @@ class Parser {
 
         switch (t) {
             default:
-                throw new Exception("Unexpected token '" ~ t ~ "' on line #" ~ to!string(line));
+                throw new ParserException("Unexpected token '" ~ t ~ "'", line);
             case TokenType.NUMBER:
                 return parseNumber();
             case TokenType.BOOL:
@@ -129,7 +130,7 @@ class Parser {
 
         switch (t) {
             default:
-                throw new Exception("Unexpected token '" ~ t ~ "' on line #" ~ to!string(line));
+                throw new ParserException("Unexpected token '" ~ t ~ "'", line);
             case TokenType.VAR:
                 return parseDeclaration();
         }
