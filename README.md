@@ -17,17 +17,17 @@ a multi-paradigm, imperative, procedural, object-oriented programming language i
 
 ## another one?
 
-> A language that really stood out to me in almost every way is Swift. Unfortunately, Swift is meant to run on only Apple machines running OS X or iOS. Upon seeing the code, I admired the syntax and design of the language. It was obviously *so close* to being the perfect programming language. I'm not trying to make the perfect programming language for everyone, I'm trying to make a good programming language that anyone can use and that everyone will love to use! :)
-- @danilolekovic
+> A language that really stood out to me in almost every way is Swift. Unfortunately, Swift is meant to run on only Apple machines running OS X or iOS. Upon seeing the code, I admired the syntax and design of the language. It was obviously *so close* to being the perfect programming language. I'm not trying to make the perfect programming language for everyone, I'm trying to make a good programming language that anyone can use and that everyone will love to use! :smiley:
+-[@danilolekovic](https://github.com/danilolekovic)
 
 ## roadmap
 
 - [x] lexer
 - [ ] parser
 - [ ] ast
-- [ ] code generation
-- [ ] literals (bool, int)
-- [ ] statements (if, else)
+- [ ] code generation (LLVM)
+- [x] literals (bool, int, string, etc)
+- [ ] statements (if, else, etc)
 - [ ] functions & variables
 - [ ] standard library
 - [ ] import from c std
