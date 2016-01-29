@@ -158,6 +158,14 @@ class Lexer {
                         tokens ~= new Token(TokenType.EQUALS, toStr);
                         pos++;
                         break;
+                    case '(':
+                        tokens ~= new Token(TokenType.LPAREN, toStr);
+                        pos++;
+                        break;
+                    case ')':
+                        tokens ~= new Token(TokenType.RPAREN, toStr);
+                        pos++;
+                        break;
                 }
             }
         }

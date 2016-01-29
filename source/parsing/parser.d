@@ -95,8 +95,7 @@ class Parser {
                 Node next = literal();
 
                 if (peekCheck(TokenType.NEWLINE)) {
-                    nextToken();
-                    skipNewline();
+                    nextToken(true);
 
                     return new NodeDeclaration(name, next);
                 } else {
@@ -107,6 +106,80 @@ class Parser {
             }
         } else {
             throw new ParserException("Expected an identifier", line);
+        }
+    }
+
+    /* parses an ident as a literal */
+    public Node parseIdentLiteral() {
+        string ident = nextToken().getValue();
+
+        if (peekCheck(TokenType.LPAREN)) {
+            nextToken(true);
+            Node[] args;
+
+            while (!peekCheck(TokenType.RPAREN)) {
+                args ~= literal();
+
+                if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
+                    throw new ParserException("Expected ',' or ')'", line);
+                }
+
+                if (peekCheck(TokenType.COMMA)) {
+                    nextToken(true);
+                } else if (peekCheck(TokenType.RPAREN)) {
+                    break;
+                }
+            }
+
+            if (peekCheck(TokenType.RPAREN)) {
+                nextToken();
+
+                return new NodeCall(ident, args);
+            } else {
+                throw new ParserException("Expected ',' or ')'", line);
+            }
+        } else {
+            return new NodeVariable(ident);
+        }
+    }
+
+    /* parses an ident as an expression */
+    public Node parseIdent() {
+        string ident = nextToken(true).getValue();
+
+        if (peekCheck(TokenType.LPAREN)) {
+            nextToken(true);
+            Node[] args;
+
+            while (!peekCheck(TokenType.RPAREN)) {
+                args ~= literal();
+
+                if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
+                    throw new ParserException("Expected ',' or ')'", line);
+                }
+
+                if (peekCheck(TokenType.COMMA)) {
+                    nextToken(true);
+                } else if (peekCheck(TokenType.RPAREN)) {
+                    break;
+                }
+            }
+
+            if (peekCheck(TokenType.RPAREN)) {
+                nextToken();
+
+                if (peekCheck(TokenType.NEWLINE)) {
+                    nextToken(true);
+
+                    return new NodeCall(ident, args);
+                } else {
+                    throw new ParserException("Expected a newline", line);
+                }
+            } else {
+                throw new ParserException("Expected ',' or ')'", line);
+            }
+        } else {
+            throw new ParserException("Expected nothing or '(' after identifier", line);
         }
     }
 
@@ -121,6 +194,8 @@ class Parser {
                 return parseNumber();
             case TokenType.BOOL:
                 return parseBoolean();
+            case TokenType.IDENT:
+                return parseIdentLiteral();
         }
     }
 
@@ -133,6 +208,8 @@ class Parser {
                 throw new ParserException("Unexpected token '" ~ t ~ "'", line);
             case TokenType.VAR:
                 return parseDeclaration();
+            case TokenType.IDENT:
+                return parseIdent();
         }
     }
 }

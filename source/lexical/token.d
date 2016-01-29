@@ -38,6 +38,8 @@ enum TokenType : string {
     HASHTAG = "hashtag",
     COLON = "colon",
     NEWLINE = "terminator",
+    LPAREN = "left parenthesis",
+    RPAREN = "right parenthesis",
 
     // math
     ADD = "add",
