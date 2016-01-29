@@ -1,6 +1,7 @@
 module iode.ast.node;
 
 import std.stdio;
+import std.string;
 import llvm.c;
 import iode.gen.stash;
 
@@ -55,6 +56,7 @@ class NodeDeclaration : Node {
     }
 }
 
+/* representation of a variable in the ast */
 class NodeVariable : Node {
     private string name;
 
@@ -68,5 +70,40 @@ class NodeVariable : Node {
         } else {
             throw new Exception("Variable '" ~ name ~ "' does not exist");
         }
+    }
+}
+
+/* representation of a function call in the ast */
+class NodeCall : Node {
+    private string name;
+    private Node[] args;
+
+    this(string name, Node[] args) {
+        this.name = name;
+        this.args = args;
+    }
+
+    LLVMValueRef generate() {
+        LLVMValueRef caller = LLVMGetNamedFunction(Stash.theModule, name.toStringz());
+
+        if (caller is null) {
+            throw new Exception("Unknown function: " ~ name);
+        }
+
+        if (LLVMCountParams(caller) != args.length) {
+            throw new Exception("Function '" ~ name ~ "' expected "
+                ~ to!string(LLVMCountParams(caller)) ~ " params but got "
+                ~ to!string(args.length) ~ " params.");
+        }
+
+        LLVMValueRef[] generated;
+
+        foreach (arg; args) {
+            generated ~= arg.generate();
+        }
+
+        uint len = to!uint(generated.length);
+
+        return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
     }
 }

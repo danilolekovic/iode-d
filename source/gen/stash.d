@@ -5,6 +5,13 @@ import llvm.c;
 
 class Stash {
     public static LLVMValueRef[string] namedValues;
+    public static LLVMModuleRef theModule;
+    public static LLVMBuilderRef builder;
+
+    this(LLVMModuleRef theModule, LLVMBuilderRef builder) {
+        this.theModule = theModule;
+        this.builder = builder;
+    }
 
     public static LLVMValueRef getVariable(string name) {
         if (checkVariable(name)) {
