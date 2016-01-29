@@ -1,9 +1,0 @@
-fn getAges() > ArrayInt {
-  return [1, 2, 3]
-}
-
-var myArray:String = ["Bob", "Jim", "Charlie"]
-
-fn main() > Int {
-  return 0
-}

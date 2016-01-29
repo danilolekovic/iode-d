@@ -1,8 +1,0 @@
-var name:String = "John" # var is mutable #
-let age = 22 # let is constant #
-let alive = true # constants don't need a variable type #
-
-fn main() > Int {
-  name = "Billy"
-  printf("%s", name)
-}

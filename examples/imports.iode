@@ -1,6 +1,0 @@
-import function
-
-fn main() > Int {
-  printName("Dan")
-  return 0
-}

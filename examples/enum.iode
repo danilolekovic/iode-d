@@ -1,5 +1,0 @@
-enum days (MONDAY, TUESDAY, WEDNESDAY, FRIDAY, SATURDAY, SUNDAY)
-
-fn main() > Int {
-  return 0
-}

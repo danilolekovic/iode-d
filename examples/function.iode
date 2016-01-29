@@ -1,5 +1,0 @@
-import std stdio # stdio is imported by default #
-
-fn printName(String name) > Void {
-  printf("Hey %s!\n", name)
-}

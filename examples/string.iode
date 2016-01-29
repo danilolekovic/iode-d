@@ -1,8 +1,0 @@
-fn main() > Int {
-  # var msg:String = left + right won't compile #
-  var where:String = "World!"
-  var msg:String = "Hello" + " " + where
-
-  printf("%s", msg)
-  return 0
-}

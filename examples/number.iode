@@ -1,8 +1,0 @@
-var decimal:Double = 3.1415
-var big:Int = 22_213 # compiles to 22213 #
-
-fn main() > Int {
-  printf("%f\n", decimal)
-  printf("%d\n", big)
-  return 0
-}
