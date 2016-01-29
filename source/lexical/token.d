@@ -2,8 +2,12 @@ module iode.lexical.token;
 
 import std.stdio;
 
+/* Token that the parser can understand */
 class Token {
+    // Type of token
     private TokenType tokenType;
+
+    // Token's value in the code
     private string value;
 
     this(TokenType tokenType, string value) {
@@ -20,6 +24,7 @@ class Token {
     }
 }
 
+/* Legal token types */
 enum TokenType {
     // types
     IDENT,
@@ -32,6 +37,7 @@ enum TokenType {
     DOT,
     HASHTAG,
     COLON,
+    NEWLINE,
 
     // math
     ADD,
@@ -45,6 +51,7 @@ enum TokenType {
     LTE,
 
     // keywords
+    IF,
     FN,
     VAR,
     LET,
