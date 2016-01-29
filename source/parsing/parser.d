@@ -1,8 +1,10 @@
 module iode.parsing.parser;
 
 import std.stdio;
+import std.conv;
 import iode.lexical.lexer;
 import iode.lexical.token;
+import iode.ast.node;
 
 /* Converts tokens into AST */
 class Parser {
@@ -67,5 +69,15 @@ class Parser {
                 nextToken();
             }
         }
+    }
+
+    /* parses numbers */
+    public Node parseNumber() {
+        return new NodeNumber(to!double(nextToken().getValue()));
+    }
+
+    /* parses boolean */
+    public Node parseBoolean() {
+        return new NodeNumber(to!bool(nextToken().getValue()));
     }
 }
