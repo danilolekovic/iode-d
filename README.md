@@ -22,7 +22,7 @@ a multi-paradigm, imperative, procedural, object-oriented programming language i
 
 ## roadmap
 
-- [ ] lexer
+- [x] lexer
 - [ ] parser
 - [ ] ast
 - [ ] code generation
