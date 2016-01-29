@@ -17,6 +17,7 @@ class Lexer {
         this.tokens = [];
     }
 
+    /* Converts code into tokens */
     public void tokenize() {
         // current position in the code
         int pos = 0;
