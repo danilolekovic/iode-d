@@ -33,6 +33,10 @@ a multi-paradigm, imperative, procedural, object-oriented programming language i
 - [ ] import from c std
 - [ ] first release
 
+## thinking to contribute?
+
+this project uses [llvm-d](https://github.com/Calrama/llvm-d/) for its LLVM bindings. For a to-do list of things that need to be done/fixed/implemented, [click here](https://trello.com/b/4o7ZAmRC/the-iode-programming-language). All help is much appreciated!
+
 ## license
 
 **COPYRIGHT (c) 2016 Danilo Lekovic**
