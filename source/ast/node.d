@@ -137,7 +137,7 @@ class NodeReturn : Node {
     }
 
     LLVMValueRef generate() {
-        return LLVMBuildRet(Stash.builder, value.generate());
+        return value.generate();
     }
 }
 
