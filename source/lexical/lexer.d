@@ -133,7 +133,12 @@ class Lexer {
                         pos++;
                         break;
                     case '#':
-                        tokens ~= new Token(TokenType.HASHTAG, toStr);
+                        pos++;
+
+                        while (code[pos] != '#') {
+                            pos++;
+                        }
+
                         pos++;
                         break;
                     case '%':

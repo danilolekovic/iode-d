@@ -36,7 +36,6 @@ enum TokenType : string {
     // symbols
     COMMA = "comma",
     DOT = "dot",
-    HASHTAG = "hashtag",
     COLON = "colon",
     NEWLINE = "terminator",
     LPAREN = "left parenthesis",
