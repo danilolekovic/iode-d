@@ -194,6 +194,103 @@ class Parser {
         }
     }
 
+    /* parses a function declaration */
+    public Node parseFunction() {
+        nextToken(true);
+
+        if (peekCheck(TokenType.IDENT)) {
+            string name = nextToken(true).getValue();
+
+            if (peekCheck(TokenType.LPAREN)) {
+                nextToken(true);
+                Arg[] args;
+
+                while (!peekCheck(TokenType.RPAREN)) {
+                    if (peekCheck(TokenType.IDENT)) {
+                        string argName = nextToken(true).getValue();
+
+                        if (peekCheck(TokenType.COLON)) {
+                            nextToken(true);
+
+                            if (peekCheck(TokenType.IDENT)) {
+                                string type = nextToken(true).getValue();
+
+                                args ~= new Arg(type, argName);
+
+                                if (peekCheck(TokenType.COMMA)) {
+                                    nextToken(true);
+                                } else if (peekCheck(TokenType.RPAREN)) {
+                                    break;
+                                } else {
+                                    throw new ParserException("Expected ',' or ')'", line);
+                                }
+                            } else {
+                                throw new ParserException("Expected a type after ':'", line);
+                            }
+                        } else {
+                            throw new ParserException("Expected ':' after parameter name", line);
+                        }
+                    } else {
+                        throw new ParserException("Expected an identifier", line);
+                    }
+                }
+
+                Node[] block;
+
+                if (peekCheck(TokenType.RPAREN)) {
+                    nextToken(true);
+
+                    if (peekCheck(TokenType.GT)) {
+                        nextToken(true);
+
+                        if (peekCheck(TokenType.IDENT)) {
+                            string type = nextToken().getValue();
+
+                            if (peekCheck(TokenType.LBRACE)) {
+                                nextToken(true);
+
+                                while (!peekCheck(TokenType.RBRACE)) {
+                                    block ~= start();
+                                    skipNewline();
+                                }
+
+                                nextToken(true);
+
+                                return new NodeFunction(name, args, type, block);
+                            } else {
+                                throw new ParserException("Expected '{'", line);
+                            }
+                        } else {
+                            throw new ParserException("Expected type", line);
+                        }
+                    } else {
+                        throw new ParserException("Expected '>'", line);
+                    }
+                } else {
+                    throw new ParserException("Expected ')'", line);
+                }
+            } else {
+                throw new ParserException("Expected '('", line);
+            }
+        } else {
+            throw new ParserException("Expected a function name", line);
+        }
+    }
+
+    /* parses a return */
+    public Node parseReturn() {
+        nextToken(true);
+        Node lit = literal();
+
+        if (peekCheck(TokenType.NEWLINE)) {
+            nextToken(true);
+        } else {
+            throw new ParserException("Expected a newline", line);
+        }
+
+        return new NodeReturn(lit);
+    }
+
     /* gets the next literal */
     public Node literal() {
         TokenType t = peekToken().getType();
@@ -223,8 +320,12 @@ class Parser {
                 throw new ParserException("Unexpected token '" ~ t ~ "'", line);
             case TokenType.VAR:
                 return parseDeclaration();
+            case TokenType.FN:
+                return parseFunction();
             case TokenType.IDENT:
                 return parseIdent();
+            case TokenType.RETURN:
+                return parseReturn();
         }
     }
 }

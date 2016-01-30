@@ -65,6 +65,9 @@ class Lexer {
                     case "null":
                         theType = TokenType.NULL;
                         break;
+                    case "return":
+                        theType = TokenType.RETURN;
+                        break;
                 }
 
                 // push token
@@ -150,9 +153,9 @@ class Lexer {
 
                         if (code.length < (pos + 1) && code[pos + 1] == '=') {
                             pos++;
-                            tokens ~= new Token(TokenType.LTE, toStr);
+                            tokens ~= new Token(TokenType.GTE, toStr);
                         } else {
-                            tokens ~= new Token(TokenType.LT, toStr);
+                            tokens ~= new Token(TokenType.GT, toStr);
                         }
                         break;
                     case '<':
@@ -175,6 +178,14 @@ class Lexer {
                         break;
                     case ')':
                         tokens ~= new Token(TokenType.RPAREN, toStr);
+                        pos++;
+                        break;
+                    case '{':
+                        tokens ~= new Token(TokenType.LBRACE, toStr);
+                        pos++;
+                        break;
+                    case '}':
+                        tokens ~= new Token(TokenType.RBRACE, toStr);
                         pos++;
                         break;
                 }

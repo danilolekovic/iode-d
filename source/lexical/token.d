@@ -40,6 +40,8 @@ enum TokenType : string {
     NEWLINE = "terminator",
     LPAREN = "left parenthesis",
     RPAREN = "right parenthesis",
+    LBRACE = "left brace",
+    RBRACE = "right brace",
 
     // math
     ADD = "add",
@@ -58,5 +60,6 @@ enum TokenType : string {
     FN = "function",
     VAR = "variable",
     LET = "constant variable",
+    RETURN = "return",
     TYPE = "type"
 }
