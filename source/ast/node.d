@@ -12,14 +12,14 @@ interface Node {
 
 /* representation of a number in the AST */
 class NodeNumber : Node {
-    private double value;
+    private ulong value;
 
-    this(double value) {
+    this(ulong value) {
         this.value = value;
     }
 
     LLVMValueRef generate() {
-        return LLVMConstReal(LLVMDoubleType(), value);
+        return LLVMConstInt(LLVMInt32Type(), value, false);
     }
 }
 
@@ -171,10 +171,10 @@ class NodeFunction : Node {
 
 		foreach (arg; args) {
 			if (arg.type == "Int") {
-                types ~= LLVMDoubleType();
+                types ~= LLVMInt32Type();
             } else if (arg.type == "String") {
                 // TODO: string type
-                types ~= LLVMDoubleType();
+                types ~= LLVMInt32Type();
             } else if (arg.type == "Bool") {
                 types ~= LLVMInt16Type();
             } else {
@@ -185,7 +185,7 @@ class NodeFunction : Node {
         LLVMTypeRef theType;
 
         if (type == "Int") {
-            theType = LLVMDoubleType();
+            theType = LLVMInt32Type();
         } else if (type == "String") {
             // TODO: string type
             theType = LLVMDoubleType();
@@ -219,7 +219,20 @@ class NodeFunction : Node {
 		foreach (index, arg; prms) {
             auto backupCurrentBlock = LLVMGetInsertBlock(Stash.builder);
         	LLVMPositionBuilderAtEnd(Stash.builder, LLVMGetFirstBasicBlock(func));
-        	auto alloca = LLVMBuildAlloca(Stash.builder, LLVMDoubleType(), args[index].name.toStringz());
+            LLVMTypeRef t;
+
+            if (args[index].type == "Int") {
+                t = LLVMInt32Type();
+            } else if (args[index].type == "String") {
+                // TODO: string type
+                t = LLVMDoubleType();
+            } else if (args[index].type == "Bool") {
+                t = LLVMInt16Type();
+            } else {
+                t = LLVMVoidType();
+            }
+
+        	auto alloca = LLVMBuildAlloca(Stash.builder, t, args[index].name.toStringz());
             LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
 
 			LLVMBuildStore(Stash.builder, arg, alloca);

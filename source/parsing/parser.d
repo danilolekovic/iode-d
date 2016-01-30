@@ -74,7 +74,7 @@ class Parser {
 
     /* parses numbers */
     public Node parseNumber() {
-        return new NodeNumber(to!double(nextToken().getValue()));
+        return new NodeNumber(to!ulong(nextToken().getValue()));
     }
 
     /* parses strings */
