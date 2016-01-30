@@ -33,13 +33,11 @@ class CodeGenerator {
 
     	if (result == 1) {
     		writeln(to!string(errorPtr));
-    		writeln("Cannot create execution engine ! Exiting...");
+    		writeln("Error creating execution engine..");
     		return;
     	}
 
     	Stash.engine = engine;
-
-    	// Setup optimisation passes
     	Stash.passManager = LLVMCreateFunctionPassManagerForModule(Stash.theModule);
     	LLVMAddTargetData(LLVMGetExecutionEngineTargetData(Stash.engine), Stash.passManager);
     	LLVMAddPromoteMemoryToRegisterPass(Stash.passManager);

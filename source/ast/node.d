@@ -173,8 +173,7 @@ class NodeFunction : Node {
 			if (arg.type == "Int") {
                 types ~= LLVMInt32Type();
             } else if (arg.type == "String") {
-                // TODO: string type
-                types ~= LLVMInt32Type();
+                types ~= LLVMInt8Type();
             } else if (arg.type == "Bool") {
                 types ~= LLVMInt16Type();
             } else {
@@ -187,8 +186,7 @@ class NodeFunction : Node {
         if (type == "Int") {
             theType = LLVMInt32Type();
         } else if (type == "String") {
-            // TODO: string type
-            theType = LLVMDoubleType();
+            theType = LLVMInt8Type();
         } else if (type == "Bool") {
             theType = LLVMInt16Type();
         } else if (type == "Void") {
@@ -224,8 +222,7 @@ class NodeFunction : Node {
             if (args[index].type == "Int") {
                 t = LLVMInt32Type();
             } else if (args[index].type == "String") {
-                // TODO: string type
-                t = LLVMDoubleType();
+                t = LLVMInt8Type();
             } else if (args[index].type == "Bool") {
                 t = LLVMInt16Type();
             } else {
