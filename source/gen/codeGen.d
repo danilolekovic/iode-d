@@ -49,6 +49,13 @@ class CodeGenerator {
     	LLVMAddGVNPass(Stash.passManager);
     	LLVMAddCFGSimplificationPass(Stash.passManager);
 
+        string name = "returnNumber";
+        string[] args = ["msg"];
+        string type = "Int";
+        Node[] block = [new NodeReturn(new NodeNumber(25))];
+        NodeFunction nf = new NodeFunction(name, args, type, block);
+        nf.generate();
+
     	foreach (n; ast) {
     		n.generate();
     	}

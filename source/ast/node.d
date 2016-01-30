@@ -127,3 +127,92 @@ class NodeCall : Node {
         return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
     }
 }
+
+/* representation of a return expression in the ast */
+class NodeReturn : Node {
+    private Node value;
+
+    this(Node value) {
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        return LLVMBuildRet(Stash.builder, value.generate());
+    }
+}
+
+/* representation of a function definition in the ast */
+class NodeFunction : Node {
+    private string name;
+    private string[] args;
+    private string type;
+    private Node[] block;
+
+    this(string name, string[] args, string type, Node[] block) {
+        this.name = name;
+        this.args = args;
+        this.type = type;
+        this.block = block;
+    }
+
+    LLVMValueRef generate() {
+        LLVMTypeRef[] types;
+
+		foreach (arg; args) {
+			types ~= LLVMDoubleType();
+		}
+
+        LLVMTypeRef theType;
+
+        if (type == "Int") {
+            theType = LLVMDoubleType();
+        } else if (type == "String") {
+            // TODO: string type
+            theType = LLVMDoubleType();
+        } else if (type == "Bool") {
+            theType = LLVMInt16Type();
+        } else if (type == "Void") {
+            theType = LLVMVoidType();
+        } else {
+            theType = LLVMVoidType();
+        }
+
+        auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
+
+		LLVMValueRef func = LLVMAddFunction(Stash.theModule, name.toStringz(), funcType);
+
+		LLVMValueRef[] params;
+		params.length = LLVMCountParams(func);
+		LLVMGetParams(func, params.ptr);
+
+		foreach (index, arg; params) {
+			LLVMSetValueName(arg, args[index].toStringz());
+		}
+
+        LLVMBasicBlockRef basicBlock = LLVMAppendBasicBlock(func, "entry");
+		LLVMPositionBuilderAtEnd(Stash.builder, basicBlock);
+
+        LLVMValueRef[] prms;
+		prms.length = LLVMCountParams(func);
+		LLVMGetParams(func, prms.ptr);
+
+		foreach (index, arg; prms) {
+            auto backupCurrentBlock = LLVMGetInsertBlock(Stash.builder);
+        	LLVMPositionBuilderAtEnd(Stash.builder, LLVMGetFirstBasicBlock(func));
+        	auto alloca = LLVMBuildAlloca(Stash.builder, LLVMDoubleType(), args[index].toStringz());
+            LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
+
+			LLVMBuildStore(Stash.builder, arg, alloca);
+			Stash.newVariable(args[index], alloca);
+		}
+
+        foreach (expr; block) {
+			LLVMBuildRet(Stash.builder, expr.generate());
+        }
+
+        LLVMVerifyFunction(func, 1);
+        LLVMRunFunctionPassManager(Stash.passManager, func);
+
+        return func;
+    }
+}
