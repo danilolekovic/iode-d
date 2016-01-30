@@ -1,6 +1,7 @@
 module iode.gen.codeGen;
 
 import std.stdio;
+import std.string;
 import llvm.c;
 import iode.lexical.token;
 import iode.lexical.lexer;

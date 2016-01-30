@@ -62,6 +62,9 @@ class Lexer {
                     case "false":
                         theType = TokenType.BOOL;
                         break;
+                    case "null":
+                        theType = TokenType.NULL;
+                        break;
                 }
 
                 // push token

@@ -31,6 +31,7 @@ enum TokenType : string {
     STRING = "string",
     NUMBER = "number",
     BOOL = "boolean",
+    NULL = "null",
 
     // symbols
     COMMA = "comma",

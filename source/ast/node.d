@@ -53,6 +53,13 @@ class NodeBoolean : Node {
     }
 }
 
+/* representation of a null value in the AST */
+class NodeNull : Node {
+    LLVMValueRef generate() {
+        return LLVMConstNull(LLVMVoidType());
+    }
+}
+
 /* representation of a variable declaration in the AST */
 class NodeDeclaration : Node {
     private string name;

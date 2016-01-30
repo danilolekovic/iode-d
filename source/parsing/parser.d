@@ -87,6 +87,12 @@ class Parser {
         return new NodeNumber(to!bool(nextToken().getValue()));
     }
 
+    /* parses null */
+    public Node parseNull() {
+        nextToken();
+        return new NodeNull();
+    }
+
     /* parses variable declaration */
     public Node parseDeclaration() {
         nextToken(true);
@@ -203,6 +209,8 @@ class Parser {
                 return parseIdentLiteral();
             case TokenType.STRING:
                 return parseString();
+            case TokenType.NULL:
+                return parseNull();
         }
     }
 
