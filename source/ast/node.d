@@ -137,7 +137,7 @@ class NodeReturn : Node {
     }
 
     LLVMValueRef generate() {
-        return value.generate();
+        return LLVMBuildRet(Stash.builder, value.generate());
     }
 }
 
@@ -227,7 +227,7 @@ class NodeFunction : Node {
 		}
 
         foreach (expr; block) {
-			LLVMBuildRet(Stash.builder, expr.generate());
+			expr.generate();
         }
 
         LLVMVerifyFunction(func, 1);
