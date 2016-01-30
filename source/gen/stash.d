@@ -24,7 +24,27 @@ class Stash {
     }
 
     public static void newVariable(string name, LLVMValueRef value) {
-        namedValues[name] = value;
+        if (!checkVariable(name)) {
+            namedValues[name] = value;
+        } else {
+            throw new Exception("Variable " ~ name ~ " already exists.");
+        }
+    }
+
+    public static void setVariable(string name, LLVMValueRef value) {
+        if (checkVariable(name)) {
+            namedValues[name] = value;
+        } else {
+            throw new Exception("Variable " ~ name ~ " doesn't exists.");
+        }
+    }
+
+    public static void removeVariable(string name) {
+        if (checkVariable(name)) {
+            namedValues.remove(name);
+        } else {
+            throw new Exception("Variable " ~ name ~ " doesn't exist.");
+        }
     }
 
     public static bool checkVariable(string name) {

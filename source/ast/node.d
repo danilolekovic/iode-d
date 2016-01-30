@@ -62,7 +62,7 @@ class NodeNull : Node {
 
 /* representation of a variable declaration in the AST */
 class NodeDeclaration : Node {
-    private string name;
+    public string name;
     private Node value;
 
     this(string name, Node value) {
@@ -226,12 +226,27 @@ class NodeFunction : Node {
 			Stash.newVariable(args[index].name, alloca);
 		}
 
+        string[] localVariables;
+
         foreach (expr; block) {
-			expr.generate();
+			if (cast(NodeDeclaration) expr) {
+                NodeDeclaration decl = cast(NodeDeclaration) expr;
+                localVariables ~= decl.name;
+            }
+
+            expr.generate();
         }
 
         LLVMVerifyFunction(func, 1);
         LLVMRunFunctionPassManager(Stash.passManager, func);
+
+        foreach (arg; args) {
+			Stash.removeVariable(arg.name);
+		}
+
+        foreach (vari; localVariables) {
+            Stash.removeVariable(vari);
+        }
 
         return func;
     }
