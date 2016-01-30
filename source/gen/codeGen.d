@@ -50,7 +50,8 @@ class CodeGenerator {
     	LLVMAddCFGSimplificationPass(Stash.passManager);
 
         string name = "returnNumber";
-        string[] args = ["msg"];
+        Arg[] args;
+        args ~= new Arg("Int", "n");
         string type = "Int";
         Node[] block = [new NodeReturn(new NodeNumber(25))];
         NodeFunction nf = new NodeFunction(name, args, type, block);

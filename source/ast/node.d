@@ -141,14 +141,25 @@ class NodeReturn : Node {
     }
 }
 
+/* helper class for functions */
+class Arg {
+    public string type;
+    public string name;
+
+    this(string type, string name) {
+        this.type = type;
+        this.name = name;
+    }
+}
+
 /* representation of a function definition in the ast */
 class NodeFunction : Node {
     private string name;
-    private string[] args;
+    private Arg[] args;
     private string type;
     private Node[] block;
 
-    this(string name, string[] args, string type, Node[] block) {
+    this(string name, Arg[] args, string type, Node[] block) {
         this.name = name;
         this.args = args;
         this.type = type;
@@ -159,7 +170,16 @@ class NodeFunction : Node {
         LLVMTypeRef[] types;
 
 		foreach (arg; args) {
-			types ~= LLVMDoubleType();
+			if (arg.type == "Int") {
+                types ~= LLVMDoubleType();
+            } else if (arg.type == "String") {
+                // TODO: string type
+                types ~= LLVMDoubleType();
+            } else if (arg.type == "Bool") {
+                types ~= LLVMInt16Type();
+            } else {
+                types ~= LLVMVoidType();
+            }
 		}
 
         LLVMTypeRef theType;
@@ -186,7 +206,7 @@ class NodeFunction : Node {
 		LLVMGetParams(func, params.ptr);
 
 		foreach (index, arg; params) {
-			LLVMSetValueName(arg, args[index].toStringz());
+			LLVMSetValueName(arg, args[index].name.toStringz());
 		}
 
         LLVMBasicBlockRef basicBlock = LLVMAppendBasicBlock(func, "entry");
@@ -199,11 +219,11 @@ class NodeFunction : Node {
 		foreach (index, arg; prms) {
             auto backupCurrentBlock = LLVMGetInsertBlock(Stash.builder);
         	LLVMPositionBuilderAtEnd(Stash.builder, LLVMGetFirstBasicBlock(func));
-        	auto alloca = LLVMBuildAlloca(Stash.builder, LLVMDoubleType(), args[index].toStringz());
+        	auto alloca = LLVMBuildAlloca(Stash.builder, LLVMDoubleType(), args[index].name.toStringz());
             LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
 
 			LLVMBuildStore(Stash.builder, arg, alloca);
-			Stash.newVariable(args[index], alloca);
+			Stash.newVariable(args[index].name, alloca);
 		}
 
         foreach (expr; block) {
