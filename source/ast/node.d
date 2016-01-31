@@ -4,6 +4,7 @@ import std.stdio;
 import std.string;
 import llvm.c;
 import iode.gen.stash;
+import iode.errors.astError;
 
 /* base class */
 interface Node {
@@ -32,8 +33,8 @@ class NodeString : Node {
     }
 
     LLVMValueRef generate() {
+        // TODO: fix this!!! somehow!
         return LLVMConstString(value.toStringz(), to!uint(value.length), false);
-        //return LLVMConstInt(LLVMInt8Type(), 5, false);
     }
 }
 
@@ -89,7 +90,7 @@ class NodeVariable : Node {
         if (Stash.checkVariable(name)) {
             return Stash.getVariable(name);
         } else {
-            throw new Exception("Variable '" ~ name ~ "' does not exist");
+            throw new ASTException("Variable '" ~ name ~ "' does not exist");
         }
     }
 }
@@ -107,14 +108,14 @@ class NodeCall : Node {
     LLVMValueRef generate() {
         LLVMValueRef caller = LLVMGetNamedFunction(Stash.theModule, name.toStringz());
 
-        if (caller is null) {
-            throw new Exception("Unknown function: " ~ name);
+        if (caller == null) {
+            throw new ASTException("Unknown function: " ~ name);
         }
 
         if (LLVMCountParams(caller) != args.length) {
-            throw new Exception("Function '" ~ name ~ "' expected "
+            throw new ASTException("Function '" ~ name ~ "' expected "
                 ~ to!string(LLVMCountParams(caller)) ~ " params but got "
-                ~ to!string(args.length) ~ " params.");
+                ~ to!string(args.length) ~ " params");
         }
 
         LLVMValueRef[] generated;
@@ -178,7 +179,7 @@ class NodeFunction : Node {
             } else if (arg.type == "Bool") {
                 types ~= LLVMInt16Type();
             } else {
-                types ~= LLVMVoidType();
+                throw new ASTException("Unknown type: " ~ arg.type);
             }
 		}
 
@@ -193,7 +194,7 @@ class NodeFunction : Node {
         } else if (type == "Void") {
             theType = LLVMVoidType();
         } else {
-            theType = LLVMVoidType();
+            throw new ASTException("Unknown type: " ~ type);
         }
 
         auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
@@ -227,7 +228,7 @@ class NodeFunction : Node {
             } else if (args[index].type == "Bool") {
                 t = LLVMInt1Type();
             } else {
-                t = LLVMVoidType();
+                throw new ASTException("Unknown type: " ~ args[index].type);
             }
 
         	auto alloca = LLVMBuildAlloca(Stash.builder, t, args[index].name.toStringz());

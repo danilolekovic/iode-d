@@ -10,11 +10,7 @@ class Stash {
     public static LLVMBuilderRef builder;
     public static LLVMPassManagerRef passManager;
     public static LLVMExecutionEngineRef engine;
-
-    this(LLVMModuleRef theModule, LLVMBuilderRef builder) {
-        this.theModule = theModule;
-        this.builder = builder;
-    }
+    public static int line = 1;
 
     public static LLVMValueRef getVariable(string name) {
         if (checkVariable(name)) {

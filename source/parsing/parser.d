@@ -5,19 +5,19 @@ import std.conv;
 import iode.lexical.lexer;
 import iode.lexical.token;
 import iode.ast.node;
+import iode.gen.stash;
 import iode.errors.parserError;
 
 /* Converts tokens into AST */
 class Parser {
     private Lexer lexer;
     public int pos;
-    private int line;
     public ulong totalTokens;
 
     this(Lexer lexer) {
         this.lexer = lexer;
         this.pos = 0;
-        this.line = 1;
+        Stash.line = 1;
         this.totalTokens = lexer.tokens.length;
     }
 
@@ -46,7 +46,7 @@ class Parser {
         pos++;
 
         if (peekCheck(TokenType.NEWLINE)) {
-            line++;
+            Stash.line++;
         }
 
         return lexer.nextToken();
@@ -110,13 +110,13 @@ class Parser {
 
                     return new NodeDeclaration(name, next);
                 } else {
-                    throw new ParserException("Expected a newline", line);
+                    throw new ParserException("Expected a newline");
                 }
             } else {
-                throw new ParserException("Expected '='", line);
+                throw new ParserException("Expected '='");
             }
         } else {
-            throw new ParserException("Expected an identifier", line);
+            throw new ParserException("Expected an identifier");
         }
     }
 
@@ -132,7 +132,7 @@ class Parser {
                 args ~= literal();
 
                 if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
-                    throw new ParserException("Expected ',' or ')'", line);
+                    throw new ParserException("Expected ',' or ')'");
                 }
 
                 if (peekCheck(TokenType.COMMA)) {
@@ -147,7 +147,7 @@ class Parser {
 
                 return new NodeCall(ident, args);
             } else {
-                throw new ParserException("Expected ',' or ')'", line);
+                throw new ParserException("Expected ',' or ')'");
             }
         } else {
             return new NodeVariable(ident);
@@ -166,7 +166,7 @@ class Parser {
                 args ~= literal();
 
                 if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
-                    throw new ParserException("Expected ',' or ')'", line);
+                    throw new ParserException("Expected ',' or ')'");
                 }
 
                 if (peekCheck(TokenType.COMMA)) {
@@ -184,13 +184,13 @@ class Parser {
 
                     return new NodeCall(ident, args);
                 } else {
-                    throw new ParserException("Expected a newline", line);
+                    throw new ParserException("Expected a newline");
                 }
             } else {
-                throw new ParserException("Expected ',' or ')'", line);
+                throw new ParserException("Expected ',' or ')'");
             }
         } else {
-            throw new ParserException("Expected nothing or '(' after identifier", line);
+            throw new ParserException("Expected nothing or '(' after identifier");
         }
     }
 
@@ -222,16 +222,16 @@ class Parser {
                                 } else if (peekCheck(TokenType.RPAREN)) {
                                     break;
                                 } else {
-                                    throw new ParserException("Expected ',' or ')'", line);
+                                    throw new ParserException("Expected ',' or ')'");
                                 }
                             } else {
-                                throw new ParserException("Expected a type after ':'", line);
+                                throw new ParserException("Expected a type after ':'");
                             }
                         } else {
-                            throw new ParserException("Expected ':' after parameter name", line);
+                            throw new ParserException("Expected ':' after parameter name");
                         }
                     } else {
-                        throw new ParserException("Expected an identifier", line);
+                        throw new ParserException("Expected an identifier");
                     }
                 }
 
@@ -258,22 +258,22 @@ class Parser {
 
                                 return new NodeFunction(name, args, type, block);
                             } else {
-                                throw new ParserException("Expected '{'", line);
+                                throw new ParserException("Expected '{'");
                             }
                         } else {
-                            throw new ParserException("Expected type", line);
+                            throw new ParserException("Expected type");
                         }
                     } else {
-                        throw new ParserException("Expected '>'", line);
+                        throw new ParserException("Expected '>'");
                     }
                 } else {
-                    throw new ParserException("Expected ')'", line);
+                    throw new ParserException("Expected ')'");
                 }
             } else {
-                throw new ParserException("Expected '('", line);
+                throw new ParserException("Expected '('");
             }
         } else {
-            throw new ParserException("Expected a function name", line);
+            throw new ParserException("Expected a function name");
         }
     }
 
@@ -285,7 +285,7 @@ class Parser {
         if (peekCheck(TokenType.NEWLINE)) {
             nextToken(true);
         } else {
-            throw new ParserException("Expected a newline", line);
+            throw new ParserException("Expected a newline");
         }
 
         return new NodeReturn(lit);
@@ -297,7 +297,7 @@ class Parser {
 
         switch (t) {
             default:
-                throw new ParserException("Unexpected token '" ~ t ~ "'", line);
+                throw new ParserException("Unexpected token '" ~ t ~ "'");
             case TokenType.NUMBER:
                 return parseNumber();
             case TokenType.BOOL:
@@ -317,7 +317,7 @@ class Parser {
 
         switch (t) {
             default:
-                throw new ParserException("Unexpected token '" ~ t ~ "'", line);
+                throw new ParserException("Unexpected token '" ~ t ~ "'");
             case TokenType.VAR:
                 return parseDeclaration();
             case TokenType.FN:
