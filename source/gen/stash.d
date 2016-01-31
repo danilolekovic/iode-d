@@ -9,6 +9,7 @@ import iode.ast.node;
 
 class Stash {
     public static Variable[string] namedValues;
+    public static LLVMTypeRef[string] funcTypes;
     public static LLVMModuleRef theModule;
     public static LLVMBuilderRef builder;
     public static LLVMPassManagerRef passManager;

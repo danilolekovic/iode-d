@@ -170,7 +170,11 @@ class NodeCall : Node {
 
         uint len = to!uint(generated.length);
 
-        return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
+        if (Stash.funcTypes[name] == LLVMVoidType()) {
+            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
+        } else {
+            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
+        }
     }
 }
 
@@ -309,6 +313,8 @@ class NodeFunction : Node {
         foreach (vari; localVariables) {
             Stash.removeVariable(vari);
         }
+
+        Stash.funcTypes[name] = theType;
 
         return func;
     }
