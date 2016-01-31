@@ -46,9 +46,9 @@ class NodeBoolean : Node {
 
     LLVMValueRef generate() {
         if (value) {
-            return LLVMConstReal(LLVMInt16Type(), 1);
+            return LLVMConstReal(LLVMInt1Type(), 1);
         } else {
-            return LLVMConstReal(LLVMInt16Type(), 0);
+            return LLVMConstReal(LLVMInt1Type(), 0);
         }
     }
 }
@@ -188,7 +188,7 @@ class NodeFunction : Node {
         } else if (type == "String") {
             theType = LLVMInt8Type();
         } else if (type == "Bool") {
-            theType = LLVMInt16Type();
+            theType = LLVMInt1Type();
         } else if (type == "Void") {
             theType = LLVMVoidType();
         } else {
@@ -224,7 +224,7 @@ class NodeFunction : Node {
             } else if (args[index].type == "String") {
                 t = LLVMInt8Type();
             } else if (args[index].type == "Bool") {
-                t = LLVMInt16Type();
+                t = LLVMInt1Type();
             } else {
                 t = LLVMVoidType();
             }

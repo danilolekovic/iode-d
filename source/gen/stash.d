@@ -1,6 +1,7 @@
 module iode.gen.stash;
 
 import std.stdio;
+import std.string;
 import llvm.c;
 
 class Stash {
@@ -53,5 +54,15 @@ class Stash {
         } else {
             return false;
         }
+    }
+
+    public static LLVMValueRef addPuts() {
+        LLVMTypeRef[] types = [LLVMInt8Type()];
+        LLVMTypeRef theType = LLVMInt32Type();
+
+        auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
+		LLVMValueRef func = LLVMAddFunction(theModule, "puts".toStringz(), funcType);
+
+        return func;
     }
 }

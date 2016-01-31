@@ -46,6 +46,7 @@ class CodeGenerator {
     	LLVMAddInstructionCombiningPass(Stash.passManager);
     	LLVMAddGVNPass(Stash.passManager);
     	LLVMAddCFGSimplificationPass(Stash.passManager);
+        Stash.addPuts();
 
     	foreach (n; ast) {
     		n.generate();
