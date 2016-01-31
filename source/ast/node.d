@@ -254,7 +254,7 @@ class NodeFunction : Node {
             LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
 
 			LLVMBuildStore(Stash.builder, arg, alloca);
-			Stash.newVariable(args[index].name, alloca);
+			Stash.newVariable(args[index].name, new Variable(alloca));
 		}
 
         string[] localVariables;

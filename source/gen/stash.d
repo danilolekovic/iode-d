@@ -5,6 +5,7 @@ import std.string;
 import llvm.c;
 import iode.errors.astError;
 import iode.assets.variable;
+import iode.ast.node;
 
 class Stash {
     public static Variable[string] namedValues;
@@ -16,7 +17,7 @@ class Stash {
 
     public static LLVMValueRef getVariable(string name) {
         if (checkVariable(name)) {
-            return namedValues[name].value;
+            return namedValues[name].llvmValue;
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
@@ -30,9 +31,17 @@ class Stash {
         }
     }
 
+    public static void newVariable(string name, LLVMValueRef value) {
+        if (!checkVariable(name)) {
+            namedValues[name] = new Variable(value);
+        } else {
+            throw new ASTException("Variable " ~ name ~ " already exists");
+        }
+    }
+
     public static void setVariable(string name, Node value) {
         if (checkVariable(name)) {
-            namedValues[name] = new Variable(value.value);
+            namedValues[name] = new Variable(value);
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }
