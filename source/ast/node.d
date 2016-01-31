@@ -5,6 +5,7 @@ import std.string;
 import llvm.c;
 import iode.gen.stash;
 import iode.errors.astError;
+import iode.assets.variable;
 
 /* base class */
 interface Node {
@@ -73,7 +74,25 @@ class NodeDeclaration : Node {
     }
 
     LLVMValueRef generate() {
-        Stash.newVariable(name, value.generate());
+        Stash.newVariable(name, new Variable(value));
+        return null;
+    }
+}
+
+/* representation of a typed variable declaration in the AST */
+class NodeTypedDeclaration : Node {
+    public string name;
+    private string type;
+    private Node value;
+
+    this(string name, string type, Node value) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        Stash.newVariable(name, new Variable(type, value));
         return null;
     }
 }

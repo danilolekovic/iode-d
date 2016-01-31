@@ -4,9 +4,10 @@ import std.stdio;
 import std.string;
 import llvm.c;
 import iode.errors.astError;
+import iode.assets.variable;
 
 class Stash {
-    public static LLVMValueRef[string] namedValues;
+    public static Variable[string] namedValues;
     public static LLVMModuleRef theModule;
     public static LLVMBuilderRef builder;
     public static LLVMPassManagerRef passManager;
@@ -15,23 +16,23 @@ class Stash {
 
     public static LLVMValueRef getVariable(string name) {
         if (checkVariable(name)) {
-            return namedValues[name];
+            return namedValues[name].value;
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
     }
 
-    public static void newVariable(string name, LLVMValueRef value) {
+    public static void newVariable(string name, Variable value) {
         if (!checkVariable(name)) {
-            namedValues[name] = value;
+            namedValues[name] = new Variable(value.value);
         } else {
             throw new ASTException("Variable " ~ name ~ " already exists");
         }
     }
 
-    public static void setVariable(string name, LLVMValueRef value) {
+    public static void setVariable(string name, Node value) {
         if (checkVariable(name)) {
-            namedValues[name] = value;
+            namedValues[name] = new Variable(value.value);
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }
