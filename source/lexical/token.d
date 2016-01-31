@@ -42,6 +42,7 @@ enum TokenType : string {
     RPAREN = "right parenthesis",
     LBRACE = "left brace",
     RBRACE = "right brace",
+    SEMICOLON = "semicolon",
 
     // math
     ADD = "add",

@@ -111,6 +111,10 @@ class Lexer {
                 switch (code[pos]) {
                     default:
                         throw new LexerException("Illegal symbol: " ~ toStr, line);
+                    case ';':
+                        tokens ~= new Token(TokenType.SEMICOLON, toStr);
+                        pos++;
+                        break;
                     case '+':
                         tokens ~= new Token(TokenType.ADD, toStr);
                         pos++;

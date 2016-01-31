@@ -66,10 +66,15 @@ class Parser {
     /* skips newlines */
     public void skipNewline() {
         if (!(totalTokens >= pos)) {
-            while (peekCheck(TokenType.NEWLINE)) {
+            while (peekCheck(TokenType.NEWLINE) || peekCheck(TokenType.SEMICOLON)) {
                 nextToken();
             }
         }
+    }
+
+    /* checks if the next token is a terminator */
+    public bool terminator() {
+        return peekCheck(TokenType.NEWLINE) || peekCheck(TokenType.SEMICOLON);
     }
 
     /* parses numbers */
@@ -105,7 +110,7 @@ class Parser {
 
                 Node next = literal();
 
-                if (peekCheck(TokenType.NEWLINE)) {
+                if (terminator()) {
                     nextToken(true);
 
                     return new NodeDeclaration(name, next);
@@ -123,7 +128,7 @@ class Parser {
 
                         Node next = literal();
 
-                        if (peekCheck(TokenType.NEWLINE)) {
+                        if (terminator()) {
                             nextToken(true);
 
                             return new NodeTypedDeclaration(name, type, next);
@@ -203,7 +208,7 @@ class Parser {
             if (peekCheck(TokenType.RPAREN)) {
                 nextToken();
 
-                if (peekCheck(TokenType.NEWLINE)) {
+                if (terminator()) {
                     nextToken(true);
 
                     return new NodeCall(ident, args);
@@ -306,7 +311,7 @@ class Parser {
         nextToken(true);
         Node lit = literal();
 
-        if (peekCheck(TokenType.NEWLINE)) {
+        if (terminator()) {
             nextToken(true);
         } else {
             throw new ParserException("Expected a newline");
