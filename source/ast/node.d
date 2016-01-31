@@ -38,7 +38,7 @@ class NodeString : Node {
 
     LLVMValueRef generate() {
         // TODO: fix this!!! somehow!
-        return LLVMConstString(value.toStringz(), to!uint(value.length), false);
+        return LLVMBuildGlobalString(Stash.builder, value.toStringz(), "str".toStringz());
     }
 }
 
@@ -293,6 +293,10 @@ class NodeFunction : Node {
             }
 
             expr.generate();
+        }
+
+        if (type == "Void") {
+            LLVMBuildRetVoid(Stash.builder);
         }
 
         LLVMVerifyFunction(func, 1);

@@ -5,6 +5,6 @@ import std.conv;
 
 class LexerException : Exception {
     this(string msg, int line) {
-        super(msg ~ " on line # " ~ to!string(line)) ~ ".";
+        super(msg ~ " on line # " ~ to!string(line) ~ ".");
     }
 }

@@ -64,7 +64,7 @@ class Stash {
     }
 
     public static LLVMValueRef addPuts() {
-        LLVMTypeRef[] types = [LLVMInt8Type()];
+        LLVMTypeRef[] types = [LLVMPointerType(LLVMInt8Type(), LLVMGetPointerAddressSpace(LLVMInt8Type()))];
         LLVMTypeRef theType = LLVMInt32Type();
 
         auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
