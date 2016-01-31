@@ -112,8 +112,32 @@ class Parser {
                 } else {
                     throw new ParserException("Expected a newline");
                 }
+            } else if (peekCheck(TokenType.COLON)) {
+                nextToken(true);
+
+                if (peekCheck(TokenType.IDENT)) {
+                    string type = nextToken(true).getValue();
+
+                    if (peekCheck(TokenType.EQUALS)) {
+                        nextToken(true);
+
+                        Node next = literal();
+
+                        if (peekCheck(TokenType.NEWLINE)) {
+                            nextToken(true);
+
+                            return new NodeTypedDeclaration(name, type, next);
+                        } else {
+                            throw new ParserException("Expected a newline");
+                        }
+                    } else {
+                        throw new ParserException("Expected '=' or ':'");
+                    }
+                } else {
+                    throw new ParserException("Expected a type");
+                }
             } else {
-                throw new ParserException("Expected '='");
+                throw new ParserException("Expected '=' or ':'");
             }
         } else {
             throw new ParserException("Expected an identifier");

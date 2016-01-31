@@ -9,11 +9,13 @@ import iode.assets.variable;
 
 /* base class */
 interface Node {
+    public string nodeType();
     LLVMValueRef generate();
 }
 
 /* representation of a number in the AST */
 class NodeNumber : Node {
+    public string nodeType() { return "Number"; }
     private ulong value;
 
     this(ulong value) {
@@ -27,6 +29,7 @@ class NodeNumber : Node {
 
 /* representation of a string in the AST */
 class NodeString : Node {
+    public string nodeType() { return "String"; }
     private string value;
 
     this(string value) {
@@ -41,6 +44,7 @@ class NodeString : Node {
 
 /* representation of a boolean in the AST */
 class NodeBoolean : Node {
+    public string nodeType() { return "Boolean"; }
     private bool value;
 
     this(bool value) {
@@ -58,6 +62,8 @@ class NodeBoolean : Node {
 
 /* representation of a null value in the AST */
 class NodeNull : Node {
+    public string nodeType() { return "Null"; }
+
     LLVMValueRef generate() {
         return LLVMConstNull(LLVMVoidType());
     }
@@ -65,6 +71,7 @@ class NodeNull : Node {
 
 /* representation of a variable declaration in the AST */
 class NodeDeclaration : Node {
+    public string nodeType() { return "Declaration"; }
     public string name;
     private Node value;
 
@@ -81,6 +88,7 @@ class NodeDeclaration : Node {
 
 /* representation of a typed variable declaration in the AST */
 class NodeTypedDeclaration : Node {
+    public string nodeType() { return "Typed Declaration"; }
     public string name;
     private string type;
     private Node value;
@@ -92,13 +100,29 @@ class NodeTypedDeclaration : Node {
     }
 
     LLVMValueRef generate() {
-        Stash.newVariable(name, new Variable(type, value));
+        // TODO: variables.
+
+        LLVMValueRef realValue = value.generate();
+
+        if (type == "Int" && value.nodeType() == "Number") {
+            Stash.newVariable(name, new Variable(type, realValue));
+        } else if (type == "String" && value.nodeType() == "String") {
+            Stash.newVariable(name, new Variable(type, realValue));
+        } else if (type == "Bool" && value.nodeType() == "Boolean") {
+            Stash.newVariable(name, new Variable(type, realValue));
+        } else if (type == "Null" && value.nodeType() == "Null") {
+            Stash.newVariable(name, new Variable(type, realValue));
+        } else {
+            throw new ASTException("Type and value do not match in typed variable declaration");
+        }
+
         return null;
     }
 }
 
 /* representation of a variable in the ast */
 class NodeVariable : Node {
+    public string nodeType() { return "Variable"; }
     private string name;
 
     this(string name) {
@@ -107,7 +131,7 @@ class NodeVariable : Node {
 
     LLVMValueRef generate() {
         if (Stash.checkVariable(name)) {
-            return Stash.getVariable(name);
+            return Stash.getVariable(name).llvmValue;
         } else {
             throw new ASTException("Variable '" ~ name ~ "' does not exist");
         }
@@ -116,6 +140,7 @@ class NodeVariable : Node {
 
 /* representation of a function call in the ast */
 class NodeCall : Node {
+    public string nodeType() { return "Call"; }
     private string name;
     private Node[] args;
 
@@ -151,6 +176,7 @@ class NodeCall : Node {
 
 /* representation of a return expression in the ast */
 class NodeReturn : Node {
+    public string nodeType() { return "Return"; }
     private Node value;
 
     this(Node value) {
@@ -175,6 +201,7 @@ class Arg {
 
 /* representation of a function definition in the ast */
 class NodeFunction : Node {
+    public string nodeType() { return "Function"; }
     private string name;
     private Arg[] args;
     private string type;

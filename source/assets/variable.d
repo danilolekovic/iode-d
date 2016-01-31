@@ -15,6 +15,11 @@ class Variable {
         this.llvmValue = value.generate();
     }
 
+    this(string type, LLVMValueRef llvmValue) {
+        this.type = type;
+        this.llvmValue = llvmValue;
+    }
+
     this(Node value) {
         this.value = value;
         this.llvmValue = value.generate();

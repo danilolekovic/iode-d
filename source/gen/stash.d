@@ -15,9 +15,9 @@ class Stash {
     public static LLVMExecutionEngineRef engine;
     public static int line = 1;
 
-    public static LLVMValueRef getVariable(string name) {
+    public static Variable getVariable(string name) {
         if (checkVariable(name)) {
-            return namedValues[name].llvmValue;
+            return namedValues[name];
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
