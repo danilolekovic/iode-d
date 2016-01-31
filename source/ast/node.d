@@ -33,6 +33,7 @@ class NodeString : Node {
 
     LLVMValueRef generate() {
         return LLVMConstString(value.toStringz(), to!uint(value.length), false);
+        //return LLVMConstInt(LLVMInt8Type(), 5, false);
     }
 }
 
