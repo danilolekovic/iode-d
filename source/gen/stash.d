@@ -3,6 +3,7 @@ module iode.gen.stash;
 import std.stdio;
 import std.string;
 import llvm.c;
+import iode.errors.astError;
 
 class Stash {
     public static LLVMValueRef[string] namedValues;
@@ -16,7 +17,7 @@ class Stash {
         if (checkVariable(name)) {
             return namedValues[name];
         } else {
-            throw new Exception("Variable " ~ name ~ " doesn't exist.");
+            throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
     }
 
@@ -24,7 +25,7 @@ class Stash {
         if (!checkVariable(name)) {
             namedValues[name] = value;
         } else {
-            throw new Exception("Variable " ~ name ~ " already exists.");
+            throw new ASTException("Variable " ~ name ~ " already exists");
         }
     }
 
@@ -32,7 +33,7 @@ class Stash {
         if (checkVariable(name)) {
             namedValues[name] = value;
         } else {
-            throw new Exception("Variable " ~ name ~ " doesn't exists.");
+            throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }
     }
 
@@ -40,7 +41,7 @@ class Stash {
         if (checkVariable(name)) {
             namedValues.remove(name);
         } else {
-            throw new Exception("Variable " ~ name ~ " doesn't exist.");
+            throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
     }
 
