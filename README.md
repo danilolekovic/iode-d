@@ -42,3 +42,7 @@ this project uses [llvm-d](https://github.com/Calrama/llvm-d/) for its LLVM bind
 **COPYRIGHT (c) 2016 Danilo Lekovic**
 
 iode is licensed under the BSD v3 license.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/iode-lang/iode/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
