@@ -113,7 +113,7 @@ class NodeTypedDeclaration : Node {
         } else if (type == "Null" && value.nodeType() == "Null") {
             Stash.newVariable(name, new Variable(type, realValue));
         } else {
-            throw new ASTException("Type and value do not match in typed variable declaration");
+            throw new ASTException("Expected type of " ~ type ~ ", got " ~ value.nodeType());
         }
 
         return null;
