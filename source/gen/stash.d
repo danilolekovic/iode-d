@@ -70,6 +70,24 @@ class Stash {
                     namedValues[name].type == "Bool" && value.nodeType() == "Boolean" ||
                     namedValues[name].type == "Null" && value.nodeType() == "Null") {
 
+                } else {
+                    throw new ASTException("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType());
+                }
+            } else {
+                if (namedValues[name].value.nodeType() == "Number") {
+                    namedValues[name].type = "Int";
+                } else if (namedValues[name].value.nodeType() == "String") {
+                    namedValues[name].type = "String";
+                } else if (namedValues[name].value.nodeType() == "Boolean") {
+                    namedValues[name].type = "Bool";
+                } else if (namedValues[name].value.nodeType() == "Null") {
+                    namedValues[name].type = "Null";
+                }
+
+                if (namedValues[name].type == "Int" && value.nodeType() == "Number" ||
+                    namedValues[name].type == "String" && value.nodeType() == "String" ||
+                    namedValues[name].type == "Bool" && value.nodeType() == "Boolean" ||
+                    namedValues[name].type == "Null" && value.nodeType() == "Null") {
 
                 } else {
                     throw new ASTException("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType());

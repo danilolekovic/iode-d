@@ -4,5 +4,5 @@ import std.stdio;
 import iode.gen.codeGen;
 
 void main(string[] args) {
-	CodeGenerator.run("fn main() > Int { var a = 2; a = \"Test\"; return 0; }");
+	CodeGenerator.run("fn main() > Int { var a = 2; a = 4; a = \"Swag\"; return 0; }");
 }
