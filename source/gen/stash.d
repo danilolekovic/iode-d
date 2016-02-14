@@ -27,6 +27,16 @@ class Stash {
     public static void newVariable(bool constant, string name, Node value) {
         if (!checkVariable(name)) {
             namedValues[name] = new Variable(constant, value);
+
+            if (value.nodeType() == "Number") {
+                namedValues[name].type = "Int";
+            } else if (value.nodeType() == "String") {
+                namedValues[name].type = "String";
+            } else if (value.nodeType() == "Boolean") {
+                namedValues[name].type = "Bool";
+            } else if (value.nodeType() == "Null") {
+                namedValues[name].type = "Null";
+            }
         } else {
             throw new ASTException("Variable " ~ name ~ " already exists");
         }
@@ -52,6 +62,18 @@ class Stash {
         if (checkVariable(name)) {
             if (namedValues[name].constant) {
                 throw new ASTException("Variable " ~ name ~ " is constant and cannot be changed");
+            }
+
+            if (namedValues[name].type != null) {
+                if (namedValues[name].type == "Int" && value.nodeType() == "Number" ||
+                    namedValues[name].type == "String" && value.nodeType() == "String" ||
+                    namedValues[name].type == "Bool" && value.nodeType() == "Boolean" ||
+                    namedValues[name].type == "Null" && value.nodeType() == "Null") {
+
+
+                } else {
+                    throw new ASTException("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType());
+                }
             }
 
             namedValues[name] = new Variable(false, value);
