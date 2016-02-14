@@ -69,6 +69,23 @@ class NodeNull : Node {
     }
 }
 
+/* representation of a variable setting in the AST */
+class NodeSetting : Node {
+    public string nodeType() { return "Setting"; }
+    public string name;
+    private Node value;
+
+    this(string name, Node value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        Stash.setVariable(name, value);
+        return null;
+    }
+}
+
 /* representation of a variable declaration in the AST */
 class NodeDeclaration : Node {
     public string nodeType() { return "Declaration"; }

@@ -218,8 +218,20 @@ class Parser {
             } else {
                 throw new ParserException("Expected ',' or ')'");
             }
+        } else if (peekCheck(TokenType.EQUALS)) {
+            nextToken(true);
+
+            Node next = literal();
+
+            if (terminator()) {
+                nextToken(true);
+
+                return new NodeSetting(ident, next);
+            } else {
+                throw new ParserException("Expected a newline");
+            }
         } else {
-            throw new ParserException("Expected nothing or '(' after identifier");
+            throw new ParserException("Expected nothing, '(', or '=' after identifier");
         }
     }
 

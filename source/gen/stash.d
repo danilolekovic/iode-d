@@ -62,10 +62,6 @@ class Stash {
 
     public static void removeVariable(string name) {
         if (checkVariable(name)) {
-            if (namedValues[name].constant) {
-                throw new ASTException("Variable " ~ name ~ " is constant and cannot be removed");
-            }
-
             namedValues.remove(name);
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
