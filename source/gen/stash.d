@@ -50,8 +50,11 @@ class Stash {
 
     public static void setVariable(string name, Node value) {
         if (checkVariable(name)) {
+            if (namedValues[name].constant) {
+                throw new ASTException("Variable " ~ name ~ " is constant and cannot be changed");
+            }
+
             namedValues[name] = new Variable(false, value);
-            // check if constant
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }
@@ -59,8 +62,11 @@ class Stash {
 
     public static void removeVariable(string name) {
         if (checkVariable(name)) {
+            if (namedValues[name].constant) {
+                throw new ASTException("Variable " ~ name ~ " is constant and cannot be removed");
+            }
+
             namedValues.remove(name);
-            // check if constant
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
