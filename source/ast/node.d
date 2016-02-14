@@ -72,16 +72,18 @@ class NodeNull : Node {
 /* representation of a variable declaration in the AST */
 class NodeDeclaration : Node {
     public string nodeType() { return "Declaration"; }
+    public bool constant;
     public string name;
     private Node value;
 
-    this(string name, Node value) {
+    this(bool constant, string name, Node value) {
+        this.constant = constant;
         this.name = name;
         this.value = value;
     }
 
     LLVMValueRef generate() {
-        Stash.newVariable(name, new Variable(value));
+        Stash.newVariable(constant, name, value);
         return null;
     }
 }
@@ -89,11 +91,13 @@ class NodeDeclaration : Node {
 /* representation of a typed variable declaration in the AST */
 class NodeTypedDeclaration : Node {
     public string nodeType() { return "Typed Declaration"; }
+    public bool constant;
     public string name;
     private string type;
     private Node value;
 
-    this(string name, string type, Node value) {
+    this(bool constant, string name, string type, Node value) {
+        this.constant = constant;
         this.name = name;
         this.type = type;
         this.value = value;
@@ -104,14 +108,12 @@ class NodeTypedDeclaration : Node {
 
         LLVMValueRef realValue = value.generate();
 
-        if (type == "Int" && value.nodeType() == "Number") {
-            Stash.newVariable(name, new Variable(type, realValue));
-        } else if (type == "String" && value.nodeType() == "String") {
-            Stash.newVariable(name, new Variable(type, realValue));
-        } else if (type == "Bool" && value.nodeType() == "Boolean") {
-            Stash.newVariable(name, new Variable(type, realValue));
-        } else if (type == "Null" && value.nodeType() == "Null") {
-            Stash.newVariable(name, new Variable(type, realValue));
+        if (type == "Int" && value.nodeType() == "Number" ||
+            type == "String" && value.nodeType() == "String" ||
+            type == "Bool" && value.nodeType() == "Boolean" ||
+            type == "Null" && value.nodeType() == "Null") {
+
+            Stash.newVariable(constant, type, name, realValue);
         } else {
             throw new ASTException("Expected type of " ~ type ~ ", got " ~ value.nodeType());
         }
@@ -285,7 +287,7 @@ class NodeFunction : Node {
             LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
 
 			LLVMBuildStore(Stash.builder, arg, alloca);
-			Stash.newVariable(args[index].name, new Variable(alloca));
+			Stash.newVariable(false, args[index].name, alloca);
 		}
 
         string[] localVariables;

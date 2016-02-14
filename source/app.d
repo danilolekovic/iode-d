@@ -4,5 +4,5 @@ import std.stdio;
 import iode.gen.codeGen;
 
 void main(string[] args) {
-	CodeGenerator.run("fn test() > Void {} fn main() > Int { test(); return 0; }");
+	CodeGenerator.run("fn main() > Int { let const = 2; return 0; }");
 }

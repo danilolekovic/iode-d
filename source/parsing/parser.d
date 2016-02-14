@@ -99,7 +99,7 @@ class Parser {
     }
 
     /* parses variable declaration */
-    public Node parseDeclaration() {
+    public Node parseDeclaration(bool constant) {
         nextToken(true);
 
         if (peekCheck(TokenType.IDENT)) {
@@ -113,7 +113,7 @@ class Parser {
                 if (terminator()) {
                     nextToken(true);
 
-                    return new NodeDeclaration(name, next);
+                    return new NodeDeclaration(constant, name, next);
                 } else {
                     throw new ParserException("Expected a newline");
                 }
@@ -131,7 +131,7 @@ class Parser {
                         if (terminator()) {
                             nextToken(true);
 
-                            return new NodeTypedDeclaration(name, type, next);
+                            return new NodeTypedDeclaration(constant, name, type, next);
                         } else {
                             throw new ParserException("Expected a newline");
                         }
@@ -348,7 +348,9 @@ class Parser {
             default:
                 throw new ParserException("Unexpected token '" ~ t ~ "'");
             case TokenType.VAR:
-                return parseDeclaration();
+                return parseDeclaration(false);
+            case TokenType.LET:
+                return parseDeclaration(true);
             case TokenType.FN:
                 return parseFunction();
             case TokenType.IDENT:

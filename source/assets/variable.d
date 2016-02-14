@@ -5,27 +5,32 @@ import llvm.c;
 import iode.ast.node;
 
 class Variable {
+    public bool constant = false;
     public string type = null;
     public Node value = null;
     public LLVMValueRef llvmValue;
 
-    this(string type, Node value) {
+    this(bool constant, string type, Node value) {
+        this.constant = constant;
         this.type = type;
         this.value = value;
         this.llvmValue = value.generate();
     }
 
-    this(string type, LLVMValueRef llvmValue) {
+    this(bool constant, string type, LLVMValueRef llvmValue) {
+        this.constant = constant;
         this.type = type;
         this.llvmValue = llvmValue;
     }
 
-    this(Node value) {
+    this(bool constant, Node value) {
+        this.constant = constant;
         this.value = value;
         this.llvmValue = value.generate();
     }
 
-    this(LLVMValueRef llvmValue) {
+    this(bool constant, LLVMValueRef llvmValue) {
+        this.constant = constant;
         this.llvmValue = llvmValue;
     }
 }

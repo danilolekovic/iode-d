@@ -24,17 +24,25 @@ class Stash {
         }
     }
 
-    public static void newVariable(string name, Variable value) {
+    public static void newVariable(bool constant, string name, Node value) {
         if (!checkVariable(name)) {
-            namedValues[name] = new Variable(value.value);
+            namedValues[name] = new Variable(constant, value);
         } else {
             throw new ASTException("Variable " ~ name ~ " already exists");
         }
     }
 
-    public static void newVariable(string name, LLVMValueRef value) {
+    public static void newVariable(bool constant, string name, LLVMValueRef value) {
         if (!checkVariable(name)) {
-            namedValues[name] = new Variable(value);
+            namedValues[name] = new Variable(constant, value);
+        } else {
+            throw new ASTException("Variable " ~ name ~ " already exists");
+        }
+    }
+
+    public static void newVariable(bool constant, string type, string name, LLVMValueRef value) {
+        if (!checkVariable(name)) {
+            namedValues[name] = new Variable(constant, type, value);
         } else {
             throw new ASTException("Variable " ~ name ~ " already exists");
         }
@@ -42,7 +50,8 @@ class Stash {
 
     public static void setVariable(string name, Node value) {
         if (checkVariable(name)) {
-            namedValues[name] = new Variable(value);
+            namedValues[name] = new Variable(false, value);
+            // check if constant
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }
@@ -51,6 +60,7 @@ class Stash {
     public static void removeVariable(string name) {
         if (checkVariable(name)) {
             namedValues.remove(name);
+            // check if constant
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exist");
         }
