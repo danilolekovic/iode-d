@@ -200,7 +200,7 @@ class NodeCall : Node {
 /* representation of a return expression in the ast */
 class NodeReturn : Node {
     public string nodeType() { return "Return"; }
-    private Node value;
+    public Node value;
 
     this(Node value) {
         this.value = value;
@@ -308,6 +308,7 @@ class NodeFunction : Node {
 		}
 
         string[] localVariables;
+        bool hasReturn = false;
 
         foreach (expr; block) {
 			if (cast(NodeDeclaration) expr) {
@@ -315,7 +316,29 @@ class NodeFunction : Node {
                 localVariables ~= decl.name;
             }
 
+            if (type != "Void") {
+                if (cast(NodeReturn) expr) {
+                    NodeReturn ret = cast(NodeReturn) expr;
+
+                    if (type == "Int" && ret.value.nodeType() == "Number" ||
+                        type == "String" && ret.value.nodeType() == "String" ||
+                        type == "Bool" && ret.value.nodeType() == "Boolean" ||
+                        type == "Null" && ret.value.nodeType() == "Null") {
+
+                        // good
+                    } else {
+                        throw new ASTException("Function '" ~ name ~ "' has an invalid return type");
+                    }
+
+                    hasReturn = true;
+                }
+            }
+
             expr.generate();
+        }
+
+        if (!hasReturn) {
+            throw new ASTException("Function '" ~ name ~ "' does not have return value");
         }
 
         if (type == "Void") {
