@@ -46,12 +46,17 @@ class CodeGenerator {
     	LLVMAddInstructionCombiningPass(Stash.passManager);
     	LLVMAddGVNPass(Stash.passManager);
     	LLVMAddCFGSimplificationPass(Stash.passManager);
-        Stash.addPuts();
+        Stash.addPrintf();
 
     	foreach (n; ast) {
     		n.generate();
     	}
 
-    	LLVMDumpModule(Stash.theModule);
+        auto execResult = LLVMRunFunctionAsMain(Stash.engine, Stash.funcs["main"].generate(), 0, null, null);
+        writefln("-> %d", LLVMGenericValueToInt(LLVMCreateGenericValueOfInt(LLVMInt32Type(), execResult, 0), 0));
+
+        LLVMDisposePassManager(Stash.passManager);
+        LLVMDisposeBuilder(Stash.builder);
+        LLVMDisposeExecutionEngine(Stash.engine);
     }
 }

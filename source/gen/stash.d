@@ -9,7 +9,7 @@ import iode.ast.node;
 
 class Stash {
     public static Variable[string] namedValues;
-    public static LLVMTypeRef[string] funcTypes;
+    public static NodeFunction[string] funcs;
     public static LLVMModuleRef theModule;
     public static LLVMBuilderRef builder;
     public static LLVMPassManagerRef passManager;
@@ -116,7 +116,7 @@ class Stash {
         }
     }
 
-    public static LLVMValueRef addPuts() {
+    public static LLVMValueRef addPrintf() {
         LLVMTypeRef[] types = [LLVMPointerType(LLVMInt8Type(), LLVMGetPointerAddressSpace(LLVMInt8Type()))];
         LLVMTypeRef theType = LLVMInt32Type();
 
