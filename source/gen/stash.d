@@ -117,12 +117,15 @@ class Stash {
     }
 
     public static LLVMValueRef addPrintf() {
-        LLVMTypeRef[] types = [LLVMPointerType(LLVMInt8Type(), LLVMGetPointerAddressSpace(LLVMInt8Type()))];
-        LLVMTypeRef theType = LLVMInt32Type();
+        LLVMValueRef funcPrintf = LLVMGetNamedFunction(theModule, "printf");
 
-        auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
-		LLVMValueRef func = LLVMAddFunction(theModule, "puts".toStringz(), funcType);
+        if (!funcPrintf) {
+            funcPrintf = LLVMAddFunction(theModule, "printf", LLVMInt8Type());
+            LLVMSetFunctionCallConv(funcPrintf, LLVMCCallConv);
+        }
 
-        return func;
+        // AttributeSet
+        
+        return funcPrintf;
     }
 }

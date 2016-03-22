@@ -79,7 +79,29 @@ class Parser {
 
     /* parses numbers */
     public Node parseNumber() {
-        return new NodeNumber(to!ulong(nextToken().getValue()));
+        ulong converted = to!ulong(nextToken().getValue());
+        Node left = new NodeNumber(converted);
+        string op = null;
+        Node right = null;
+
+        while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
+            || peekCheck(TokenType.MUL) || peekCheck(TokenType.DIV)) {
+            skipNewline();
+            op = this.nextToken().getValue();
+            skipNewline();
+
+            if (peekCheck(TokenType.NUMBER)) {
+                right = cast(NodeNumber)this.parseNumber();
+            } else {
+                throw new ParserException("Expected a number after binary operation");
+            }
+        }
+
+        if (op != null) {
+            left = new NodeBinaryOp(left, op, right);
+        }
+
+        return left;
     }
 
     /* parses strings */

@@ -27,6 +27,40 @@ class NodeNumber : Node {
     }
 }
 
+/* representation of a mathematical operation in the AST */
+class NodeBinaryOp : Node {
+    public string nodeType() { return "Binary Operation"; }
+    private Node left;
+    private string op;
+    private Node right;
+
+    this(Node left, string op, Node right) {
+        this.left = left;
+        this.op = op;
+        this.right = right;
+    }
+
+    LLVMValueRef generate() {
+        LLVMValueRef l = left.generate();
+        LLVMValueRef r = right.generate();
+        LLVMValueRef ret = null;
+
+        if (op == "+") {
+            ret = LLVMBuildAdd(Stash.builder, l, r, "addtmp");
+        } else if (op == "-") {
+            ret = LLVMBuildSub(Stash.builder, l, r, "subtmp");
+        } else if (op == "*") {
+            ret = LLVMBuildMul(Stash.builder, l, r, "multmp");
+        } else if (op == "/") {
+            ret = LLVMBuildUDiv(Stash.builder, l, r, "divtmp");
+        } else {
+            throw new ASTException("Illegal operator: " ~ op);
+        }
+
+        return ret;
+    }
+}
+
 /* representation of a string in the AST */
 class NodeString : Node {
     public string nodeType() { return "String"; }
@@ -323,7 +357,8 @@ class NodeFunction : Node {
                     if (type == "Int" && ret.value.nodeType() == "Number" ||
                         type == "String" && ret.value.nodeType() == "String" ||
                         type == "Bool" && ret.value.nodeType() == "Boolean" ||
-                        type == "Null" && ret.value.nodeType() == "Null") {
+                        type == "Null" && ret.value.nodeType() == "Null" ||
+                        type == "Int" && ret.value.nodeType() == "Binary Operation") {
 
                         // good
                     } else {
