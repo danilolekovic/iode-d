@@ -223,10 +223,20 @@ class NodeCall : Node {
 
         uint len = to!uint(generated.length);
 
-        if (Stash.funcs[name].type == "Void") {
-            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
+        NodeExtern* p = (name in Stash.externs);
+
+        if (p !is null) {
+            if (Stash.externs[name].type == "Void") {
+                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
+            } else {
+                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
+            }
         } else {
-            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
+            if (Stash.funcs[name].type == "Void") {
+                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
+            } else {
+                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
+            }
         }
     }
 }
@@ -256,6 +266,56 @@ class Arg {
     }
 }
 
+/* representation of an external function declaration in ast */
+class NodeExtern : Node {
+    public string nodeType() { return "External"; }
+    private string type;
+    private string name;
+    private string[] argTypes;
+
+    this(string type, string name, string[] argTypes) {
+        this.type = type;
+        this.name = name;
+        this.argTypes = argTypes;
+    }
+
+    LLVMValueRef generate() {
+        LLVMTypeRef[] types;
+
+        foreach (string s; argTypes) {
+            if (s == "Int") {
+                types ~= LLVMInt32Type();
+            } else if (s == "String") {
+                types ~= LLVMInt8Type();
+            } else if (s == "Bool") {
+                types ~= LLVMInt1Type();
+            } else {
+                throw new ASTException("Unknown argument type in extern: " ~ name);
+            }
+        }
+
+        LLVMTypeRef retType;
+
+        if (type == "Int") {
+            retType = LLVMInt32Type();
+        } else if (type == "String") {
+            retType = LLVMInt8Type();
+        } else if (type == "Bool") {
+            retType = LLVMInt1Type();
+        } else if (type == "Void") {
+            retType = LLVMVoidType();
+        } else {
+            throw new ASTException("Unknown type: " ~ type);
+        }
+
+        auto funcType = LLVMFunctionType(retType, types.ptr, cast(uint)argTypes.length, 0);
+        LLVMValueRef func = LLVMAddFunction(Stash.theModule, name.toStringz(), funcType);
+        Stash.externs[name] = this;
+
+        return func;
+    }
+}
+
 /* representation of a function definition in the ast */
 class NodeFunction : Node {
     public string nodeType() { return "Function"; }
@@ -280,7 +340,7 @@ class NodeFunction : Node {
             } else if (arg.type == "String") {
                 types ~= LLVMInt8Type();
             } else if (arg.type == "Bool") {
-                types ~= LLVMInt16Type();
+                types ~= LLVMInt1Type();
             } else {
                 throw new ASTException("Unknown type: " ~ arg.type);
             }
@@ -353,12 +413,13 @@ class NodeFunction : Node {
             if (type != "Void") {
                 if (cast(NodeReturn) expr) {
                     NodeReturn ret = cast(NodeReturn) expr;
-
+                    
                     if (type == "Int" && ret.value.nodeType() == "Number" ||
                         type == "String" && ret.value.nodeType() == "String" ||
                         type == "Bool" && ret.value.nodeType() == "Boolean" ||
                         type == "Null" && ret.value.nodeType() == "Null" ||
-                        type == "Int" && ret.value.nodeType() == "Binary Operation") {
+                        type == "Int" && ret.value.nodeType() == "Binary Operation" ||
+                        ret.value.nodeType() == "Variable") { // fix this
 
                         // good
                     } else {

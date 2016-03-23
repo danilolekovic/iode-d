@@ -10,6 +10,7 @@ import iode.ast.node;
 class Stash {
     public static Variable[string] namedValues;
     public static NodeFunction[string] funcs;
+    public static NodeExtern[string] externs;
     public static LLVMModuleRef theModule;
     public static LLVMBuilderRef builder;
     public static LLVMPassManagerRef passManager;
@@ -114,18 +115,5 @@ class Stash {
         } else {
             return false;
         }
-    }
-
-    public static LLVMValueRef addPrintf() {
-        LLVMValueRef funcPrintf = LLVMGetNamedFunction(theModule, "printf");
-
-        if (!funcPrintf) {
-            funcPrintf = LLVMAddFunction(theModule, "printf", LLVMInt8Type());
-            LLVMSetFunctionCallConv(funcPrintf, LLVMCCallConv);
-        }
-
-        // AttributeSet
-        
-        return funcPrintf;
     }
 }

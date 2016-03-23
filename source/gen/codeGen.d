@@ -17,6 +17,9 @@ class CodeGenerator {
     	Parser parser = new Parser(lexer);
     	Node[] ast;
 
+        string[] types = ["String"];
+        ast ~= new NodeExtern("Int", "sqrt", types);
+
     	while (parser.pos != parser.totalTokens) {
     		ast ~= parser.start();
     	}
@@ -46,7 +49,6 @@ class CodeGenerator {
     	LLVMAddInstructionCombiningPass(Stash.passManager);
     	LLVMAddGVNPass(Stash.passManager);
     	LLVMAddCFGSimplificationPass(Stash.passManager);
-        Stash.addPrintf();
 
     	foreach (n; ast) {
     		n.generate();
