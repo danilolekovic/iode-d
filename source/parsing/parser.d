@@ -94,6 +94,8 @@ class Parser {
                 right = cast(NodeNumber)this.parseNumber();
             } else if (peekCheck(TokenType.DOUBLE)) {
                 right = cast(NodeDouble)this.parseDouble();
+            } else if (peekCheck(TokenType.IDENT)) {
+                right = new NodeVariable(nextToken().getValue());
             } else {
                 throw new ParserException("Expected a number, double, or variable after binary operation");
             }
@@ -123,6 +125,8 @@ class Parser {
                 right = cast(NodeNumber)this.parseNumber();
             } else if (peekCheck(TokenType.DOUBLE)) {
                 right = cast(NodeDouble)this.parseDouble();
+            } else if (peekCheck(TokenType.IDENT)) {
+                right = new NodeVariable(nextToken().getValue());
             } else {
                 throw new ParserException("Expected a number, double, or variable after binary operation");
             }
@@ -232,7 +236,32 @@ class Parser {
                 throw new ParserException("Expected ',' or ')'");
             }
         } else {
-            return new NodeVariable(ident);
+            Node left = new NodeVariable(ident);
+            string op = null;
+            Node right = null;
+
+            while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
+                || peekCheck(TokenType.MUL) || peekCheck(TokenType.DIV)) {
+                skipNewline();
+                op = this.nextToken().getValue();
+                skipNewline();
+
+                if (peekCheck(TokenType.NUMBER)) {
+                    right = cast(NodeNumber)this.parseNumber();
+                } else if (peekCheck(TokenType.DOUBLE)) {
+                    right = cast(NodeDouble)this.parseDouble();
+                } else if (peekCheck(TokenType.IDENT)) {
+                    right = new NodeVariable(nextToken().getValue());
+                } else {
+                    throw new ParserException("Expected a number, double, or variable after binary operation");
+                }
+            }
+
+            if (op != null) {
+                left = new NodeBinaryOp(left, op, right);
+            }
+
+            return left;
         }
     }
 
