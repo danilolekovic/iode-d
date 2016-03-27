@@ -17,6 +17,7 @@ class CodeGenerator {
     	Parser parser = new Parser(lexer);
     	Node[] ast;
 
+        // todo: replace this
     	while (parser.pos != parser.totalTokens) {
     		ast ~= parser.start();
     	}

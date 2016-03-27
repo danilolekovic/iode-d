@@ -92,8 +92,39 @@ class Parser {
 
             if (peekCheck(TokenType.NUMBER)) {
                 right = cast(NodeNumber)this.parseNumber();
+            } else if (peekCheck(TokenType.DOUBLE)) {
+                right = cast(NodeDouble)this.parseDouble();
             } else {
-                throw new ParserException("Expected a number after binary operation");
+                throw new ParserException("Expected a number, double, or variable after binary operation");
+            }
+        }
+
+        if (op != null) {
+            left = new NodeBinaryOp(left, op, right);
+        }
+
+        return left;
+    }
+
+    /* parses doubles */
+    public Node parseDouble() {
+        double converted = to!double(nextToken().getValue());
+        Node left = new NodeDouble(converted);
+        string op = null;
+        Node right = null;
+
+        while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
+            || peekCheck(TokenType.MUL) || peekCheck(TokenType.DIV)) {
+            skipNewline();
+            op = this.nextToken().getValue();
+            skipNewline();
+
+            if (peekCheck(TokenType.NUMBER)) {
+                right = cast(NodeNumber)this.parseNumber();
+            } else if (peekCheck(TokenType.DOUBLE)) {
+                right = cast(NodeDouble)this.parseDouble();
+            } else {
+                throw new ParserException("Expected a number, double, or variable after binary operation");
             }
         }
 
@@ -370,6 +401,8 @@ class Parser {
                 throw new ParserException("Unexpected token '" ~ t ~ "'");
             case TokenType.NUMBER:
                 return parseNumber();
+            case TokenType.DOUBLE:
+                return parseDouble();
             case TokenType.BOOL:
                 return parseBoolean();
             case TokenType.IDENT:

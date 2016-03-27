@@ -30,6 +30,7 @@ enum TokenType : string {
     IDENT = "identifier",
     STRING = "string",
     NUMBER = "number",
+    DOUBLE = "double",
     BOOL = "boolean",
     NULL = "null",
 

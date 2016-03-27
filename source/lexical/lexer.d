@@ -76,13 +76,27 @@ class Lexer {
                 tokens ~= new Token(theType, buffer);
                 buffer = ""; // reset buffer
             } else if (isNumber(code[pos])) {
+                bool isDecimal = false;
+
                 // number..
-                while (pos < code.length && isNumber(code[pos])) {
-                    buffer ~= code[pos];
-                    pos++;
+                while (pos < code.length && isNumber(code[pos]) || code[pos] == '.') {
+                    if (code[pos] == '.' && !isDecimal) {
+                        isDecimal = true;
+                        pos++;
+                    } else if (code[pos] == '.' && isDecimal) {
+                        throw new LexerException("Cannot have more than one decimal point in a number", line);
+                    } else {
+                        buffer ~= code[pos];
+                        pos++;
+                    }
                 }
 
-                tokens ~= new Token(TokenType.NUMBER, buffer);
+                if (isDecimal) {
+                    tokens ~= new Token(TokenType.DOUBLE, buffer);
+                } else {
+                    tokens ~= new Token(TokenType.NUMBER, buffer);
+                }
+
                 buffer = "";
             } else if (code[pos] == '\"') {
                 // string..

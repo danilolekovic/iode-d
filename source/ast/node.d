@@ -27,6 +27,20 @@ class NodeNumber : Node {
     }
 }
 
+/* representation of a double in the AST */
+class NodeDouble : Node {
+    public string nodeType() { return "Double"; }
+    private double value;
+
+    this(double value) {
+        this.value = value;
+    }
+
+    LLVMValueRef generate() {
+        return LLVMConstReal(LLVMDoubleType(), value);
+    }
+}
+
 /* representation of a mathematical operation in the AST */
 class NodeBinaryOp : Node {
     public string nodeType() { return "Binary Operation"; }
@@ -160,6 +174,7 @@ class NodeTypedDeclaration : Node {
         LLVMValueRef realValue = value.generate();
 
         if (type == "Int" && value.nodeType() == "Number" ||
+            type == "Double" && value.nodeType() == "Double" ||
             type == "String" && value.nodeType() == "String" ||
             type == "Bool" && value.nodeType() == "Boolean" ||
             type == "Null" && value.nodeType() == "Null") {
@@ -285,6 +300,8 @@ class NodeExtern : Node {
         foreach (string s; argTypes) {
             if (s == "Int") {
                 types ~= LLVMInt32Type();
+            } else if (s == "Double") {
+                types ~= LLVMDoubleType();
             } else if (s == "String") {
                 types ~= LLVMInt8Type();
             } else if (s == "Bool") {
@@ -298,6 +315,8 @@ class NodeExtern : Node {
 
         if (type == "Int") {
             retType = LLVMInt32Type();
+        } else if (type == "Double") {
+            retType = LLVMDoubleType();
         } else if (type == "String") {
             retType = LLVMInt8Type();
         } else if (type == "Bool") {
@@ -337,6 +356,8 @@ class NodeFunction : Node {
 		foreach (arg; args) {
 			if (arg.type == "Int") {
                 types ~= LLVMInt32Type();
+			} else if (arg.type == "Double") {
+                types ~= LLVMDoubleType();
             } else if (arg.type == "String") {
                 types ~= LLVMInt8Type();
             } else if (arg.type == "Bool") {
@@ -350,6 +371,8 @@ class NodeFunction : Node {
 
         if (type == "Int") {
             theType = LLVMInt32Type();
+        } else if (type == "Double") {
+            theType = LLVMDoubleType();
         } else if (type == "String") {
             theType = LLVMInt8Type();
         } else if (type == "Bool") {
@@ -386,6 +409,8 @@ class NodeFunction : Node {
 
             if (args[index].type == "Int") {
                 t = LLVMInt32Type();
+            } else if (args[index].type == "Double") {
+                t = LLVMDoubleType();
             } else if (args[index].type == "String") {
                 t = LLVMInt8Type();
             } else if (args[index].type == "Bool") {
@@ -415,10 +440,12 @@ class NodeFunction : Node {
                     NodeReturn ret = cast(NodeReturn) expr;
 
                     if (type == "Int" && ret.value.nodeType() == "Number" ||
+                        type == "Double" && ret.value.nodeType() == "Number" ||
                         type == "String" && ret.value.nodeType() == "String" ||
                         type == "Bool" && ret.value.nodeType() == "Boolean" ||
                         type == "Null" && ret.value.nodeType() == "Null" ||
                         type == "Int" && ret.value.nodeType() == "Binary Operation" ||
+                        type == "Double" && ret.value.nodeType() == "Binary Operation" ||
                         ret.value.nodeType() == "Variable") { // fix this
 
                         // good
