@@ -29,6 +29,11 @@ void main(string[] args) {
 		getVersion();
 	}
 
+	if (!help && !vrsn && files.length <= 1) {
+		getHelp();
+		exit(0);
+	}
+
 	if (files.length > 0) {
 		removeAt(files, 0);
 	}
