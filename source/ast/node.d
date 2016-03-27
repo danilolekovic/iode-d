@@ -413,7 +413,7 @@ class NodeFunction : Node {
             if (type != "Void") {
                 if (cast(NodeReturn) expr) {
                     NodeReturn ret = cast(NodeReturn) expr;
-                    
+
                     if (type == "Int" && ret.value.nodeType() == "Number" ||
                         type == "String" && ret.value.nodeType() == "String" ||
                         type == "Bool" && ret.value.nodeType() == "Boolean" ||
@@ -455,5 +455,14 @@ class NodeFunction : Node {
         Stash.funcs[name] = this;
 
         return func;
+    }
+}
+
+/* representation of a newline in the AST */
+class NodeNewline : Node {
+    public string nodeType() { return "Newline"; }
+
+    LLVMValueRef generate() {
+        return null;
     }
 }

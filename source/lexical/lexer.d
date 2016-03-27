@@ -2,6 +2,7 @@ module iode.lexical.lexer;
 
 import std.stdio;
 import std.uni;
+import std.conv;
 import iode.lexical.token;
 import iode.errors.lexerError;
 
@@ -16,6 +17,7 @@ class Lexer {
         this.code = code;
         this.index = -1;
         this.tokens = [];
+        this.line = 1;
     }
 
     /* Converts code into tokens */
@@ -105,8 +107,8 @@ class Lexer {
                 // ignore whitespace
                 pos++;
             } else {
-                string toStr = "";
-                toStr ~= code[pos];
+                char chr = code[pos];
+                string toStr = to!string(chr);
 
                 switch (code[pos]) {
                     default:
@@ -190,6 +192,11 @@ class Lexer {
                         break;
                     case '}':
                         tokens ~= new Token(TokenType.RBRACE, toStr);
+                        pos++;
+                        break;
+                    case '\u007F':
+                    case '\u0001':
+                    case '\u0002':
                         pos++;
                         break;
                 }

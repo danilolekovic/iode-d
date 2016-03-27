@@ -354,6 +354,13 @@ class Parser {
         return new NodeReturn(lit);
     }
 
+    /* parses a newline */
+    public Node parseNewline() {
+        nextToken();
+        Stash.line++;
+        return new NodeNewline();
+    }
+
     /* gets the next literal */
     public Node literal() {
         TokenType t = peekToken().getType();
@@ -391,6 +398,8 @@ class Parser {
                 return parseIdent();
             case TokenType.RETURN:
                 return parseReturn();
+            case TokenType.NEWLINE:
+                return parseNewline();
         }
     }
 }
