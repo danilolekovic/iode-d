@@ -96,6 +96,8 @@ class Parser {
                 right = cast(NodeDouble)this.parseDouble();
             } else if (peekCheck(TokenType.IDENT)) {
                 right = new NodeVariable(nextToken().getValue());
+            } else if (peekCheck(TokenType.LPAREN)) {
+                right = this.parseParens();
             } else {
                 throw new ParserException("Expected a number, double, or variable after binary operation");
             }
@@ -127,6 +129,8 @@ class Parser {
                 right = cast(NodeDouble)this.parseDouble();
             } else if (peekCheck(TokenType.IDENT)) {
                 right = new NodeVariable(nextToken().getValue());
+            } else if (peekCheck(TokenType.LPAREN)) {
+                right = this.parseParens();
             } else {
                 throw new ParserException("Expected a number, double, or variable after binary operation");
             }
@@ -252,6 +256,8 @@ class Parser {
                     right = cast(NodeDouble)this.parseDouble();
                 } else if (peekCheck(TokenType.IDENT)) {
                     right = new NodeVariable(nextToken().getValue());
+                } else if (peekCheck(TokenType.LPAREN)) {
+                    right = this.parseParens();
                 } else {
                     throw new ParserException("Expected a number, double, or variable after binary operation");
                 }
@@ -421,6 +427,65 @@ class Parser {
         return new NodeNewline();
     }
 
+    /* Parses a parenthesis */
+    public Node parseParens() {
+        nextToken();
+        Node left = literal();
+        string op = null;
+        Node right = null;
+
+        while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
+            || peekCheck(TokenType.MUL) || peekCheck(TokenType.DIV)) {
+            skipNewline();
+            op = this.nextToken().getValue();
+            skipNewline();
+
+            if (peekCheck(TokenType.NUMBER)) {
+                right = cast(NodeNumber)this.parseNumber();
+            } else if (peekCheck(TokenType.DOUBLE)) {
+                right = cast(NodeDouble)this.parseDouble();
+            } else if (peekCheck(TokenType.IDENT)) {
+                right = new NodeVariable(nextToken().getValue());
+            } else if (peekCheck(TokenType.LPAREN)) {
+                right = this.parseParens();
+            } else {
+                throw new ParserException("Expected a number, double, or variable after binary operation");
+            }
+        }
+
+        if (op != null) {
+            left = new NodeBinaryOp(left, op, right);
+        }
+
+        if (peekCheck(TokenType.RPAREN)) {
+            skipNewline();
+            nextToken();
+        } else {
+            throw new ParserException("Expected a ')'");
+        }
+
+        while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
+            || peekCheck(TokenType.MUL) || peekCheck(TokenType.DIV)) {
+            skipNewline();
+            op = this.nextToken().getValue();
+            skipNewline();
+
+            if (peekCheck(TokenType.NUMBER)) {
+                right = cast(NodeNumber)this.parseNumber();
+            } else if (peekCheck(TokenType.DOUBLE)) {
+                right = cast(NodeDouble)this.parseDouble();
+            } else if (peekCheck(TokenType.IDENT)) {
+                right = new NodeVariable(nextToken().getValue());
+            } else if (peekCheck(TokenType.LPAREN)) {
+                right = this.parseParens();
+            } else {
+                throw new ParserException("Expected a number, double, or variable after binary operation");
+            }
+        }
+
+        return left;
+    }
+
     /* gets the next literal */
     public Node literal() {
         TokenType t = peekToken().getType();
@@ -440,6 +505,8 @@ class Parser {
                 return parseString();
             case TokenType.NULL:
                 return parseNull();
+            case TokenType.LPAREN:
+                return parseParens();
         }
     }
 
