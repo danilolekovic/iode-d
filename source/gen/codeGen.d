@@ -2,6 +2,7 @@ module iode.gen.codeGen;
 
 import std.stdio;
 import std.string;
+import llvm.util.memory;
 import llvm.c;
 import iode.lexical.token;
 import iode.lexical.lexer;
@@ -22,13 +23,15 @@ class CodeGenerator {
     		ast ~= parser.start();
     	}
 
-    	Stash.theModule = LLVMModuleCreateWithName("Iode");
+    	Stash.theModule = LLVMModuleCreateWithName("Iode".toCString());
     	Stash.builder = LLVMCreateBuilder();
 
     	char[1024] error;
     	char* errorPtr = error.ptr;
 
     	LLVMExecutionEngineRef engine;
+
+        char* jitError = null;
 
     	int result = LLVMCreateExecutionEngineForModule(&engine, Stash.theModule, &errorPtr);
 
@@ -47,6 +50,8 @@ class CodeGenerator {
     	LLVMAddInstructionCombiningPass(Stash.passManager);
     	LLVMAddGVNPass(Stash.passManager);
     	LLVMAddCFGSimplificationPass(Stash.passManager);
+
+        Stash.addPuts();
 
     	foreach (n; ast) {
     		n.generate();

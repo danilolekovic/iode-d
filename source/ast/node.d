@@ -86,7 +86,7 @@ class NodeString : Node {
 
     LLVMValueRef generate() {
         // TODO: fix this!!! somehow!
-        return LLVMBuildGlobalString(Stash.builder, value.toStringz(), "str".toStringz());
+        return LLVMBuildGlobalStringPtr(Stash.builder, value.toStringz(), "str".toStringz());
     }
 }
 
@@ -239,6 +239,7 @@ class NodeCall : Node {
         uint len = to!uint(generated.length);
 
         NodeExtern* p = (name in Stash.externs);
+        NodeFunction* f = (name in Stash.funcs);
 
         if (p !is null) {
             if (Stash.externs[name].type == "Void") {
@@ -246,12 +247,14 @@ class NodeCall : Node {
             } else {
                 return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
             }
-        } else {
+        } else if (f !is null) {
             if (Stash.funcs[name].type == "Void") {
                 return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
             } else {
                 return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
             }
+        } else {
+            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
         }
     }
 }

@@ -116,4 +116,13 @@ class Stash {
             return false;
         }
     }
+
+    public static LLVMValueRef addPuts() {
+        auto putsArgs = [LLVMInt8Type()];
+
+        auto putsType = LLVMFunctionType(LLVMInt32Type(), putsArgs.ptr, to!uint(1), cast(LLVMBool) false);
+        LLVMValueRef putsFunc = LLVMAddFunction(theModule, "puts".toStringz(), putsType);
+
+        return putsFunc;
+    }
 }
