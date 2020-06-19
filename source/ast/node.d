@@ -2,7 +2,6 @@ module iode.ast.node;
 
 import std.stdio;
 import std.string;
-import llvm.c;
 import iode.gen.stash;
 import iode.errors.astError;
 import iode.assets.variable;
@@ -10,7 +9,7 @@ import iode.assets.variable;
 /* base class */
 interface Node {
     public string nodeType();
-    LLVMValueRef generate();
+    string generate();
 }
 
 /* representation of a number in the AST */
@@ -22,8 +21,8 @@ class NodeNumber : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        return LLVMConstInt(LLVMInt32Type(), value, false);
+    string generate() {
+        return null;
     }
 }
 
@@ -36,8 +35,8 @@ class NodeDouble : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        return LLVMConstReal(LLVMDoubleType(), value);
+    string generate() {
+        return null;
     }
 }
 
@@ -54,24 +53,8 @@ class NodeBinaryOp : Node {
         this.right = right;
     }
 
-    LLVMValueRef generate() {
-        LLVMValueRef l = left.generate();
-        LLVMValueRef r = right.generate();
-        LLVMValueRef ret = null;
-
-        if (op == "+") {
-            ret = LLVMBuildAdd(Stash.builder, l, r, "addtmp");
-        } else if (op == "-") {
-            ret = LLVMBuildSub(Stash.builder, l, r, "subtmp");
-        } else if (op == "*") {
-            ret = LLVMBuildMul(Stash.builder, l, r, "multmp");
-        } else if (op == "/") {
-            ret = LLVMBuildUDiv(Stash.builder, l, r, "divtmp");
-        } else {
-            throw new ASTException("Illegal operator: " ~ op);
-        }
-
-        return ret;
+    string generate() {
+        return null;
     }
 }
 
@@ -84,9 +67,8 @@ class NodeString : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        // TODO: fix this!!! somehow!
-        return LLVMBuildGlobalStringPtr(Stash.builder, value.toStringz(), "str".toStringz());
+    string generate() {
+        return null;
     }
 }
 
@@ -99,12 +81,8 @@ class NodeBoolean : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        if (value) {
-            return LLVMConstReal(LLVMInt1Type(), 1);
-        } else {
-            return LLVMConstReal(LLVMInt1Type(), 0);
-        }
+    string generate() {
+        return null;
     }
 }
 
@@ -112,8 +90,8 @@ class NodeBoolean : Node {
 class NodeNull : Node {
     public string nodeType() { return "Null"; }
 
-    LLVMValueRef generate() {
-        return LLVMConstNull(LLVMVoidType());
+    string generate() {
+        return null;
     }
 }
 
@@ -128,8 +106,7 @@ class NodeSetting : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        Stash.setVariable(name, value);
+    string generate() {
         return null;
     }
 }
@@ -147,8 +124,7 @@ class NodeDeclaration : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        Stash.newVariable(constant, name, value);
+    string generate() {
         return null;
     }
 }
@@ -168,22 +144,7 @@ class NodeTypedDeclaration : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        // TODO: variables.
-
-        LLVMValueRef realValue = value.generate();
-
-        if (type == "Int" && value.nodeType() == "Number" ||
-            type == "Double" && value.nodeType() == "Double" ||
-            type == "String" && value.nodeType() == "String" ||
-            type == "Bool" && value.nodeType() == "Boolean" ||
-            type == "Null" && value.nodeType() == "Null") {
-
-            Stash.newVariable(constant, type, name, realValue);
-        } else {
-            throw new ASTException("Expected type of " ~ type ~ ", got " ~ value.nodeType());
-        }
-
+    string generate() {
         return null;
     }
 }
@@ -197,12 +158,8 @@ class NodeVariable : Node {
         this.name = name;
     }
 
-    LLVMValueRef generate() {
-        if (Stash.checkVariable(name)) {
-            return Stash.getVariable(name).llvmValue;
-        } else {
-            throw new ASTException("Variable '" ~ name ~ "' does not exist");
-        }
+    string generate() {
+        return null;
     }
 }
 
@@ -217,45 +174,8 @@ class NodeCall : Node {
         this.args = args;
     }
 
-    LLVMValueRef generate() {
-        LLVMValueRef caller = LLVMGetNamedFunction(Stash.theModule, name.toStringz());
-
-        if (caller == null) {
-            throw new ASTException("Unknown function: " ~ name);
-        }
-
-        if (LLVMCountParams(caller) != args.length) {
-            throw new ASTException("Function '" ~ name ~ "' expected "
-                ~ to!string(LLVMCountParams(caller)) ~ " params but got "
-                ~ to!string(args.length) ~ " params");
-        }
-
-        LLVMValueRef[] generated;
-
-        foreach (arg; args) {
-            generated ~= arg.generate();
-        }
-
-        uint len = to!uint(generated.length);
-
-        NodeExtern* p = (name in Stash.externs);
-        NodeFunction* f = (name in Stash.funcs);
-
-        if (p !is null) {
-            if (Stash.externs[name].type == "Void") {
-                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
-            } else {
-                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
-            }
-        } else if (f !is null) {
-            if (Stash.funcs[name].type == "Void") {
-                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "");
-            } else {
-                return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
-            }
-        } else {
-            return LLVMBuildCall(Stash.builder, caller, generated.ptr, len, "calltmp");
-        }
+    string generate() {
+        return null;
     }
 }
 
@@ -268,8 +188,8 @@ class NodeReturn : Node {
         this.value = value;
     }
 
-    LLVMValueRef generate() {
-        return LLVMBuildRet(Stash.builder, value.generate());
+    string generate() {
+        return null;
     }
 }
 
@@ -297,44 +217,8 @@ class NodeExtern : Node {
         this.argTypes = argTypes;
     }
 
-    LLVMValueRef generate() {
-        LLVMTypeRef[] types;
-
-        foreach (string s; argTypes) {
-            if (s == "Int") {
-                types ~= LLVMInt32Type();
-            } else if (s == "Double") {
-                types ~= LLVMDoubleType();
-            } else if (s == "String") {
-                types ~= LLVMInt8Type();
-            } else if (s == "Bool") {
-                types ~= LLVMInt1Type();
-            } else {
-                throw new ASTException("Unknown argument type in extern: " ~ name);
-            }
-        }
-
-        LLVMTypeRef retType;
-
-        if (type == "Int") {
-            retType = LLVMInt32Type();
-        } else if (type == "Double") {
-            retType = LLVMDoubleType();
-        } else if (type == "String") {
-            retType = LLVMInt8Type();
-        } else if (type == "Bool") {
-            retType = LLVMInt1Type();
-        } else if (type == "Void") {
-            retType = LLVMVoidType();
-        } else {
-            throw new ASTException("Unknown type: " ~ type);
-        }
-
-        auto funcType = LLVMFunctionType(retType, types.ptr, cast(uint)argTypes.length, 0);
-        LLVMValueRef func = LLVMAddFunction(Stash.theModule, name.toStringz(), funcType);
-        Stash.externs[name] = this;
-
-        return func;
+    string generate() {
+        return null;
     }
 }
 
@@ -353,138 +237,8 @@ class NodeFunction : Node {
         this.block = block;
     }
 
-    LLVMValueRef generate() {
-        LLVMTypeRef[] types;
-
-		foreach (arg; args) {
-			if (arg.type == "Int") {
-                types ~= LLVMInt32Type();
-			} else if (arg.type == "Double") {
-                types ~= LLVMDoubleType();
-            } else if (arg.type == "String") {
-                types ~= LLVMInt8Type();
-            } else if (arg.type == "Bool") {
-                types ~= LLVMInt1Type();
-            } else {
-                throw new ASTException("Unknown type: " ~ arg.type);
-            }
-		}
-
-        LLVMTypeRef theType;
-
-        if (type == "Int") {
-            theType = LLVMInt32Type();
-        } else if (type == "Double") {
-            theType = LLVMDoubleType();
-        } else if (type == "String") {
-            theType = LLVMInt8Type();
-        } else if (type == "Bool") {
-            theType = LLVMInt1Type();
-        } else if (type == "Void") {
-            theType = LLVMVoidType();
-        } else {
-            throw new ASTException("Unknown type: " ~ type);
-        }
-
-        auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
-
-		LLVMValueRef func = LLVMAddFunction(Stash.theModule, name.toStringz(), funcType);
-
-		LLVMValueRef[] params;
-		params.length = LLVMCountParams(func);
-		LLVMGetParams(func, params.ptr);
-
-		foreach (index, arg; params) {
-			LLVMSetValueName(arg, args[index].name.toStringz());
-		}
-
-        LLVMBasicBlockRef basicBlock = LLVMAppendBasicBlock(func, "entry");
-		LLVMPositionBuilderAtEnd(Stash.builder, basicBlock);
-
-        LLVMValueRef[] prms;
-		prms.length = LLVMCountParams(func);
-		LLVMGetParams(func, prms.ptr);
-
-		foreach (index, arg; prms) {
-            auto backupCurrentBlock = LLVMGetInsertBlock(Stash.builder);
-        	LLVMPositionBuilderAtEnd(Stash.builder, LLVMGetFirstBasicBlock(func));
-            LLVMTypeRef t;
-
-            if (args[index].type == "Int") {
-                t = LLVMInt32Type();
-            } else if (args[index].type == "Double") {
-                t = LLVMDoubleType();
-            } else if (args[index].type == "String") {
-                t = LLVMInt8Type();
-            } else if (args[index].type == "Bool") {
-                t = LLVMInt1Type();
-            } else {
-                throw new ASTException("Unknown type: " ~ args[index].type);
-            }
-
-        	auto alloca = LLVMBuildAlloca(Stash.builder, t, args[index].name.toStringz());
-            LLVMPositionBuilderAtEnd(Stash.builder, backupCurrentBlock);
-
-			LLVMBuildStore(Stash.builder, arg, alloca);
-			Stash.newVariable(false, args[index].name, alloca);
-		}
-
-        string[] localVariables;
-        bool hasReturn = false;
-
-        foreach (expr; block) {
-			if (cast(NodeDeclaration) expr) {
-                NodeDeclaration decl = cast(NodeDeclaration) expr;
-                localVariables ~= decl.name;
-            }
-
-            if (type != "Void") {
-                if (cast(NodeReturn) expr) {
-                    NodeReturn ret = cast(NodeReturn) expr;
-
-                    if (type == "Int" && ret.value.nodeType() == "Number" ||
-                        type == "Double" && ret.value.nodeType() == "Number" ||
-                        type == "String" && ret.value.nodeType() == "String" ||
-                        type == "Bool" && ret.value.nodeType() == "Boolean" ||
-                        type == "Null" && ret.value.nodeType() == "Null" ||
-                        type == "Int" && ret.value.nodeType() == "Binary Operation" ||
-                        type == "Double" && ret.value.nodeType() == "Binary Operation" ||
-                        ret.value.nodeType() == "Variable") { // fix this
-
-                        // good
-                    } else {
-                        throw new ASTException("Function '" ~ name ~ "' has an invalid return type");
-                    }
-
-                    hasReturn = true;
-                }
-            }
-
-            expr.generate();
-        }
-
-        if (!hasReturn) {
-            throw new ASTException("Function '" ~ name ~ "' does not have return value");
-        }
-
-        if (type == "Void") {
-            LLVMBuildRetVoid(Stash.builder);
-        }
-
-        LLVMVerifyFunction(func, 1);
-        LLVMRunFunctionPassManager(Stash.passManager, func);
-
-        foreach (arg; args) {
-			Stash.removeVariable(arg.name);
-		}
-
-        foreach (vari; localVariables) {
-            Stash.removeVariable(vari);
-        }
-
-        Stash.funcs[name] = this;
-
-        return func;
+    string generate() {
+        return null;
     }
 }
 
@@ -492,7 +246,7 @@ class NodeFunction : Node {
 class NodeNewline : Node {
     public string nodeType() { return "Newline"; }
 
-    LLVMValueRef generate() {
+    string generate() {
         return null;
     }
 }

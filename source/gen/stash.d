@@ -2,7 +2,6 @@ module iode.gen.stash;
 
 import std.stdio;
 import std.string;
-import llvm.c;
 import iode.errors.astError;
 import iode.assets.variable;
 import iode.ast.node;
@@ -11,10 +10,6 @@ class Stash {
     public static Variable[string] namedValues;
     public static NodeFunction[string] funcs;
     public static NodeExtern[string] externs;
-    public static LLVMModuleRef theModule;
-    public static LLVMBuilderRef builder;
-    public static LLVMPassManagerRef passManager;
-    public static LLVMExecutionEngineRef engine;
     public static int line = 1;
 
     public static Variable getVariable(string name) {
@@ -38,22 +33,6 @@ class Stash {
             } else if (value.nodeType() == "Null") {
                 namedValues[name].type = "Null";
             }
-        } else {
-            throw new ASTException("Variable " ~ name ~ " already exists");
-        }
-    }
-
-    public static void newVariable(bool constant, string name, LLVMValueRef value) {
-        if (!checkVariable(name)) {
-            namedValues[name] = new Variable(constant, value);
-        } else {
-            throw new ASTException("Variable " ~ name ~ " already exists");
-        }
-    }
-
-    public static void newVariable(bool constant, string type, string name, LLVMValueRef value) {
-        if (!checkVariable(name)) {
-            namedValues[name] = new Variable(constant, type, value);
         } else {
             throw new ASTException("Variable " ~ name ~ " already exists");
         }
@@ -115,14 +94,5 @@ class Stash {
         } else {
             return false;
         }
-    }
-
-    public static LLVMValueRef addPuts() {
-        auto putsArgs = [LLVMInt8Type()];
-
-        auto putsType = LLVMFunctionType(LLVMInt32Type(), putsArgs.ptr, to!uint(1), cast(LLVMBool) false);
-        LLVMValueRef putsFunc = LLVMAddFunction(theModule, "puts".toStringz(), putsType);
-
-        return putsFunc;
     }
 }
