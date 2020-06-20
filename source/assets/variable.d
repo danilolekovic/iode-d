@@ -13,4 +13,10 @@ class Variable {
         this.type = type;
         this.value = value;
     }
+
+    this(string type, Node value) {
+        this.constant = false;
+        this.type = type;
+        this.value = value;
+    }
 }

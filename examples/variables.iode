@@ -1,6 +1,2 @@
-fn main() > Int {
-    var x = 24
-    var y = 6
-
-    return x + y
-}
+var x = 24
+var y = 6

@@ -2,6 +2,7 @@ module iode.ast.node;
 
 import std.stdio;
 import std.string;
+import std.conv;
 import iode.gen.stash;
 import iode.errors.astError;
 import iode.assets.variable;
@@ -22,7 +23,7 @@ class NodeNumber : Node {
     }
 
     string generate() {
-        return null;
+        return to!string(value);
     }
 }
 
@@ -36,7 +37,7 @@ class NodeDouble : Node {
     }
 
     string generate() {
-        return null;
+        return to!string(value);
     }
 }
 
@@ -54,7 +55,7 @@ class NodeBinaryOp : Node {
     }
 
     string generate() {
-        return null;
+        return left.generate() ~ op ~ right.generate();
     }
 }
 
@@ -68,7 +69,7 @@ class NodeString : Node {
     }
 
     string generate() {
-        return null;
+        return "\"" ~ value ~ "\"";
     }
 }
 
@@ -82,7 +83,7 @@ class NodeBoolean : Node {
     }
 
     string generate() {
-        return null;
+        return value ? "true" : "false";
     }
 }
 
@@ -91,7 +92,7 @@ class NodeNull : Node {
     public string nodeType() { return "Null"; }
 
     string generate() {
-        return null;
+        return "null";
     }
 }
 
@@ -107,7 +108,7 @@ class NodeSetting : Node {
     }
 
     string generate() {
-        return null;
+        return name ~ " = " ~ value.generate();
     }
 }
 
@@ -125,7 +126,7 @@ class NodeDeclaration : Node {
     }
 
     string generate() {
-        return null;
+        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
     }
 }
 
@@ -144,8 +145,9 @@ class NodeTypedDeclaration : Node {
         this.value = value;
     }
 
+    // TODO: handle types. question: do we want types?
     string generate() {
-        return null;
+        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
     }
 }
 
@@ -159,7 +161,7 @@ class NodeVariable : Node {
     }
 
     string generate() {
-        return null;
+        return this.name;
     }
 }
 
@@ -174,6 +176,7 @@ class NodeCall : Node {
         this.args = args;
     }
 
+    // todo
     string generate() {
         return null;
     }
@@ -189,7 +192,7 @@ class NodeReturn : Node {
     }
 
     string generate() {
-        return null;
+        return "return " ~ value.generate();
     }
 }
 
@@ -217,6 +220,7 @@ class NodeExtern : Node {
         this.argTypes = argTypes;
     }
 
+    // todo
     string generate() {
         return null;
     }
@@ -237,6 +241,7 @@ class NodeFunction : Node {
         this.block = block;
     }
 
+    // todo
     string generate() {
         return null;
     }
@@ -247,6 +252,6 @@ class NodeNewline : Node {
     public string nodeType() { return "Newline"; }
 
     string generate() {
-        return null;
+        return "\n";
     }
 }

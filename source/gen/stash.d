@@ -22,7 +22,7 @@ class Stash {
 
     public static void newVariable(bool constant, string name, Node value) {
         if (!checkVariable(name)) {
-            namedValues[name] = new Variable(constant, value);
+            namedValues[name] = new Variable(constant, name, value);
 
             if (value.nodeType() == "Number") {
                 namedValues[name].type = "Int";
@@ -74,7 +74,7 @@ class Stash {
                 }
             }
 
-            namedValues[name] = new Variable(false, value);
+            namedValues[name] = new Variable(false, name, value);
         } else {
             throw new ASTException("Variable " ~ name ~ " doesn't exists");
         }

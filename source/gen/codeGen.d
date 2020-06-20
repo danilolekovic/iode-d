@@ -20,5 +20,13 @@ class CodeGenerator {
     	while (parser.pos != parser.totalTokens) {
     		ast ~= parser.start();
     	}
+
+		string builder = "";
+
+		foreach (Node n; ast) {
+			builder ~= n.generate() ~ "\n";
+		}
+
+		writeln(builder);
     }
 }
