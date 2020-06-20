@@ -3,3 +3,7 @@ FILES := source/iode.d source/parsing/parser.d source/lexical/lexer.d source/lex
 
 iode:
 	$(DC) $(FILES)
+
+clean:
+	rm iode.o
+	rm iode

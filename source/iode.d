@@ -3,6 +3,9 @@ module iode.main;
 import std.stdio;
 import std.file;
 import std.string;
+import std.datetime;
+import std.datetime.stopwatch : benchmark, StopWatch;
+import std.conv;
 import core.stdc.stdlib;
 import iode.gen.codeGen;
 
@@ -51,7 +54,12 @@ void main(string[] args) {
 				}
 
 				if (code != "") {
+					StopWatch sw;
+					sw.start();
 					CodeGenerator.run(code);
+					sw.stop();
+					long msecs = sw.peek.total!"msecs";
+					writeln("Execution: " ~ to!string(msecs) ~ "ms");
 				}
 			} else {
 				writeln("File is not an .iode file.");
