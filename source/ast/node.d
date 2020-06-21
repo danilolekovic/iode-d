@@ -161,7 +161,7 @@ class NodeVariable : Node {
     }
 
     string generate() {
-        return this.name;
+        return name;
     }
 }
 
@@ -178,7 +178,19 @@ class NodeCall : Node {
 
     // todo
     string generate() {
-        return null;
+        string sb = name ~ "(";
+
+        foreach (i, Node n; args) {
+            sb ~= n.generate();
+
+            if (i != args.length - 1) {
+                sb ~= ", ";
+            }
+        }
+
+        sb ~= ")\n";
+
+        return sb;
     }
 }
 
@@ -243,7 +255,25 @@ class NodeFunction : Node {
 
     // todo
     string generate() {
-        return null;
+        string sb = "let " ~ name ~ " = function(";
+
+        if (args.length > 0) {
+            foreach (Arg n; args) {
+                sb ~= n.name ~ ", ";
+            }
+
+            sb = chop(sb) ~ ") {";
+        } else {
+            sb ~= ") {";
+        }
+
+        foreach (Node n; block) {
+            sb ~= "\t" ~ n.generate() ~ "\n";
+        }
+
+        sb ~= "}";
+
+        return sb;
     }
 }
 
