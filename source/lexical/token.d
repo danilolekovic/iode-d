@@ -44,6 +44,7 @@ enum TokenType : string {
     LBRACE = "left brace",
     RBRACE = "right brace",
     SEMICOLON = "semicolon",
+    ATTRIBUTE = "attribute",
 
     // math
     ADD = "add",

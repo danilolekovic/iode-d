@@ -108,7 +108,7 @@ class NodeSetting : Node {
     }
 
     string generate() {
-        return name ~ " = " ~ value.generate();
+        return name ~ " = " ~ value.generate() ~ ";";
     }
 }
 
@@ -126,7 +126,7 @@ class NodeDeclaration : Node {
     }
 
     string generate() {
-        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
+        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate() ~ ";";
     }
 }
 
@@ -147,7 +147,7 @@ class NodeTypedDeclaration : Node {
 
     // TODO: handle types. question: do we want types?
     string generate() {
-        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
+        return constant ? "const " ~ name ~ " = " ~ value.generate() ~ ";" : "var " ~ name ~ " = " ~ value.generate() ~ ";";
     }
 }
 
@@ -188,7 +188,7 @@ class NodeCall : Node {
             }
         }
 
-        sb ~= ")\n";
+        sb ~= ");";
 
         return sb;
     }
@@ -204,7 +204,7 @@ class NodeReturn : Node {
     }
 
     string generate() {
-        return "return " ~ value.generate();
+        return "return " ~ value.generate() ~ ";";
     }
 }
 
@@ -235,6 +235,20 @@ class NodeExtern : Node {
     // todo
     string generate() {
         return null;
+    }
+}
+
+class NodeAttribute : Node {
+    public string nodeType() { return "Attribute"; }
+    private string attribute;
+
+    this(string attribute) {
+        this.attribute = attribute;
+    }
+
+    string generate() {
+        // set attribute in stash
+        return "/* @ATTRIBUTE: " ~ attribute ~ " */\n";
     }
 }
 

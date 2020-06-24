@@ -164,6 +164,19 @@ class Lexer {
 
                         pos++;
                         break;
+                    case '@':
+                        pos++;
+
+                        while (code[pos] != '\n') {
+                            buffer ~= code[pos];
+                            pos++;
+                        }
+
+                        pos++;
+
+                        tokens ~= new Token(TokenType.ATTRIBUTE, buffer);
+                        buffer = "";
+                        break;
                     case '%':
                         tokens ~= new Token(TokenType.MOD, toStr);
                         pos++;

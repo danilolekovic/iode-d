@@ -323,6 +323,17 @@ class Parser {
         }
     }
 
+    /* parses a function attribute */
+    public Node parseAttribute() {
+        string attr = nextToken(true).getValue();
+
+        if (!peekCheck(TokenType.FN)) {
+            throw new ParserException("Expected function declaration after attribute");
+        }
+
+        return new NodeAttribute(attr);
+    }
+
     /* parses a function declaration */
     public Node parseFunction() {
         nextToken(true);
@@ -523,6 +534,8 @@ class Parser {
                 return parseDeclaration(true);
             case TokenType.FN:
                 return parseFunction();
+            case TokenType.ATTRIBUTE:
+                return parseAttribute();
             case TokenType.IDENT:
                 return parseIdent();
             case TokenType.RETURN:

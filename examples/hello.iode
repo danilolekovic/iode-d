@@ -1,4 +1,7 @@
+@deprecated
 fn main() > Int {
     puts("Hello world!")
     return 0
 }
+
+main()
