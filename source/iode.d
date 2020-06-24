@@ -56,7 +56,7 @@ void main(string[] args) {
 				if (code != "") {
 					StopWatch sw;
 					sw.start();
-					CodeGenerator.run(code);
+					CodeGenerator.run(code, false);
 					sw.stop();
 					long msecs = sw.peek.total!"msecs";
 					writeln("Execution: " ~ to!string(msecs) ~ "ms");

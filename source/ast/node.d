@@ -6,11 +6,14 @@ import std.conv;
 import iode.gen.stash;
 import iode.errors.astError;
 import iode.assets.variable;
+import iode.gen.codeGen;
+import llvm;
 
 /* base class */
 interface Node {
     public string nodeType();
-    string generate();
+    string generateJS();
+    LLVMValueRef generate();
 }
 
 /* representation of a number in the AST */
@@ -22,8 +25,12 @@ class NodeNumber : Node {
         this.value = value;
     }
 
-    string generate() {
+    string generateJS() {
         return to!string(value);
+    }
+
+    LLVMValueRef generate() {
+        return LLVMConstInt(LLVMInt32Type(), value, false);
     }
 }
 
@@ -36,8 +43,12 @@ class NodeDouble : Node {
         this.value = value;
     }
 
-    string generate() {
+    string generateJS() {
         return to!string(value);
+    }
+
+    LLVMValueRef generate() {
+        return LLVMConstReal(LLVMDoubleType(), value);
     }
 }
 
@@ -54,8 +65,28 @@ class NodeBinaryOp : Node {
         this.right = right;
     }
 
-    string generate() {
-        return left.generate() ~ op ~ right.generate();
+    string generateJS() {
+        return left.generateJS() ~ op ~ right.generateJS();
+    }
+
+    LLVMValueRef generate() {
+        LLVMValueRef l = left.generate();
+        LLVMValueRef r = right.generate();
+        LLVMValueRef ret = null;
+
+        if (op == "+") {
+            ret = LLVMBuildAdd(CodeGenerator.builder, l, r, "addtmp");
+        } else if (op == "-") {
+            ret = LLVMBuildSub(CodeGenerator.builder, l, r, "subtmp");
+        } else if (op == "*") {
+            ret = LLVMBuildMul(CodeGenerator.builder, l, r, "multmp");
+        } else if (op == "/") {
+            ret = LLVMBuildUDiv(CodeGenerator.builder, l, r, "divtmp");
+        } else {
+            throw new ASTException("Illegal operator: " ~ op);
+        }
+
+        return ret;
     }
 }
 
@@ -68,8 +99,21 @@ class NodeString : Node {
         this.value = value;
     }
 
-    string generate() {
+    string generateJS() {
         return "\"" ~ value ~ "\"";
+    }
+
+    LLVMValueRef generate() {
+        LLVMValueRef glob = LLVMAddGlobal(CodeGenerator.mod, LLVMArrayType(LLVMInt8Type(), to!uint(value.length)), "string");
+
+        // set as internal linkage and constant
+        LLVMSetLinkage(glob, LLVMInternalLinkage);
+        LLVMSetGlobalConstant(glob, true);
+
+        // Initialize with string:
+        LLVMSetInitializer(glob, LLVMConstString(value.toStringz(), to!uint(value.length), true));
+
+        return glob;
     }
 }
 
@@ -82,8 +126,12 @@ class NodeBoolean : Node {
         this.value = value;
     }
 
-    string generate() {
+    string generateJS() {
         return value ? "true" : "false";
+    }
+
+    LLVMValueRef generate() {
+        return value ? LLVMConstReal(LLVMInt1Type(), 1) : LLVMConstReal(LLVMInt1Type(), 0);
     }
 }
 
@@ -91,8 +139,12 @@ class NodeBoolean : Node {
 class NodeNull : Node {
     public string nodeType() { return "Null"; }
 
-    string generate() {
+    string generateJS() {
         return "null";
+    }
+
+    LLVMValueRef generate() {
+        return LLVMConstNull(LLVMVoidType());
     }
 }
 
@@ -107,8 +159,13 @@ class NodeSetting : Node {
         this.value = value;
     }
 
-    string generate() {
-        return name ~ " = " ~ value.generate();
+    string generateJS() {
+        return name ~ " = " ~ value.generateJS();
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
 
@@ -125,8 +182,13 @@ class NodeDeclaration : Node {
         this.value = value;
     }
 
-    string generate() {
-        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
+    string generateJS() {
+        return constant ? "const " ~ name ~ " = " ~ value.generateJS() : "var " ~ name ~ " = " ~ value.generateJS();
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
 
@@ -146,8 +208,13 @@ class NodeTypedDeclaration : Node {
     }
 
     // TODO: handle types. question: do we want types?
-    string generate() {
-        return constant ? "const " ~ name ~ " = " ~ value.generate() : "var " ~ name ~ " = " ~ value.generate();
+    string generateJS() {
+        return constant ? "const " ~ name ~ " = " ~ value.generateJS() : "var " ~ name ~ " = " ~ value.generateJS();
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
 
@@ -160,8 +227,13 @@ class NodeVariable : Node {
         this.name = name;
     }
 
-    string generate() {
+    string generateJS() {
         return name;
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
 
@@ -176,12 +248,11 @@ class NodeCall : Node {
         this.args = args;
     }
 
-    // todo
-    string generate() {
+    string generateJS() {
         string sb = name ~ "(";
 
         foreach (i, Node n; args) {
-            sb ~= n.generate();
+            sb ~= n.generateJS();
 
             if (i != args.length - 1) {
                 sb ~= ", ";
@@ -191,6 +262,11 @@ class NodeCall : Node {
         sb ~= ")\n";
 
         return sb;
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
 
@@ -203,8 +279,12 @@ class NodeReturn : Node {
         this.value = value;
     }
 
-    string generate() {
-        return "return " ~ value.generate();
+    string generateJS() {
+        return "return " ~ value.generateJS();
+    }
+
+    LLVMValueRef generate() {
+        return LLVMBuildRet(CodeGenerator.builder, value.generate());
     }
 }
 
@@ -232,8 +312,12 @@ class NodeExtern : Node {
         this.argTypes = argTypes;
     }
 
+    string generateJS() {
+        return null;
+    }
+
     // todo
-    string generate() {
+    LLVMValueRef generate() {
         return null;
     }
 }
@@ -253,8 +337,7 @@ class NodeFunction : Node {
         this.block = block;
     }
 
-    // todo
-    string generate() {
+    string generateJS() {
         string sb = "let " ~ name ~ " = function(";
 
         if (args.length > 0) {
@@ -268,12 +351,101 @@ class NodeFunction : Node {
         }
 
         foreach (Node n; block) {
-            sb ~= "\t" ~ n.generate() ~ "\n";
+            sb ~= "\t" ~ n.generateJS() ~ "\n";
         }
 
         sb ~= "}";
 
         return sb;
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        LLVMTypeRef[] types;
+
+		foreach (arg; args) {
+			if (arg.type == "Int") {
+                types ~= LLVMInt32Type();
+			} else if (arg.type == "Double") {
+                types ~= LLVMDoubleType();
+            } else if (arg.type == "String") {
+                types ~= LLVMInt8Type();
+            } else if (arg.type == "Bool") {
+                types ~= LLVMInt1Type();
+            } else {
+                throw new ASTException("Unknown type: " ~ arg.type);
+            }
+		}
+
+        LLVMTypeRef theType;
+
+        if (type == "Int") {
+            theType = LLVMInt32Type();
+        } else if (type == "Double") {
+            theType = LLVMDoubleType();
+        } else if (type == "String") {
+            theType = LLVMInt8Type();
+        } else if (type == "Bool") {
+            theType = LLVMInt1Type();
+        } else if (type == "Void") {
+            theType = LLVMVoidType();
+        } else {
+            throw new ASTException("Unknown type: " ~ type);
+        }
+
+        auto funcType = LLVMFunctionType(theType, types.ptr, cast(uint)types.length, false);
+
+		LLVMValueRef func = LLVMAddFunction(CodeGenerator.mod, name.toStringz(), funcType);
+
+		LLVMValueRef[] params;
+		params.length = LLVMCountParams(func);
+		LLVMGetParams(func, params.ptr);
+
+		foreach (index, arg; params) {
+            const(char)* argName = toStringz(args[index].name);
+			LLVMSetValueName2(arg, argName, to!uint(args[index].name.length));
+		}
+
+        LLVMBasicBlockRef basicBlock = LLVMAppendBasicBlock(func, "entry");
+		LLVMPositionBuilderAtEnd(CodeGenerator.builder, basicBlock);
+
+        LLVMValueRef[] prms;
+		prms.length = LLVMCountParams(func);
+		LLVMGetParams(func, prms.ptr);
+
+		foreach (index, arg; prms) {
+            auto backupCurrentBlock = LLVMGetInsertBlock(CodeGenerator.builder);
+        	LLVMPositionBuilderAtEnd(CodeGenerator.builder, LLVMGetFirstBasicBlock(func));
+            LLVMTypeRef t;
+
+            if (args[index].type == "Int") {
+                t = LLVMInt32Type();
+            } else if (args[index].type == "Double") {
+                t = LLVMDoubleType();
+            } else if (args[index].type == "String") {
+                t = LLVMInt8Type();
+            } else if (args[index].type == "Bool") {
+                t = LLVMInt1Type();
+            } else {
+                throw new ASTException("Unknown type: " ~ args[index].type);
+            }
+
+        	auto alloca = LLVMBuildAlloca(CodeGenerator.builder, t, args[index].name.toStringz());
+            LLVMPositionBuilderAtEnd(CodeGenerator.builder, backupCurrentBlock);
+
+			LLVMBuildStore(CodeGenerator.builder, arg, alloca);
+		}
+
+        if (type == "Void") {
+            LLVMBuildRetVoid(CodeGenerator.builder);
+        }
+
+        LLVMVerifyFunction(func, 1);
+        LLVMRunFunctionPassManager(CodeGenerator.passManager, func);
+
+        CodeGenerator.funcs[name] = this;
+
+        return func;
     }
 }
 
@@ -281,7 +453,12 @@ class NodeFunction : Node {
 class NodeNewline : Node {
     public string nodeType() { return "Newline"; }
 
-    string generate() {
+    string generateJS() {
         return "\n";
+    }
+
+    // todo
+    LLVMValueRef generate() {
+        return null;
     }
 }
