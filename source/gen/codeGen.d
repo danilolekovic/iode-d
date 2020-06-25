@@ -22,6 +22,7 @@ class CodeGenerator {
     	}
 
 		string builder = "";
+		Stash.line = 1;
 
 		foreach (Node n; ast) {
 			builder ~= n.generate() ~ "\n";

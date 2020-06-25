@@ -3,6 +3,7 @@ module iode.gen.stash;
 import std.stdio;
 import std.string;
 import iode.errors.astError;
+import iode.errors.error;
 import iode.assets.variable;
 import iode.ast.node;
 
@@ -10,6 +11,7 @@ class Stash {
     public static Variable[string] namedValues;
     public static NodeFunction[string] funcs;
     public static NodeExtern[string] externs;
+    public static IodeError[] errors;
     public static int line = 1;
     public static string currentFile;
     public static string currentCode;

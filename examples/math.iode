@@ -1,1 +1,8 @@
-var pi = 3.1415
+@deprecated
+fn someFunc() > Int {
+    return 0
+}
+
+someFunc()
+
+var pi 3.1415

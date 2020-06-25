@@ -195,7 +195,7 @@ class NodeCall : Node {
 
         if (name in Stash.funcs) {
             if (Stash.funcs[name].attribute == "deprecated") {
-                new IodeError("Function deprecated", Stash.line, 0, Stash.currentFile, "Warning").call();
+                new IodeError("Function deprecated", Stash.line, 0, "Warning", false).call();
             }
         }
 
@@ -309,6 +309,7 @@ class NodeNewline : Node {
     public string nodeType() { return "Newline"; }
 
     string generate() {
+        Stash.line += 1;
         return "\n";
     }
 }

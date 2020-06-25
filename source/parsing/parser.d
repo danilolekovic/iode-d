@@ -7,6 +7,7 @@ import iode.lexical.token;
 import iode.ast.node;
 import iode.gen.stash;
 import iode.errors.parserError;
+import iode.errors.error;
 
 /* Converts tokens into AST */
 class Parser {
@@ -203,7 +204,8 @@ class Parser {
                     throw new ParserException("Expected a type");
                 }
             } else {
-                throw new ParserException("Expected '=' or ':'");
+                new IodeError("Expected '=' or ':'", Stash.line, 0, "Syntax Error", true).call();
+                return null;
             }
         } else {
             throw new ParserException("Expected an identifier");
