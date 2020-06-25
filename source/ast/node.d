@@ -190,6 +190,14 @@ class NodeCall : Node {
 
         sb ~= ");";
 
+        // check for attributes
+
+        if (name in Stash.funcs) {
+            if (Stash.funcs[name].attribute == "deprecated") {
+                throw new ASTException("Warning: Function '" ~ name ~ "' is deprecated");
+            }
+        }
+
         return sb;
     }
 }
@@ -288,9 +296,8 @@ class NodeFunction : Node {
 
         sb ~= "}";
 
-        if (attribute != "none") {
-            // handle attribute
-        }
+        // double check that there aren't same names being redeclared
+        Stash.funcs[name] = this;
 
         return sb;
     }
