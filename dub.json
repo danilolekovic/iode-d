@@ -1,9 +1,12 @@
 {
-  "name": "iode",
-  "description": "",
-  "license": "MIT",
-  "copyright": "Copyright © 2020 Danilo Lekovic",
 	"authors": [
 		"Danilo Lekovic"
-	]
+	],
+	"copyright": "Copyright © 2020, Danilo Lekovic",
+	"dependencies": {
+		"colorize": "~>1.0.5"
+	},
+	"description": "A programming language",
+	"license": "MIT",
+	"name": "iode"
 }

@@ -8,6 +8,7 @@ import std.datetime.stopwatch : benchmark, StopWatch;
 import std.conv;
 import core.stdc.stdlib;
 import iode.gen.codeGen;
+import colorize;
 
 void main(string[] args) {
 	string[] files;
@@ -74,15 +75,15 @@ void main(string[] args) {
 
 void getHelp() {
 	writeln();
-	writeln("The Iode Programming Language");
+	writeln(style(color("The Iode Programming Language", fg.cyan), mode.bold));
 	writeln();
-	writeln("Usage: iode <options> [files]");
+	writeln(color("Usage:", fg.yellow) ~ " iode <options> [files]");
 	writeln();
-	writeln("Options:");
+	writeln(color("Options:", fg.yellow));
 	writeln("\t-v, --version         returns Iode version");
 	writeln("\t-h, --help            returns usage info");
 	writeln();
-	writeln("Examples:");
+	writeln(color("Examples:", fg.yellow));
 	writeln("\tiode -v");
 	writeln("\tiode test.iode test2.iode tests/test3.iode");
 	writeln();

@@ -1,6 +1,6 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"llvm-d": "~master"
+		"colorize": "1.0.5"
 	}
 }
