@@ -13,3 +13,4 @@ iode-test-*
 *.o
 *.obj
 *.lst
+libiode.a
