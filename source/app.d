@@ -8,6 +8,7 @@ import std.datetime.stopwatch : benchmark, StopWatch;
 import std.conv;
 import core.stdc.stdlib;
 import iode.gen.codeGen;
+import iode.gen.stash;
 import colorize;
 
 void main(string[] args) {
@@ -55,6 +56,8 @@ void main(string[] args) {
 				}
 
 				if (code != "") {
+					Stash.currentCode = code;
+					Stash.currentFile = filePath;
 					StopWatch sw;
 					sw.start();
 					CodeGenerator.run(code);

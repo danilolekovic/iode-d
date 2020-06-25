@@ -11,6 +11,8 @@ class Stash {
     public static NodeFunction[string] funcs;
     public static NodeExtern[string] externs;
     public static int line = 1;
+    public static string currentFile;
+    public static string currentCode;
 
     public static Variable getVariable(string name) {
         if (checkVariable(name)) {

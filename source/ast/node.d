@@ -5,6 +5,7 @@ import std.string;
 import std.conv;
 import iode.gen.stash;
 import iode.errors.astError;
+import iode.errors.error;
 import iode.assets.variable;
 
 /* base class */
@@ -194,7 +195,7 @@ class NodeCall : Node {
 
         if (name in Stash.funcs) {
             if (Stash.funcs[name].attribute == "deprecated") {
-                throw new ASTException("Warning: Function '" ~ name ~ "' is deprecated");
+                new IodeError("Function deprecated", Stash.line, 0, Stash.currentFile, "Warning").call();
             }
         }
 

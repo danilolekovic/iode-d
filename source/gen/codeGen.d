@@ -27,6 +27,6 @@ class CodeGenerator {
 			builder ~= n.generate() ~ "\n";
 		}
 
-		writeln(builder);
+		//writeln(builder);
     }
 }
