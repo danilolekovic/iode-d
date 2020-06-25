@@ -1,7 +1,15 @@
 .dub
 docs.json
 __dummy.html
+docs/
+/iode
+iode.so
+iode.dylib
+iode.dll
+iode.a
+iode.lib
+iode-test-*
+*.exe
 *.o
 *.obj
-iode
-*.so
+*.lst
