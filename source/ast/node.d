@@ -255,19 +255,20 @@ class NodeAttribute : Node {
 /* representation of a function definition in the ast */
 class NodeFunction : Node {
     public string nodeType() { return "Function"; }
+    private string attribute;
     private string name;
     private Arg[] args;
     private string type;
     private Node[] block;
 
-    this(string name, Arg[] args, string type, Node[] block) {
+    this(string attribute, string name, Arg[] args, string type, Node[] block) {
+        this.attribute = attribute;
         this.name = name;
         this.args = args;
         this.type = type;
         this.block = block;
     }
 
-    // todo
     string generate() {
         string sb = "let " ~ name ~ " = function(";
 
@@ -286,6 +287,10 @@ class NodeFunction : Node {
         }
 
         sb ~= "}";
+
+        if (attribute != "none") {
+            // handle attribute
+        }
 
         return sb;
     }

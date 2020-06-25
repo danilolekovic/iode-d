@@ -336,6 +336,12 @@ class Parser {
 
     /* parses a function declaration */
     public Node parseFunction() {
+        string attribute = "none";
+
+        if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
+            attribute = peekSpecific(0).getValue();
+        }
+
         nextToken(true);
 
         if (peekCheck(TokenType.IDENT)) {
@@ -396,7 +402,7 @@ class Parser {
 
                                 nextToken(true);
 
-                                return new NodeFunction(name, args, type, block);
+                                return new NodeFunction(attribute, name, args, type, block);
                             } else {
                                 throw new ParserException("Expected '{'");
                             }
