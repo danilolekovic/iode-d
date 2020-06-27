@@ -10,22 +10,38 @@ import colorize;
 class IodeError {
     public string message;
     public int line;
-    public int col;
     public string type;
     public bool breaking;
 
-    this(string message, int line, int col, string type, bool breaking) {
+    this(string message, int line, string type, bool breaking) {
         this.message = message;
         this.line = line;
-        this.col = col;
         this.type = type;
         this.breaking = breaking;
     }
 
     public void call() {
-        writeln(color(Stash.currentFile, fg.black, bg.white) ~ " " ~ color(type, fg.yellow));
+        // width is 80 by default so lets just assume this until we figure out how to determine the terminal 
+
+        string header = color("Error", fg.red);
+
+        if (type == "Warning") {
+            header = color(type, fg.yellow);
+        } else if (type == "Suggestion") {
+            header = color(type, fg.green);
+        }
+
+        string bars = "";
+
+        for (int i = 1; i <= 75 - header.length - Stash.currentFile.length; i++) {
+            bars ~= "-";
+        }
+
+        string title = color("-- ", fg.cyan) ~ header ~ " " ~ color(bars, fg.cyan) ~ " " ~ color(Stash.currentFile, fg.cyan);
+        
+        writeln(title);
         writeln();
-        writeln(color(" " ~ to!string(line - 3) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 4]);
+        writeln("\t" ~ color(" " ~ to!string(line - 3) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 4]);
         writeln();
         writeln(color("Iode> ", fg.cyan) ~ message);
 

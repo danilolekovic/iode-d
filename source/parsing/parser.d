@@ -6,7 +6,6 @@ import iode.lexical.lexer;
 import iode.lexical.token;
 import iode.ast.node;
 import iode.gen.stash;
-import iode.errors.parserError;
 import iode.errors.error;
 
 /* Converts tokens into AST */
@@ -104,7 +103,8 @@ class Parser {
             } else if (peekCheck(TokenType.LPAREN)) {
                 right = this.parseParens();
             } else {
-                throw new ParserException("Expected a number, double, or variable after binary operation");
+                new IodeError("Expected a number, double, or variable after binary operation", Stash.line, "Error", true).call();
+                return null;
             }
         }
 
@@ -137,7 +137,8 @@ class Parser {
             } else if (peekCheck(TokenType.LPAREN)) {
                 right = this.parseParens();
             } else {
-                throw new ParserException("Expected a number, double, or variable after binary operation");
+                new IodeError("Expected a number, double, or variable after binary operation", Stash.line, "Error", true).call();
+                return null;
             }
         }
 
@@ -181,7 +182,8 @@ class Parser {
 
                     return new NodeDeclaration(constant, name, next);
                 } else {
-                    throw new ParserException("Expected a newline");
+                    new IodeError("Expected a terminator (newline or semicolon)", Stash.line, "Error", true).call();
+                    return null;
                 }
             } else if (peekCheck(TokenType.COLON)) {
                 nextToken(true);
@@ -199,20 +201,24 @@ class Parser {
 
                             return new NodeTypedDeclaration(constant, name, type, next);
                         } else {
-                            throw new ParserException("Expected a newline");
+                            new IodeError("Expected a terminator (newline or semicolon)", Stash.line, "Error", true).call();
+                            return null;
                         }
                     } else {
-                        throw new ParserException("Expected '=' or ':'");
+                        new IodeError("Expected '=' (denotes declaration) or ':' (denotes type)", Stash.line, "Error", true).call();
+                        return null;
                     }
                 } else {
-                    throw new ParserException("Expected a type");
+                    new IodeError("Expected a type for the variable", Stash.line, "Error", true).call();
+                    return null;
                 }
             } else {
-                new IodeError("Expected '=' or ':'", Stash.line, 0, "Syntax Error", true).call();
+                new IodeError("Expected '=' (denotes declaration) or ':' (denotes type)", Stash.line, "Error", true).call();
                 return null;
             }
         } else {
-            throw new ParserException("Expected an identifier");
+            new IodeError("Expected a name for the variable", Stash.line, "Error", true).call();
+            return null;
         }
     }
 
@@ -228,7 +234,8 @@ class Parser {
                 args ~= literal();
 
                 if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
-                    throw new ParserException("Expected ',' or ')'");
+                    new IodeError("Expected more arguments or a ')'", Stash.line, "Error", true).call();
+                    return null;
                 }
 
                 if (peekCheck(TokenType.COMMA)) {
@@ -243,7 +250,8 @@ class Parser {
 
                 return new NodeCall(ident, args, Stash.line);
             } else {
-                throw new ParserException("Expected ',' or ')'");
+                new IodeError("Expected more arguments or a ')'", Stash.line, "Error", true).call();
+                return null;
             }
         } else {
             Node left = new NodeVariable(ident);
@@ -265,7 +273,8 @@ class Parser {
                 } else if (peekCheck(TokenType.LPAREN)) {
                     right = this.parseParens();
                 } else {
-                    throw new ParserException("Expected a number, double, or variable after binary operation");
+                    new IodeError("Expected a number, double, or variable after binary operation", Stash.line, "Error", true).call();
+                    return null;
                 }
             }
 
@@ -289,7 +298,8 @@ class Parser {
                 args ~= literal();
 
                 if (!peekCheck(TokenType.COMMA) && !peekCheck(TokenType.RPAREN)) {
-                    throw new ParserException("Expected ',' or ')'");
+                    new IodeError("Expected more arguments or a ')'", Stash.line, "Error", true).call();
+                    return null;
                 }
 
                 if (peekCheck(TokenType.COMMA)) {
@@ -307,10 +317,12 @@ class Parser {
 
                     return new NodeCall(ident, args, Stash.line);
                 } else {
-                    throw new ParserException("Expected a newline");
+                    new IodeError("Expected a terminator (newline or semicolon)", Stash.line, "Error", true).call();
+                    return null;
                 }
             } else {
-                throw new ParserException("Expected ',' or ')'");
+                new IodeError("Expected more arguments or a ')'", Stash.line, "Error", true).call();
+                return null;
             }
         } else if (peekCheck(TokenType.EQUALS)) {
             nextToken(true);
@@ -322,10 +334,12 @@ class Parser {
 
                 return new NodeSetting(ident, next);
             } else {
-                throw new ParserException("Expected a newline");
+                new IodeError("Expected a terminator (newline or semicolon)", Stash.line, "Error", true).call();
+                return null;
             }
         } else {
-            throw new ParserException("Expected nothing, '(', or '=' after identifier");
+            new IodeError("Expected nothing, '(', or a '=' after identifier", Stash.line, "Error", true).call();
+            return null;
         }
     }
 
@@ -334,7 +348,8 @@ class Parser {
         string attr = nextToken(true).getValue();
 
         if (!peekCheck(TokenType.FN)) {
-            throw new ParserException("Expected function declaration after attribute");
+            new IodeError("Attributes only work with functions, so a function declaration was expected", Stash.line, "Error", true).call();
+            return null;
         }
 
         return new NodeAttribute(attr);
@@ -374,16 +389,20 @@ class Parser {
                                 } else if (peekCheck(TokenType.RPAREN)) {
                                     break;
                                 } else {
-                                    throw new ParserException("Expected ',' or ')'");
+                                    new IodeError("Expected more arguments or a ')'", Stash.line, "Error", true).call();
+                                    return null;
                                 }
                             } else {
-                                throw new ParserException("Expected a type after ':'");
+                                new IodeError("Expected a type after ':'", Stash.line, "Error", true).call();
+                                return null;
                             }
                         } else {
-                            throw new ParserException("Expected ':' after parameter name");
+                            new IodeError("Expected a ':' after the parameter name", Stash.line, "Error", true).call();
+                            return null;
                         }
                     } else {
-                        throw new ParserException("Expected an identifier");
+                        new IodeError("Expected an identifier", Stash.line, "Error", true).call();
+                        return null;
                     }
                 }
 
@@ -410,22 +429,28 @@ class Parser {
 
                                 return new NodeFunction(attribute, name, args, type, block);
                             } else {
-                                throw new ParserException("Expected '{'");
+                                new IodeError("Expected a '{'", Stash.line, "Error", true).call();
+                                return null;
                             }
                         } else {
-                            throw new ParserException("Expected type");
+                            new IodeError("Expected a type", Stash.line, "Error", true).call();
+                            return null;
                         }
                     } else {
-                        throw new ParserException("Expected '>'");
+                        new IodeError("Expected '>'", Stash.line, "Error", true).call();
+                        return null;
                     }
                 } else {
-                    throw new ParserException("Expected ')'");
+                    new IodeError("Expected ')'", Stash.line, "Error", true).call();
+                    return null;
                 }
             } else {
-                throw new ParserException("Expected '('");
+                new IodeError("Expected '('", Stash.line, "Error", true).call();
+                return null;
             }
         } else {
-            throw new ParserException("Expected a function name");
+            new IodeError("Expected a function name", Stash.line, "Error", true).call();
+            return null;
         }
     }
 
@@ -437,7 +462,8 @@ class Parser {
         if (terminator()) {
             nextToken(true);
         } else {
-            throw new ParserException("Expected a newline");
+            new IodeError("Expected a terminator (newline or semicolon)", Stash.line, "Error", true).call();
+            return null;
         }
 
         return new NodeReturn(lit);
@@ -472,7 +498,8 @@ class Parser {
             } else if (peekCheck(TokenType.LPAREN)) {
                 right = this.parseParens();
             } else {
-                throw new ParserException("Expected a number, double, or variable after binary operation");
+                new IodeError("Expected a number, double, or variable after binary operation", Stash.line, "Error", true).call();
+                return null;
             }
         }
 
@@ -484,7 +511,8 @@ class Parser {
             skipNewline();
             nextToken();
         } else {
-            throw new ParserException("Expected a ')'");
+            new IodeError("Expected a ')'", Stash.line, "Error", true).call();
+            return null;
         }
 
         while (peekCheck(TokenType.ADD) || peekCheck(TokenType.SUB)
@@ -502,7 +530,8 @@ class Parser {
             } else if (peekCheck(TokenType.LPAREN)) {
                 right = this.parseParens();
             } else {
-                throw new ParserException("Expected a number, double, or variable after binary operation");
+                new IodeError("Expected a number, double, or variable after binary operation", Stash.line, "Error", true).call();
+                return null;
             }
         }
 
@@ -515,7 +544,8 @@ class Parser {
 
         switch (t) {
             default:
-                throw new ParserException("Unexpected token '" ~ t ~ "'");
+                new IodeError("Unexpected token '" ~ t ~ "'", Stash.line, "Error", true).call();
+                return null;
             case TokenType.NUMBER:
                 return parseNumber();
             case TokenType.DOUBLE:
@@ -539,7 +569,8 @@ class Parser {
 
         switch (t) {
             default:
-                throw new ParserException("Unexpected token '" ~ t ~ "'");
+                new IodeError("Unexpected token '" ~ t ~ "'", Stash.line, "Error", true).call();
+                return null;
             case TokenType.VAR:
                 return parseDeclaration(false);
             case TokenType.LET:
