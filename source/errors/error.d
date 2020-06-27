@@ -25,7 +25,7 @@ class IodeError {
     public void call() {
         writeln(color(Stash.currentFile, fg.black, bg.white) ~ " " ~ color(type, fg.yellow));
         writeln();
-        writeln(color(" " ~ to!string(line) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 1]);
+        writeln(color(" " ~ to!string(line - 3) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 4]);
         writeln();
         writeln(color("Iode> ", fg.cyan) ~ message);
 

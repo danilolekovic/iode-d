@@ -171,10 +171,12 @@ class NodeCall : Node {
     public string nodeType() { return "Call"; }
     private string name;
     private Node[] args;
+    private int line;
 
-    this(string name, Node[] args) {
+    this(string name, Node[] args, int line) {
         this.name = name;
         this.args = args;
+        this.line = line;
     }
 
     // todo
@@ -195,7 +197,7 @@ class NodeCall : Node {
 
         if (name in Stash.funcs) {
             if (Stash.funcs[name].attribute == "deprecated") {
-                new IodeError("Function deprecated", Stash.line, 0, "Warning", false).call();
+                new IodeError("Function deprecated", line, 0, "Warning", false).call();
             }
         }
 

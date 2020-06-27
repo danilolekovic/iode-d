@@ -18,8 +18,8 @@ class Parser {
     this(Lexer lexer) {
         this.lexer = lexer;
         this.pos = 0;
-        Stash.line = 1;
         this.totalTokens = lexer.tokens.length;
+        Stash.line = 1;
     }
 
     /* checks up on the next token */
@@ -69,6 +69,10 @@ class Parser {
         if (!(totalTokens >= pos)) {
             while (peekCheck(TokenType.NEWLINE) || peekCheck(TokenType.SEMICOLON)) {
                 nextToken();
+
+                if (peekCheck(TokenType.NEWLINE)) {
+                    Stash.line++;
+                }
             }
         }
     }
@@ -237,7 +241,7 @@ class Parser {
             if (peekCheck(TokenType.RPAREN)) {
                 nextToken();
 
-                return new NodeCall(ident, args);
+                return new NodeCall(ident, args, Stash.line);
             } else {
                 throw new ParserException("Expected ',' or ')'");
             }
@@ -301,7 +305,7 @@ class Parser {
                 if (terminator()) {
                     nextToken(true);
 
-                    return new NodeCall(ident, args);
+                    return new NodeCall(ident, args, Stash.line);
                 } else {
                     throw new ParserException("Expected a newline");
                 }
