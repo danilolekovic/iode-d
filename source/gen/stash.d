@@ -10,7 +10,6 @@ class Stash {
     public static Variable[string] namedValues;
     public static NodeFunction[string] funcs;
     public static NodeExtern[string] externs;
-    public static IodeError[] errors;
     public static int line = 1;
     public static string currentFile;
     public static string currentCode;
