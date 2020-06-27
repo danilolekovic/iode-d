@@ -2,7 +2,6 @@ module iode.gen.stash;
 
 import std.stdio;
 import std.string;
-import iode.errors.astError;
 import iode.errors.error;
 import iode.assets.variable;
 import iode.ast.node;
@@ -20,7 +19,8 @@ class Stash {
         if (checkVariable(name)) {
             return namedValues[name];
         } else {
-            throw new ASTException("Variable " ~ name ~ " doesn't exist");
+            new IodeError("Variable " ~ name ~ " doesn't exist", line, "Error", true).call();
+            return null;
         }
     }
 
@@ -38,14 +38,14 @@ class Stash {
                 namedValues[name].type = "Null";
             }
         } else {
-            throw new ASTException("Variable " ~ name ~ " already exists");
+            new IodeError("Variable " ~ name ~ " already exists", line, "Error", true).call();
         }
     }
 
     public static void setVariable(string name, Node value) {
         if (checkVariable(name)) {
             if (namedValues[name].constant) {
-                throw new ASTException("Variable " ~ name ~ " is constant and cannot be changed");
+                new IodeError("Variable " ~ name ~ " is constant and cannot be changed. Try removing the constant declaration.", line, "Error", true).call();
             }
 
             if (namedValues[name].type != null) {
@@ -55,7 +55,7 @@ class Stash {
                     namedValues[name].type == "Null" && value.nodeType() == "Null") {
 
                 } else {
-                    throw new ASTException("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType());
+                    new IodeError("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType(), line, "Error", true).call();
                 }
             } else {
                 if (namedValues[name].value.nodeType() == "Number") {
@@ -74,13 +74,13 @@ class Stash {
                     namedValues[name].type == "Null" && value.nodeType() == "Null") {
 
                 } else {
-                    throw new ASTException("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType());
+                    new IodeError("Variable " ~ name ~ " can't be reinitialized as a " ~ value.nodeType(), line, "Error", true).call();
                 }
             }
 
             namedValues[name] = new Variable(false, name, value);
         } else {
-            throw new ASTException("Variable " ~ name ~ " doesn't exists");
+            new IodeError("Variable " ~ name ~ " doesn't exist", line, "Error", true).call();
         }
     }
 
@@ -88,7 +88,7 @@ class Stash {
         if (checkVariable(name)) {
             namedValues.remove(name);
         } else {
-            throw new ASTException("Variable " ~ name ~ " doesn't exist");
+            new IodeError("Variable " ~ name ~ " doesn't exist", line, "Error", true).call();
         }
     }
 

@@ -4,7 +4,6 @@ import std.stdio;
 import std.string;
 import std.conv;
 import iode.gen.stash;
-import iode.errors.astError;
 import iode.errors.error;
 import iode.assets.variable;
 

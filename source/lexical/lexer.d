@@ -4,7 +4,7 @@ import std.stdio;
 import std.uni;
 import std.conv;
 import iode.lexical.token;
-import iode.errors.lexerError;
+import iode.errors.error;
 
 /* Converts raw code into tokens */
 class Lexer {
@@ -84,7 +84,7 @@ class Lexer {
                         isDecimal = true;
                         pos++;
                     } else if (code[pos] == '.' && isDecimal) {
-                        throw new LexerException("Cannot have more than one decimal point in a number", line);
+                        new IodeError("Cannot have more than one decimal point in a number", line, "Error", true).call();
                     } else {
                         buffer ~= code[pos];
                         pos++;
@@ -126,7 +126,8 @@ class Lexer {
 
                 switch (code[pos]) {
                     default:
-                        throw new LexerException("Illegal symbol: " ~ toStr, line);
+                        new IodeError("Illegal symbol: " ~ toStr, line, "Error", true).call();
+                        break;
                     case ';':
                         tokens ~= new Token(TokenType.SEMICOLON, toStr);
                         pos++;
