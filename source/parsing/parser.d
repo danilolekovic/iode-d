@@ -359,8 +359,10 @@ class Parser {
     public Node parseFunction() {
         string attribute = "none";
 
-        if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
-            attribute = peekSpecific(0).getValue();
+        if (pos != 0) {
+            if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
+                attribute = peekSpecific(0).getValue();
+            }
         }
 
         nextToken(true);
@@ -458,8 +460,10 @@ class Parser {
     public Node parseClass() {
         string attribute = "none";
 
-        if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
-            attribute = peekSpecific(0).getValue();
+        if (pos != 0) {
+            if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
+                attribute = peekSpecific(0).getValue();
+            }
         }
 
         nextToken(true);

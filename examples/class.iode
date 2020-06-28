@@ -1,4 +1,3 @@
-@deprecated
 class Box {
     var X = 0
     var Y = 0
