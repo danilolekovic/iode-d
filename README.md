@@ -14,13 +14,41 @@ The following is a tentative list, very much subject to change, of things that n
 - [x] Lexer
 - [x] Parser
 - [ ] Bytecode gen
-- [ ] JS gen
+- [X] JS gen
 - [ ] Package manager
 - [ ] Self-hosting
 - [ ] Standard library
-- [ ] A website
+- [X] A website
 - [ ] Documentation
 - [ ] Speed!
+
+The main goal right now is to create enough language functionality for this compiler to be able to be written in Iode. This will save time. So, what needs to be done is:
+
+- [x] Functions
+- [x] Variables
+- [x] Classes
+- [ ] Check if variable is already declared / compare types
+- [ ] Imports
+- [ ] If statements
+- [ ] While/do/foreach/for loops
+- [ ] Standard library
+- [ ] Arrays
+- [ ] Constructors
+- [ ] x++ notation
+- [ ] Conditional statements (||, &&)
+- [ ] this
+- [ ] Class instances
+- [ ] Dictionaries
+- [ ] Enumerations
+- [ ] Constructors
+- [ ] File I/O
+- [ ] String manipulation
+- [ ] Terminal manipulation
+- [ ] Static class variables
+- [ ] Modules
+- [ ] Interfaces/abstract classes
+- [ ] Type conversion
+
 
 ### License
 
