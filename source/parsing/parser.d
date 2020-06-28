@@ -423,7 +423,7 @@ class Parser {
                                 nextToken(true);
 
                                 while (!peekCheck(TokenType.RBRACE)) {
-                                    block ~= start();
+                                    block ~= startBlock();
                                     skipNewline();
                                 }
 
@@ -477,7 +477,7 @@ class Parser {
                 nextToken(true);
 
                 while (!peekCheck(TokenType.RBRACE)) {
-                    block ~= start();
+                    block ~= startClass();
                     skipNewline();
                 }
 
@@ -600,6 +600,58 @@ class Parser {
                 return parseNull();
             case TokenType.LPAREN:
                 return parseParens();
+        }
+    }
+
+    /* gets the next statement for a class */
+    public Node startClass() {
+        TokenType t = peekToken().getType();
+
+        switch (t) {
+            default:
+                new IodeError("Classes can't contain a '" ~ t ~ "' inside of it. Must be a variable declaration/setting or function", Stash.line, "Error", true).call();
+                return null;
+            case TokenType.CLASS:
+                new IodeError("A class can't contain a '" ~ t ~ "' inside of it. Are you trying to create a class within a class?", Stash.line, "Error", true).call();
+                return null;
+            case TokenType.VAR:
+                return parseDeclaration(false);
+            case TokenType.LET:
+                return parseDeclaration(true);
+            case TokenType.FN:
+                return parseFunction();
+            case TokenType.ATTRIBUTE:
+                return parseAttribute();
+            case TokenType.NEWLINE:
+                return parseNewline();
+        }
+    }
+
+     /* gets the next statement for a block */
+    public Node startBlock() {
+        TokenType t = peekToken().getType();
+
+        switch (t) {
+            default:
+                new IodeError("A block can't contain a '" ~ t ~ "' inside.", Stash.line, "Error", true).call();
+                return null;
+            case TokenType.CLASS:
+                new IodeError("A block can't contain '" ~ t ~ "' on it's own. Are you trying to create a class within a function?", Stash.line, "Error", true).call();
+                return null;
+            case TokenType.VAR:
+                return parseDeclaration(false);
+            case TokenType.LET:
+                return parseDeclaration(true);
+            case TokenType.FN:
+                return parseFunction();
+            case TokenType.ATTRIBUTE:
+                return parseAttribute();
+            case TokenType.IDENT:
+                return parseIdent();
+            case TokenType.RETURN:
+                return parseReturn();
+            case TokenType.NEWLINE:
+                return parseNewline();
         }
     }
 
