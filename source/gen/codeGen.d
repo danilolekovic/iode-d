@@ -28,5 +28,6 @@ class CodeGenerator {
 		}
 
 		// create js compiled file
+		writeln(builder);
     }
 }

@@ -41,7 +41,7 @@ class IodeError {
         
         writeln(title);
         writeln();
-        writeln("\t" ~ color(" " ~ to!string(line - 3) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 4]);
+        //writeln("\t" ~ color(" " ~ to!string(line - 3) ~ " ", fg.light_black, bg.white) ~ " " ~ Stash.currentCode.split('\n')[line - 4]);
         writeln();
         writeln(color("Iode> ", fg.cyan) ~ message);
 

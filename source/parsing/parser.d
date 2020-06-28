@@ -347,8 +347,8 @@ class Parser {
     public Node parseAttribute() {
         string attr = nextToken(true).getValue();
 
-        if (!peekCheck(TokenType.FN)) {
-            new IodeError("Attributes only work with functions, so a function declaration was expected", Stash.line, "Error", true).call();
+        if (!peekCheck(TokenType.FN) && !peekCheck(TokenType.CLASS)) {
+            new IodeError("Attributes only work with functions and classes, so a function/class declaration was expected", Stash.line, "Error", true).call();
             return null;
         }
 
@@ -450,6 +450,42 @@ class Parser {
             }
         } else {
             new IodeError("Expected a function name", Stash.line, "Error", true).call();
+            return null;
+        }
+    }
+    
+    /* Parses a class */
+    public Node parseClass() {
+        string attribute = "none";
+
+        if (peekSpecificCheck(TokenType.ATTRIBUTE, 0)) {
+            attribute = peekSpecific(0).getValue();
+        }
+
+        nextToken(true);
+
+        if (peekCheck(TokenType.IDENT)) {
+            string name = nextToken(true).getValue();
+
+            Node[] block;
+
+            if (peekCheck(TokenType.LBRACE)) {
+                nextToken(true);
+
+                while (!peekCheck(TokenType.RBRACE)) {
+                    block ~= start();
+                    skipNewline();
+                }
+
+                nextToken(true);
+
+                return new NodeClass(attribute, name, block);
+            } else {
+                new IodeError("Expected a '{'", Stash.line, "Error", true).call();
+                return null;
+            }
+        } else {
+            new IodeError("Expected a class name", Stash.line, "Error", true).call();
             return null;
         }
     }
@@ -577,6 +613,8 @@ class Parser {
                 return parseDeclaration(true);
             case TokenType.FN:
                 return parseFunction();
+            case TokenType.CLASS:
+                return parseClass();
             case TokenType.ATTRIBUTE:
                 return parseAttribute();
             case TokenType.IDENT:

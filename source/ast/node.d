@@ -258,7 +258,7 @@ class NodeAttribute : Node {
 
     string generate() {
         // set attribute in stash
-        return "/* @ATTRIBUTE: " ~ attribute ~ " */\n";
+        return "/* ATTRIBUTE: " ~ attribute ~ " */\n";
     }
 }
 
@@ -305,12 +305,42 @@ class NodeFunction : Node {
     }
 }
 
+/* representation of a class definition in the ast */
+class NodeClass : Node {
+    public string nodeType() { return "Class"; }
+    private string attribute;
+    private string name;
+    private Node[] block;
+
+    this(string attribute, string name, Node[] block) {
+        this.attribute = attribute;
+        this.name = name;
+        this.block = block;
+    }
+
+    string generate() {
+        string sb = "class " ~ name ~ " {";
+
+        foreach (Node n; block) {
+            sb ~= "\t" ~ n.generate() ~ "\n";
+        }
+
+        sb ~= "}";
+
+
+        // add to class stash
+        //Stash.funcs[name] = this;
+
+        return sb;
+    }
+}
+
 /* representation of a newline in the AST */
 class NodeNewline : Node {
     public string nodeType() { return "Newline"; }
 
     string generate() {
-        Stash.line += 1;
+        Stash.line++;
         return "\n";
     }
 }

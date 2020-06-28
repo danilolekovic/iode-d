@@ -60,6 +60,9 @@ class Lexer {
                     case "let":
                         theType = TokenType.LET;
                         break;
+                    case "class":
+                        theType = TokenType.CLASS;
+                        break;
                     case "true":
                     case "false":
                         theType = TokenType.BOOL;

@@ -64,5 +64,6 @@ enum TokenType : string {
     VAR = "variable",
     LET = "constant variable",
     RETURN = "return",
-    TYPE = "type"
+    TYPE = "type",
+    CLASS = "class"
 }

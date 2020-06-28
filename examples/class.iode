@@ -1,0 +1,13 @@
+@deprecated
+class Box {
+    var X = 0
+    var Y = 0
+
+    fn getX() > Int {
+        return X
+    }
+
+    fn getY() > Int {
+        return Y
+    }
+}
