@@ -106,6 +106,7 @@ void getHelp() {
 	writeln(color("Options:", fg.yellow));
 	writeln("\t-v, --version         returns Iode version");
 	writeln("\t-h, --help            returns usage info");
+	writeln("\t-o                    outputs javascript file");
 	writeln();
 	writeln(color("Examples:", fg.yellow));
 	writeln("\tiode -v");
