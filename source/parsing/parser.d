@@ -516,6 +516,29 @@ class Parser {
         return new NodeNewline();
     }
 
+    /* Parses a compiler command */
+    public Node parseCompilerCommand() {
+        Token t = nextToken(true);
+
+        Node[] block;
+
+        if (peekCheck(TokenType.LBRACE)) {
+            nextToken(true);
+
+            while (!peekCheck(TokenType.RBRACE)) {
+                block ~= startBlock();
+                skipNewline();
+            }
+
+            nextToken(true);
+
+            return new NodeCompilerCommand(t.getValue(), block);
+        } else {
+            new IodeError("Expected a '{'", Stash.line, "Error", true).call();
+            return null;
+        }
+    }
+
     /* Parses a parenthesis */
     public Node parseParens() {
         nextToken();
@@ -679,6 +702,8 @@ class Parser {
                 return parseReturn();
             case TokenType.NEWLINE:
                 return parseNewline();
+            case TokenType.CCOMMAND:
+                return parseCompilerCommand();
         }
     }
 }

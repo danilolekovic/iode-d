@@ -65,5 +65,8 @@ enum TokenType : string {
     LET = "constant variable",
     RETURN = "return",
     TYPE = "type",
-    CLASS = "class"
+    CLASS = "class",
+
+    // special
+    CCOMMAND = "compiler command"
 }

@@ -225,6 +225,19 @@ class Lexer {
                         tokens ~= new Token(TokenType.RBRACE, toStr);
                         pos++;
                         break;
+                    case '!': // todo: condition operator
+                        pos++;
+
+                        if (code[pos] == 'c') {
+                            pos++;
+                            tokens ~= new Token(TokenType.CCOMMAND, "c");
+                        } else if (code[pos] == 'j') {
+                            pos++;
+                            tokens ~= new Token(TokenType.CCOMMAND, "j");
+                        } else {
+                            new IodeError("Illegal compiler command (" ~ code[pos] ~ "): " ~ toStr, line, "Error", true).call();
+                        }
+                        break;
                     case '\u007F':
                     case '\u0001':
                     case '\u0002':

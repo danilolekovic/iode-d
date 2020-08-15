@@ -213,6 +213,31 @@ class NodeCall : Node {
     }
 }
 
+/* representation of a compiler command in the ast */
+class NodeCompilerCommand : Node {
+    public string nodeType() { return "Compiler Command"; }
+    public string backend;
+    public Node[] block;
+
+    this(string backend, Node[] block) {
+        this.backend = backend;
+        this.block = block;
+    }
+
+    string generate() {
+        string sb = "";
+
+        if (backend == "j") {
+            foreach (Node n; block) {
+                sb ~= n.generate() ~ "\n";
+            }
+        }
+
+        return sb;
+    }
+}
+
+
 /* representation of a return expression in the ast */
 class NodeReturn : Node {
     public string nodeType() { return "Return"; }
