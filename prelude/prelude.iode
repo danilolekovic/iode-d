@@ -1,0 +1,7 @@
+!j {
+    # make js aliases for standard library
+}
+
+!c {
+    # make c aliases for standard library
+}
