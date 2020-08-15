@@ -7,6 +7,7 @@ import std.datetime;
 import std.datetime.stopwatch : benchmark, StopWatch;
 import std.conv;
 import core.stdc.stdlib;
+import std.process;
 import iode.gen.codeGen;
 import iode.gen.stash;
 import colorize;
@@ -71,10 +72,18 @@ void main(string[] args) {
 					writeln("Execution: " ~ to!string(msecs) ~ "ms");
 
 					if (output) {
-						writeln(filePath.replace(".iode", ".js"));
 						File js = File(filePath.replace(".iode", ".js"), "w");
 						js.write(outCode);
 						js.close();
+					} else {
+						File js = File(filePath.replace(".iode", ".js"), "w");
+						js.write(outCode);
+						js.close();
+						writeln();
+						auto nr = executeShell("node " ~ filePath.replace(".iode", ".js"));
+						if (nr.status != 0) writeln("Failed to execute. Make sure node.js is properly installed.");
+						else writeln(nr.output);
+						remove(filePath.replace(".iode", ".js"));
 					}
 				}
 			} else {

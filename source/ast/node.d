@@ -180,7 +180,7 @@ class NodeCall : Node {
 
     // todo
     string generate() {
-        string sb = name ~ "(";
+        string sb = "(";
 
         foreach (i, Node n; args) {
             sb ~= n.generate();
@@ -198,6 +198,12 @@ class NodeCall : Node {
             if (Stash.funcs[name].attribute == "deprecated") {
                 new IodeError("Function deprecated", line, "Warning", false).call();
             }
+        }
+
+        if (name == "puts") {
+            sb = "console.log" ~ sb;
+        } else {
+            sb = name ~ sb;
         }
 
         return sb;
