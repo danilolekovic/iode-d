@@ -9,7 +9,7 @@ import iode.ast.node;
 import iode.gen.stash;
 
 class CodeGenerator {
-    public static void run(string code) {
+    public static string run(string code) {
         Lexer lexer = new Lexer(code);
     	lexer.tokenize();
 
@@ -27,7 +27,6 @@ class CodeGenerator {
 			builder ~= n.generate() ~ "\n";
 		}
 
-		// create js compiled file
-		writeln(builder);
+		return builder;
     }
 }

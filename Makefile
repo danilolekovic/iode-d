@@ -1,4 +1,4 @@
 clean:
-	rm iode.o
 	rm iode
+	rm iode.o
 	rm libiode.a

@@ -15,6 +15,7 @@ void main(string[] args) {
 	string[] files;
 	bool help = false;
 	bool vrsn = false;
+	bool output = false;
 
 	foreach (string arg; args) {
 		if (arg == "-h" || arg == "--help") {
@@ -22,7 +23,11 @@ void main(string[] args) {
 		} else if (arg == "-v" || arg == "--version") {
 			vrsn = true;
 		} else {
-			files ~= arg;
+			if (arg == "-o") {
+				output = true;
+			} else {
+				files ~= arg;
+			}
 		}
 	}
 
@@ -60,10 +65,17 @@ void main(string[] args) {
 					Stash.currentFile = filePath;
 					StopWatch sw;
 					sw.start();
-					CodeGenerator.run(code);
+					string outCode = CodeGenerator.run(code);
 					sw.stop();
 					long msecs = sw.peek.total!"msecs";
 					writeln("Execution: " ~ to!string(msecs) ~ "ms");
+
+					if (output) {
+						writeln(filePath.replace(".iode", ".js"));
+						File js = File(filePath.replace(".iode", ".js"), "w");
+						js.write(outCode);
+						js.close();
+					}
 				}
 			} else {
 				writeln("File is not an .iode file.");
