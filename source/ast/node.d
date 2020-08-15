@@ -200,6 +200,9 @@ class NodeCall : Node {
             }
         }
 
+        // temporary. do better
+        // perhaps a prelude? compiler chooses between using js prelude and c prelude
+        // eventually this would become self-hosting.. 
         if (name == "puts") {
             sb = "console.log" ~ sb;
         } else {

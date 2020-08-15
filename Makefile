@@ -1,3 +1,6 @@
+build
+	dub build
+
 clean:
 	rm iode
 	rm iode.o
