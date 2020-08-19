@@ -10,7 +10,23 @@ import core.stdc.stdlib;
 import std.process;
 import iode.gen.codeGen;
 import iode.gen.stash;
+import iode.vm.vm;
+import iode.vm.codes;
 import colorize;
+
+/* Example of bytecode exec
+void main(string[] args) {
+	int[] program = [
+		to!int(ByteCode.PUSH), 3,
+		to!int(ByteCode.PUSH), 4,
+		to!int(ByteCode.ADD),
+		to!int(ByteCode.PUSH), 5,
+		to!int(ByteCode.SUB)
+	];
+
+	VM.vm(program);
+}
+*/
 
 void main(string[] args) {
 	string[] files;
